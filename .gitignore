@@ -123,4 +123,8 @@ hs_err_pid*
 .bsp
 project/target
 
+_site/
+
+Gemfile.lock
+
 .DS_Store
