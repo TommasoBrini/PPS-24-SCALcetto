@@ -122,3 +122,5 @@ hs_err_pid*
 .bloop
 .bsp
 project/target
+
+.DS_Store
