@@ -122,3 +122,9 @@ hs_err_pid*
 .bloop
 .bsp
 project/target
+
+_site/
+
+Gemfile.lock
+
+.DS_Store
