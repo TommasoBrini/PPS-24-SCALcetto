@@ -1,1 +1,5 @@
 remote_theme: just-the-docs/just-the-docs
+logo: "/assets/images/logo.JPEG"
+search_enabled: true
+title: PPS-24-SCALcetto
+description: Documentation for SCALcetto project pps-2024-25
