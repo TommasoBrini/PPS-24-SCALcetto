@@ -17,14 +17,38 @@ jobs:
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4.2.2
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
           distribution: 'temurin'
           cache: 'sbt'
+
       - name: Install SBT (portable)
         uses: coursier/setup-action@v1
+
+      - name: Generate coverage report
+        run: sbt coverage test coverageReport
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Move Scoverage report to docs/public/coverage
+        run: |
+          mkdir -p docs/public/coverage
+          cp -r target/scala-*/scoverage-report/* docs/public/coverage/ || echo "No report to copy"
+
+      - name: Commit and push coverage report
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add docs/public/coverage
+          git commit -m "docs: Update coverage report [skip ci]" || echo "docs: No changes to commit"
+          git push    
+
       - name: Run tests
         run: sbt test
 
