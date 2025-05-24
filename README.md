@@ -1,5 +1,6 @@
 
-![Build](https://github.com/TommasoBrini/PPS-24-SCALcetto/actions/workflows/CI.yml/badge.svg)
+![Build](https://github.com/TommasoBrini/PPS-24-SCALcetto/actions/workflows/Test_Scala.yml/badge.svg)
+![Release](https://github.com/TommasoBrini/PPS-24-SCALcetto/actions/workflows/Release.yml/badge.svg)
 ![Version](https://img.shields.io/github/v/release/TommasoBrini/PPS-24-SCALcetto?include_prereleases)
 ![License](https://img.shields.io/github/license/TommasoBrini/PPS-24-SCALcetto)
 
