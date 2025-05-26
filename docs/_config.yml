@@ -1,7 +1,7 @@
 title: "SCALcetto"
 description: Documentation for SCALcetto project pps-2024-25
-#remote_theme: just-the-docs/just-the-docs@v0.10.0
-theme: just-the-docs
+remote_theme: just-the-docs/just-the-docs@v0.10.0
+#theme: just-the-docs
 # logo: "/assets/images/logo.JPEG"
 search_enabled: true
 color_scheme: dark
