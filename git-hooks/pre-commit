@@ -1,0 +1,9 @@
+#!/bin/bash
+echo "Controllo formattazione scalafmt..."
+sbt scalafmtCheckAll || {
+  echo "Codice non formattato! Esegui 'sbt scalafmtAll' prima di commitare."
+  exit 1
+}
+
+echo "Tutti i controlli passati."
+exit 0
