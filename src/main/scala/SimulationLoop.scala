@@ -1,4 +1,4 @@
-import model.{Ball, Player, Position, SimulationState, Event}
+import model.{Ball, Event, Player, Position, SimulationState}
 import update.Update.*
 import view.View.render
 
