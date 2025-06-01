@@ -8,7 +8,7 @@ enablePlugins(ScoverageSbtPlugin)
 
 scalafmtOnCompile := true
 
-val setupHooks = taskKey[Unit]("Installa i git hooks nella cartella .git/hooks")
+val setupHooks = taskKey[Unit]("Install git hooks in the folder .git/hooks")
 
 setupHooks := {
   val base = baseDirectory.value
@@ -23,7 +23,7 @@ setupHooks := {
     val target = dst / file.getName
     IO.copyFile(file, target)
     target.setExecutable(true)
-    log.info(s"✅ Copiato e reso eseguibile: ${file.getName}")  // uso la val 'log'
+    log.info(s"Executed : ${file.getName}")  // uso la val 'log'
   }
 }
 
@@ -33,6 +33,7 @@ lazy val root = (project in file("."))
     libraryDependencies += "com.github.sbt" % "junit-interface" % "0.13.3" % Test,
     // add scala test
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.18" % Test,
+    libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0",
 
     coverageEnabled := true,
   )
