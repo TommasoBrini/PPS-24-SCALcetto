@@ -1,26 +1,20 @@
 package update
 
-import model.Event.{Decision, Step}
+import model.Event.*
 import model.{Ball, Event, Position, SimulationState}
 
+import scala.annotation.tailrec
 import scala.util.Random
 
 object Update:
+  @tailrec
   def update(simulationState: SimulationState, event: Event): SimulationState = event match
-    case Step =>
-      val random: Random = new Random()
-      random.nextInt(4) match
-        case 0 => simulationState.copy(ball =
-            Ball(Position(simulationState.ball.position.x + 1, simulationState.ball.position.y))
-          )
-        case 1 => simulationState.copy(ball =
-            Ball(Position(simulationState.ball.position.x - 1, simulationState.ball.position.y))
-          )
-        case 2 => simulationState.copy(ball =
-            Ball(Position(simulationState.ball.position.x, simulationState.ball.position.y + 1))
-          )
-        case 3 => simulationState.copy(ball =
-            Ball(Position(simulationState.ball.position.x, simulationState.ball.position.y - 1))
-          )
-
-    case Decision => simulationState
+    case Step   => update(simulationState, Decide)
+    case Decide => ??? // players with ball -> decidePlayerControl()      -- MUNI
+    // player in team with ball -> moveRandom()         --  TOM
+    // players in team without ball -> decidePlayerMovement()  -- TOM
+    // DECIDE THE NEXT ACTION FOR EACH PLAYER, AND SET THE NEXT ACTION IN THE PLAYER'S STATE
+    case Act     => ??? // ACT THE NEXT ACTION FOR EACH PLAYER, AND UPDATE THE STATE OF THE SIMULATION  -- EMI
+    case Goal    => update(simulationState, Restart)
+    case Restart => ??? // RESTART THE GAME, RESETTING THE BALL POSITION AND PLAYER POSITIONS (RANDOM???)  --- TOM
+    case _       => simulationState
