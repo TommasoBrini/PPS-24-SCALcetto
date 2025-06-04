@@ -43,8 +43,10 @@ object View:
       g.fillOval(state.ball.position.x * 10, state.ball.position.y * 10, 10, 10)
 
       g.setColor(Color.blue)
-      state.playerList.foreach(p =>
-        g.fillRect(p.position.x * 10, p.position.y * 10, 10, 10)
+      state.teams.foreach(t =>
+        t.players.foreach(p =>
+          g.fillRect(p.position.x * 10, p.position.y * 10, 10, 10)
+        )
       )
 
   class SwingView(initialState: SimulationState):
