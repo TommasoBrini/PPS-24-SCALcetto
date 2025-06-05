@@ -7,7 +7,7 @@ object Model:
 
   object Direction:
     def apply(x: Int, y: Int): Direction = Position(x, y)
-    def zero: Direction = Position(0, 0)
+    def zero: Direction                  = Position(0, 0)
     extension (d: Direction)
       def x: Int = d.x
       def y: Int = d.y
