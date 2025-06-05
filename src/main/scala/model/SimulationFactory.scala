@@ -12,7 +12,7 @@ object SimulationFactory:
     val ball   = Ball(Position(fieldWidth / 2, fieldHeight / 2), Movement(Position(0, 0), 0))
     SimulationState(List(teamsA, teamsB), ball)
 
-  private def createTeam(id: TeamId, isLeftSide: Boolean): Team =
+  private def createTeam(id: Int, isLeftSide: Boolean): Team =
     val minX = if isLeftSide then 1 else fieldWidth / 2 + 1
     val maxX = if isLeftSide then fieldWidth / 2 - 1 else fieldWidth - 2
 
