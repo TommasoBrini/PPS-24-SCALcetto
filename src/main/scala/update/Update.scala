@@ -1,7 +1,7 @@
 package update
 
-import model.Event.*
-import model.{Ball, Event, Position, SimulationState}
+import model.Model.*
+import Event.*
 
 import scala.annotation.tailrec
 import scala.util.Random
