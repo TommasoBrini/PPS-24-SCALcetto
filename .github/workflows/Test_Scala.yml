@@ -35,7 +35,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: target/scala-*/coverage-report/coverage.xml
+          files: target/scala-*/scoverage-report/scoverage.xml
 
   format-check:
     needs: build-test
