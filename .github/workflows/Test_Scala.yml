@@ -31,7 +31,7 @@ jobs:
       - name: Run tests with coverage and generate report
         run: sbt clean coverage test coverageReport
 
-      - name: Upload coverage to Codecov
+      - name: Upload coverage to Codecov 
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
