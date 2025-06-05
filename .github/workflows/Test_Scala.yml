@@ -28,16 +28,14 @@ jobs:
       - name: Install SBT (portable)
         uses: coursier/setup-action@v1
 
-      - name: Generate coverage report
-        run: sbt coverage test coverageReport
+      - name: Run tests with coverage and generate report
+        run: sbt clean coverage test coverageReport
 
-      - name: Upload coverage to Codecov
+      - name: Upload coverage to Codecov 
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Run tests
-        run: sbt test
+          files: target/scala-*/scoverage-report/scoverage.xml
 
   format-check:
     needs: build-test
