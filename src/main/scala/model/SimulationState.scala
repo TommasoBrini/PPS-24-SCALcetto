@@ -1,4 +1,5 @@
 package model
+
 object Model:
 
   case class Position(x: Int, y: Int)
@@ -12,7 +13,7 @@ object Model:
       def x: Int = d.x
       def y: Int = d.y
 
-  case class Movement(direction: Position, speed: Int)
+  case class Movement(direction: Direction, speed: Int)
 
   enum Action:
     case Move(target: Position)
