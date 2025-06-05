@@ -39,26 +39,31 @@ object View:
       g.setColor(Color.WHITE)
       g.drawRect(0, 0, fieldWidth * scale - 1, fieldHeight * scale - 1)
       g.drawLine(fieldWidth * scale / 2, 0, fieldWidth * scale / 2, fieldHeight * scale)
-      g.drawOval((fieldWidth * scale - 100)/ 2, (fieldHeight * scale - 100) / 2, 100, 100)
+      g.drawOval((fieldWidth * scale - 100) / 2, (fieldHeight * scale - 100) / 2, 100, 100)
 
       g.drawRect(0, ((fieldHeight - goalAreaHeight) * scale) / 2, goalAreaWidth * scale, goalAreaHeight * scale)
-      g.drawRect((fieldWidth - goalAreaWidth) * scale, (fieldHeight - goalAreaHeight) * scale / 2, goalAreaWidth * scale, goalAreaHeight * scale)
+      g.drawRect(
+        (fieldWidth - goalAreaWidth) * scale,
+        (fieldHeight - goalAreaHeight) * scale / 2,
+        goalAreaWidth * scale,
+        goalAreaHeight * scale
+      )
       drawCenteredOval(g, state.ball.position, ballSize, Color.WHITE)
 
       g.setColor(Color.black)
       g.fillRect(-(goalWidth * scale), (fieldHeight - goalHeight) * scale / 2, goalWidth * scale, goalHeight * scale)
       g.fillRect(fieldWidth * scale, (fieldHeight - goalHeight) * scale / 2, goalWidth * scale, goalHeight * scale)
 
-
       for team <- state.teams do
         val color = if team.id == 1 then Color.BLUE else Color.RED
         team.players.foreach(p => drawCenteredRect(g, p.position, playerSize, color))
 
-
   class SwingView(initialState: SimulationState):
-    private val panel     = new MatchPanel(initialState)
+    private val panel = new MatchPanel(initialState)
     panel.preferredSize = new Dimension(
-      (fieldWidth * scale) + 2 * (goalWidth * scale), fieldHeight * scale)
+      (fieldWidth * scale) + 2 * (goalWidth * scale),
+      fieldHeight * scale
+    )
     private val infoLabel = new Label("SCALcetto - A simple soccer simulation")
     private val frame = new MainFrame:
       title = "SCALcetto"
