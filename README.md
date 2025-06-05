@@ -2,8 +2,11 @@
 ## BUILD STATUS
 ![Build](https://github.com/TommasoBrini/PPS-24-SCALcetto/actions/workflows/Test_Scala.yml/badge.svg)
 ![Release](https://github.com/TommasoBrini/PPS-24-SCALcetto/actions/workflows/Release.yml/badge.svg)
-![Coverage](https://codecov.io/gh/TommasoBrini/PPS-24-SCALcetto/branch/main/graph/badge.svg)
 
+## COVERAGE
+MAIN ![Coverage](https://codecov.io/gh/TommasoBrini/PPS-24-SCALcetto/branch/main/graph/badge.svg)
+
+DEVELOP ![Coverage](https://codecov.io/gh/TommasoBrini/PPS-24-SCALcetto/branch/develop/graph/badge.svg)
 
 ## INFO
 ![Version](https://img.shields.io/github/v/release/TommasoBrini/PPS-24-SCALcetto?include_prereleases)
