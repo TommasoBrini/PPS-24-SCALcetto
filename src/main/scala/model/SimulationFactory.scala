@@ -9,7 +9,7 @@ object SimulationFactory:
   def initialSimulationState(): SimulationState =
     val teamsA = createTeam(1, true)
     val teamsB = createTeam(2, false)
-    val ball   = Ball(Position(fieldWidth / 2, fieldHeight / 2), Movement(Position(0, 0), 0))
+    val ball   = Ball(Position(fieldWidth / 2, fieldHeight / 2), Movement(Direction(0, 0), 0))
     SimulationState(List(teamsA, teamsB), ball)
 
   private def createTeam(id: Int, isLeftSide: Boolean): Team =
@@ -24,7 +24,7 @@ object SimulationFactory:
         position = Position(posX, posY),
         status = PlayerStatus.noControl,
         nextAction = None,
-        movement = Movement(Position(0, 0), 0)
+        movement = Movement(Direction(0, 0), 0)
       )
     }.toList
     Team(id, players)
