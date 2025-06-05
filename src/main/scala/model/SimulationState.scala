@@ -1,36 +1,47 @@
 package model
 
-case class Position(x: Int, y: Int)
+object Model:
 
-case class Player(
-    id: Int,
-    position: Position,
-    ballControl: Boolean,
-    nextAction: Option[Action] = None,
-    movement: Movement
-)
+  case class Position(x: Int, y: Int)
 
-case class Team(id: Int, players: List[Player])
+  opaque type Direction = Position
 
-case class Ball(position: Position, movement: Movement)
+  object Direction:
+    def apply(x: Int, y: Int): Direction = Position(x, y)
+    def zero: Direction                  = Position(0, 0)
+    extension (d: Direction)
+      def x: Int = d.x
+      def y: Int = d.y
 
-case class SimulationState(teams: List[Team], ball: Ball)
+  case class Movement(direction: Direction, speed: Int)
 
-case class Movement(position: Position, speed: Int)
+  enum Action:
+    case Move(target: Position)
+    case Pass(target: Position, speed: Int)
+    case Shoot(target: Position, speed: Int)
 
-enum Event:
-  case Step
-  case Decide
-  case Act
-  case Goal
-  case Restart
+  enum PlayerStatus:
+    case ballControl
+    case teamControl
+    case noControl
 
-enum PlayerStatus:
-  case ballControl
-  case teamControl
-  case noControl
+  case class Player(
+      id: Int,
+      position: Position,
+      status: PlayerStatus,
+      nextAction: Option[Action] = None,
+      movement: Movement
+  )
 
-enum Action:
-  case Move(target: Position)
-  case Pass(target: Position, speed: Int)
-  case Shoot(target: Position, speed: Int)
+  case class Team(id: Int, players: List[Player])
+
+  case class Ball(position: Position, movement: Movement)
+
+  case class SimulationState(teams: List[Team], ball: Ball)
+
+  enum Event:
+    case Step
+    case Decide
+    case Act
+    case Goal
+    case Restart
