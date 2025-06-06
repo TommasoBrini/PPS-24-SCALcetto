@@ -11,18 +11,15 @@ object Decide:
     // player in team with ball -> moveRandom()         --  TOM
     // players in team without ball -> decidePlayerMovement()  -- TOM
     state.copy(
-      teams = state.teams.map(updateTeam)
+      teams = state.teams.map { team =>
+        team.copy(players = team.players.map { player =>
+          player.status match
+            case PlayerStatus.teamControl => decideOfPlayerInTeamWithBall(player)
+            case PlayerStatus.noControl   => decideOfPlayerWithNoControl(player, state.ball.position)
+            case _                        => player
+        })
+      }
     )
-
-  private def updateTeam(team: Team): Team =
-    team.copy(players = team.players.map(updatePlayer))
-
-  private def updatePlayer(player: Player): Player = {
-    player.status match {
-      case PlayerStatus.teamControl => decideOfPlayerInTeamWithBall(player)
-      case _                        => player
-    }
-  }
 
   private[update] def decideOfPlayerInTeamWithBall(player: Player): Player = {
     val dx          = Random.between(-1, 2)
@@ -32,3 +29,8 @@ object Decide:
       nextAction = Some(Action.Move(newPosition))
     )
   }
+
+  private[update] def decideOfPlayerWithNoControl(player: Player, ballPosition: Position): Player =
+    player.copy(
+      nextAction = Some(Action.Move(ballPosition))
+    )

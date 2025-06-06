@@ -46,3 +46,22 @@ class TestDecide extends AnyFlatSpec with Matchers:
     val updatedPlayer = updatedTeam.players.find(_.id == 1).get
     updatedPlayer.nextAction.isDefined shouldBe true
     updatedPlayer.nextAction.get.isInstanceOf[Action.Move] shouldBe true
+
+  "Players with noControl" should "move toward the ball" in:
+    val noControlPlayer = Player(
+      id = 3,
+      position = Position(0, 0),
+      status = PlayerStatus.noControl,
+      nextAction = None,
+      movement = Movement(Direction(0, 0), 0)
+    )
+
+    val team  = Team(2, List(noControlPlayer))
+    val ball  = Ball(Position(10, 10), Movement(Direction(0, 0), 0))
+    val state = SimulationState(List(team), ball)
+
+    val newState      = Decide.takeDecisions(state)
+    val updatedPlayer = newState.teams.head.players.head
+    updatedPlayer.nextAction.isDefined shouldBe true
+    updatedPlayer.nextAction.get.isInstanceOf[Action.Move] shouldBe true
+    updatedPlayer.nextAction.get.asInstanceOf[Action.Move].target shouldBe Position(10, 10)
