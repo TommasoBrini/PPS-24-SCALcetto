@@ -16,7 +16,7 @@ object SimulationLoop:
       new ActionListener {
         override def actionPerformed(e: ActionEvent): Unit = {
           if remainingSteps > 0 then
-            // current = update(current, Event.Step)
+            current = update(current, Event.Step)
             view.render(current)
             remainingSteps -= 1
         }

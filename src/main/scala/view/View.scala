@@ -11,15 +11,15 @@ object View:
   private def drawCenteredOval(g: Graphics2D, position: Position, size: Int, color: Color): Unit =
     g.setColor(color)
     g.fillOval(
-      position.x * scale - size / 2,
-      position.y * scale - size / 2,
+      position.x - size / 2,
+      position.y - size / 2,
       size,
       size
     )
     g.setColor(Color.BLACK)
     g.drawOval(
-      position.x * scale - size / 2,
-      position.y * scale - size / 2,
+      position.x - size / 2,
+      position.y - size / 2,
       size,
       size
     )
@@ -27,15 +27,15 @@ object View:
   private def drawCenteredRect(g: Graphics2D, position: Position, size: Int, color: Color): Unit =
     g.setColor(color)
     g.fillRect(
-      position.x * scale - size / 2,
-      position.y * scale - size / 2,
+      position.x - size / 2,
+      position.y - size / 2,
       size,
       size
     )
     g.setColor(Color.BLACK)
     g.drawRect(
-      position.x * scale - size / 2,
-      position.y * scale - size / 2,
+      position.x - size / 2,
+      position.y - size / 2,
       size,
       size
     )
