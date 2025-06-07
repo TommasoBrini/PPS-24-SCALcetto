@@ -10,7 +10,7 @@ object Update:
   @tailrec
   def update(simulationState: SimulationState, event: Event): SimulationState = event match
     case Step   => update(simulationState, Decide)
-    case Decide => ??? // players with ball -> decidePlayerControl()      -- MUNI
+    case Decide => ??? // decidePlayerControl()      // MUNI
     // player in team with ball -> moveRandom()         --  TOM
     // players in team without ball -> decidePlayerMovement()  -- TOM
     // DECIDE THE NEXT ACTION FOR EACH PLAYER, AND SET THE NEXT ACTION IN THE PLAYER'S STATE
