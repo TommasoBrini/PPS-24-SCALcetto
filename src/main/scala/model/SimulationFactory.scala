@@ -8,13 +8,13 @@ object SimulationFactory:
 
   def initialSimulationState(): SimulationState =
     val teamsA = createTeam(1, true)
-    val teamsB = createTeamWithBall(2, false)
+    val teamsB = createTeam(2, false)
     val ball   = Ball(Position(fieldWidth / 2, fieldHeight / 2), Movement(Direction(0, 0), 0))
     SimulationState(List(teamsA, teamsB), ball)
 
-  private def createTeam(id: Int, ballControl: Boolean): Team =
-    val minX = if ballControl then 1 else fieldWidth / 2 + 1
-    val maxX = if ballControl then fieldWidth / 2 - 1 else fieldWidth - 2
+  private def createTeam(id: Int, isLeftSide: Boolean): Team =
+    val minX = if isLeftSide then 1 else fieldWidth / 2 + 1
+    val maxX = if isLeftSide then fieldWidth / 2 - 1 else fieldWidth - 2
 
     val players = (0 until teamSize).map { i =>
       val posX = Random.between(minX, maxX + 1)

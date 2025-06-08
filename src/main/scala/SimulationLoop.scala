@@ -7,16 +7,16 @@ import java.awt.event.{ActionEvent, ActionListener}
 
 object SimulationLoop:
   def loop(model: SimulationState, nStep: Int): Unit =
-    val view           = new SwingView(model)
-    var current        = model
-    var remainingSteps = nStep
+    val view: SwingView          = new SwingView(model)
+    var current: SimulationState = model
+    var remainingSteps: Int      = nStep
 
-    val timer = new SwingTimer(
+    val timer: SwingTimer = new SwingTimer(
       500,
       new ActionListener {
         override def actionPerformed(e: ActionEvent): Unit = {
           if remainingSteps > 0 then
-            // current = update(current, Event.Step)
+            current = update(current, Event.Step)
             view.render(current)
             remainingSteps -= 1
         }

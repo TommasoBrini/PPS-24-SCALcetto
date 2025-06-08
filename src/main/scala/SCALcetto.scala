@@ -1,6 +1,6 @@
 import SimulationLoop.loop
 import model.Model.*
-import model.SimulationFactory
+import update.factory.SimulationFactory
 
 @main def SCALcetto =
 
