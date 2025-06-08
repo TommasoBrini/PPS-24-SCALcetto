@@ -19,4 +19,3 @@ object Update:
     case Act     => ??? // ACT THE NEXT ACTION FOR EACH PLAYER, AND UPDATE THE STATE OF THE SIMULATION  -- EMI
     case Goal    => update(simulationState, Restart)
     case Restart => initialSimulationState()
-    case _       => simulationState

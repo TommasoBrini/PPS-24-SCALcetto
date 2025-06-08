@@ -16,12 +16,25 @@ object Decide:
           player.status match
             case PlayerStatus.teamControl => decideOfPlayerInTeamWithBall(player)
             case PlayerStatus.noControl   => decideOfPlayerWithNoControl(player, state.ball.position)
-            case PlayerStatus.ballControl => decidePlayerControl()
+            case PlayerStatus.ballControl => decidePlayerControl(player)
         })
       }
     )
 
-  private def decidePlayerControl(): Player = ???
+  // TODO
+  // 1. Spatial Awareness:
+  //   => Evaluate positions of teammates, opponents, and goals using geometric calculations
+  //   => Calculate safe zones using Voronoi diagrams or pitch control models (next)
+  // 2. Action Selection:
+  //   => compute success probability
+  // 3. Passing
+  //   => Use raycasting to check passing lanes
+  //   => evaluate receiver's space and probability to complete the pass
+  // 4. Dribbling
+  //   => calculate potential advancement
+  //   => if dribbles respawn behind the player
+  // 5. Forward Moving
+  private def decidePlayerControl(player: Player): Player = player
 
   private[update] def decideOfPlayerInTeamWithBall(player: Player): Player = {
     val dx: Int     = Random.between(-1, 2)

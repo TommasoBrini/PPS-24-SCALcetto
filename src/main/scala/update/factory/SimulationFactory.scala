@@ -10,10 +10,6 @@ object SimulationFactory:
   private val realFieldWidth: Int  = fieldWidth * scale
   private val realFieldHeight: Int = fieldHeight * scale
 
-  def factory(simulationState: Option[SimulationState]): SimulationState = simulationState match
-    case None => initialSimulationState()
-    case Some(matchState) => ???
-
   def initialSimulationState(): SimulationState =
     val teamsA: Team = createTeam(1, true)
     val teamsB: Team = createTeamWithBall(2, false)
@@ -60,4 +56,3 @@ object SimulationFactory:
       movement = Movement(Direction(0, 0), 0)
     )
     Team(id, ballPlayer :: players)
-
