@@ -16,10 +16,12 @@ object Decide:
           player.status match
             case PlayerStatus.teamControl => decideOfPlayerInTeamWithBall(player)
             case PlayerStatus.noControl   => decideOfPlayerWithNoControl(player, state.ball.position)
-            case _                        => player
+            case PlayerStatus.ballControl => decidePlayerControl()
         })
       }
     )
+
+  private def decidePlayerControl(): Player = ???
 
   private[update] def decideOfPlayerInTeamWithBall(player: Player): Player = {
     val dx: Int     = Random.between(-1, 2)
