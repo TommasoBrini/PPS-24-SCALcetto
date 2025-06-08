@@ -73,13 +73,13 @@ object View:
         team.players.foreach(p => drawCenteredRect(g, p.position, playerSize, color))
 
   class SwingView(initialState: SimulationState):
-    private val panel = new MatchPanel(initialState)
+    private val panel: MatchPanel = new MatchPanel(initialState)
     panel.preferredSize = new Dimension(
       (fieldWidth * scale) + 2 * (goalWidth * scale),
       fieldHeight * scale
     )
-    private val infoLabel = new Label("SCALcetto - A simple soccer simulation")
-    private val frame = new MainFrame:
+    private val infoLabel: Label = new Label("SCALcetto - A simple soccer simulation")
+    private val frame: MainFrame = new MainFrame:
       title = "SCALcetto"
       contents = new BorderPanel {
         layout(infoLabel) = BorderPanel.Position.North

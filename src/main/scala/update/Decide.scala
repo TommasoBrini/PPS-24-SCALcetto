@@ -22,8 +22,8 @@ object Decide:
     )
 
   private[update] def decideOfPlayerInTeamWithBall(player: Player): Player = {
-    val dx          = Random.between(-1, 2)
-    val dy          = Random.between(-1, 2)
+    val dx: Int     = Random.between(-1, 2)
+    val dy: Int     = Random.between(-1, 2)
     val newPosition = Position(player.position.x + dx, player.position.y + dy)
     player.copy(
       nextAction = Some(Action.Move(newPosition))

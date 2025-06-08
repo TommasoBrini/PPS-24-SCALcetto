@@ -3,7 +3,7 @@ package model
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import model.Model.*
-import model.SimulationFactory.*
+import update.factory.SimulationFactory.*
 import config.FieldConfig.*
 
 class TestSimulationFactory extends AnyFlatSpec with Matchers:

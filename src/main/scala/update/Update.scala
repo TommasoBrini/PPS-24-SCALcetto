@@ -3,7 +3,7 @@ package update
 import model.Model.*
 import Event.*
 import update.Decide.*
-import model.SimulationFactory.*
+import update.factory.SimulationFactory.*
 
 import scala.annotation.tailrec
 import scala.util.Random
