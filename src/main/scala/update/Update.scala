@@ -9,6 +9,7 @@ import scala.annotation.tailrec
 import scala.util.Random
 
 object Update:
+  //chain of responsibility
   @tailrec
   def update(simulationState: SimulationState, event: Event): SimulationState = event match
     case Step => update(simulationState, Decide)
