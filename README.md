@@ -12,6 +12,27 @@ DEVELOP ![Coverage](https://codecov.io/gh/TommasoBrini/PPS-24-SCALcetto/branch/d
 ![Version](https://img.shields.io/github/v/release/TommasoBrini/PPS-24-SCALcetto?include_prereleases)
 ![License](https://img.shields.io/github/license/TommasoBrini/PPS-24-SCALcetto)
 
+# CONTRIBUTE
+Once you clone this repo, run in your shell or in the intellij sbt shell
+``` bash
+sbt setupHooks
+```
+# BUILD
+To build and run the project use sbt
+``` bash
+sbt compile
+sbt run
+```
+to format automatically the code:
+``` bash
+sbt scalafmtAll
+```
+# TEST
+if you want run all the tests
+``` bash
+sbt test
+```
+
 # Docs
 You can see the live doc pushed in develop directly in the link in the about section. 
 
