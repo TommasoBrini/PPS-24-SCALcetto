@@ -78,16 +78,42 @@ object View:
       (fieldWidth * scale) + 2 * (goalWidth * scale),
       fieldHeight * scale
     )
-    private val infoLabel: Label = new Label("SCALcetto - A simple soccer simulation")
+    private val startButton: Button = new Button("Start")
+    private val pauseButton: Button = new Button("Pause")
+    pauseButton.enabled = false
+    private val resumeButton: Button = new Button("Resume")
+    resumeButton.enabled = false
+
     private val frame: MainFrame = new MainFrame:
       title = "SCALcetto"
       contents = new BorderPanel {
-        layout(infoLabel) = BorderPanel.Position.North
         layout(panel) = BorderPanel.Position.Center
+        layout(new FlowPanel(startButton, pauseButton, resumeButton)) = BorderPanel.Position.South
       }
       resizable = false
       centerOnScreen()
       visible = true
+
+    def onStart(action: => Unit): Unit =
+      startButton.reactions += {
+        case _ =>
+          startButton.enabled = false
+          pauseButton.enabled = true
+          action
+      }
+
+    def onPause(action: => Unit): Unit =
+      pauseButton.reactions += { case _ =>
+        pauseButton.enabled = false
+        resumeButton.enabled = true
+        action
+      }
+
+    def onResume(action: => Unit): Unit = resumeButton.reactions += { case _ =>
+      pauseButton.enabled = true
+      resumeButton.enabled = false
+      action
+    }
 
     def render(state: SimulationState): Unit =
       panel.state = state
