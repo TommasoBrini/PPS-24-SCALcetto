@@ -22,15 +22,19 @@ object Decide:
     )
 
   private[update] def decideOfPlayerInTeamWithBall(player: Player): Player = {
-    val dx: Int     = Random.between(-1, 2)
-    val dy: Int     = Random.between(-1, 2)
-    val newPosition = Direction(player.position.x + dx, player.position.y + dy)
+    val dx: Int   = Random.between(-1, 2)
+    val dy: Int   = Random.between(-1, 2)
+    val direction = Direction(dx, dy)
     player.copy(
-      nextAction = Some(Action.Move(newPosition))
+      nextAction = Some(Action.Move(direction))
     )
   }
 
   private[update] def decideOfPlayerWithNoControl(player: Player, ballPosition: Position): Player =
+    val dx        = ballPosition.x - player.position.x
+    val dy        = ballPosition.y - player.position.y
+    val sum       = dx + dy
+    val direction = Direction(dx / sum, dy / sum)
     player.copy(
-      nextAction = Some(Action.Move(Direction(ballPosition)))
+      nextAction = Some(Action.Move(direction))
     )
