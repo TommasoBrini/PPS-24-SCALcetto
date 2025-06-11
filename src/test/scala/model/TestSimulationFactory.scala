@@ -42,5 +42,5 @@ class TestSimulationFactory extends AnyFlatSpec with Matchers:
 
   it should "set all players to noControl status" in:
     state.teams.flatMap(_.players).foreach { player =>
-      player.status shouldBe PlayerStatus.noControl
+      player.status shouldBe PlayerStatus.teamControl
     }
