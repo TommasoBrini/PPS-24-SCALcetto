@@ -2,6 +2,7 @@ package update.factory
 
 import config.FieldConfig.*
 import model.Model.*
+import model.Player.*
 
 import scala.util.Random
 
@@ -26,9 +27,7 @@ object SimulationFactory:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),
-        status = PlayerStatus.noControl,
-        nextAction = None,
-        movement = Movement(Direction(0, 0), 0)
+        status = PlayerStatus.noControl
       )
     }.toList
     Team(id, players)

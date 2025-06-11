@@ -1,5 +1,7 @@
 package model
 
+import model.Player.Player
+
 object Model:
 
   case class Position(x: Int, y: Int)
@@ -14,24 +16,6 @@ object Model:
       def y: Int = d.y
 
   case class Movement(direction: Direction, speed: Int)
-
-  enum Action:
-    case Move(target: Position)
-    case Pass(target: Position, speed: Int)
-    case Shoot(target: Position, speed: Int)
-
-  enum PlayerStatus:
-    case ballControl
-    case teamControl
-    case noControl
-
-  case class Player(
-      id: Int,
-      position: Position,
-      status: PlayerStatus,
-      nextAction: Option[Action] = None,
-      movement: Movement
-  )
 
   case class Team(id: Int, players: List[Player])
 

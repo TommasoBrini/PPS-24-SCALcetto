@@ -5,6 +5,7 @@ import org.scalatest.matchers.should.Matchers
 import model.Model.*
 import update.factory.SimulationFactory.*
 import config.FieldConfig.*
+import model.Player.PlayerStatus
 
 class TestSimulationFactory extends AnyFlatSpec with Matchers:
 

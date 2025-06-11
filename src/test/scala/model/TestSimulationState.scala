@@ -1,12 +1,14 @@
 package model
 
 import model.Model.*
+import model.Player.Action.Initial
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import model.Player.{Action, Player, PlayerStatus}
 
 class TestSimulationState extends AnyFlatSpec with Matchers:
 
-  val player: Player = Player(1, Position(0, 0), PlayerStatus.noControl, None, Movement(Direction.zero, 0))
+  val player: Player = Player(1, Position(0, 0), PlayerStatus.noControl)
 
   "Position" should "store x and y coordinates" in:
     val position = Position(10, 20)
@@ -31,24 +33,20 @@ class TestSimulationState extends AnyFlatSpec with Matchers:
   "A player" should "be created correctly" in:
     player.id shouldEqual 1
     player.position shouldEqual Position(0, 0)
-    player.nextAction shouldEqual None
-
-  it should "have a movement with zero direction and speed" in:
-    player.movement.direction shouldEqual Direction.zero
-    player.movement.speed shouldEqual 0
+    player.nextAction shouldEqual Initial
 
   it should "allow setting a next action" in:
     val action: Action = Action.Move(Position(1, 1))
-    val updatedPlayer  = player.copy(nextAction = Some(action))
-    player.nextAction shouldEqual None
-    updatedPlayer.nextAction shouldEqual Some(action)
+    val updatedPlayer  = player.copy(nextAction = action)
+    player.nextAction shouldEqual Initial
+    updatedPlayer.nextAction shouldEqual action
 
   it should "take control of the ball" in:
     val updatedPlayer = player.copy(status = PlayerStatus.ballControl)
     updatedPlayer.status shouldEqual PlayerStatus.ballControl
 
   "A team" should "be created with players" in:
-    val second_player: Player = Player(2, Position(1, 1), PlayerStatus.noControl, None, Movement(Direction.zero, 0))
+    val second_player: Player = Player(2, Position(1, 1), PlayerStatus.noControl)
     val team: Team            = Team(1, List(player, second_player))
     team.players shouldEqual List(player, second_player)
 
@@ -59,7 +57,7 @@ class TestSimulationState extends AnyFlatSpec with Matchers:
     ball.movement.speed shouldEqual 0
 
   "A simulation state" should "contain teams and a ball" in:
-    val second_player: Player  = Player(2, Position(1, 1), PlayerStatus.noControl, None, Movement(Direction.zero, 0))
+    val second_player: Player  = Player(2, Position(1, 1), PlayerStatus.noControl)
     val team1: Team            = Team(1, List(player))
     val team2: Team            = Team(2, List(second_player))
     val ball: Ball             = Ball(Position(0, 0), Movement(Direction.zero, 0))
