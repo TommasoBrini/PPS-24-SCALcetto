@@ -1,5 +1,7 @@
 package model
 
+import scala.annotation.targetName
+
 object Model:
 
   case class Position(x: Int, y: Int)
@@ -7,8 +9,9 @@ object Model:
   opaque type Direction = Position
 
   object Direction:
+    def apply(p: Position): Direction    = p
     def apply(x: Int, y: Int): Direction = Position(x, y)
-    def zero: Direction                  = Position(0, 0)
+    def none: Direction                  = Position(0, 0)
     extension (d: Direction)
       def x: Int = d.x
       def y: Int = d.y
@@ -16,9 +19,8 @@ object Model:
   case class Movement(direction: Direction, speed: Int)
 
   enum Action:
-    case Move(target: Position)
-    case Pass(target: Position, speed: Int)
-    case Shoot(target: Position, speed: Int)
+    case Move(target: Direction)
+    case Hit(direction: Direction, speed: Int)
 
   enum PlayerStatus:
     case ballControl
