@@ -1,5 +1,6 @@
 package model
 import Model.*
+import config.FieldConfig.*
 
 object Player:
   enum Action:
@@ -17,7 +18,8 @@ object Player:
       id: Int,
       position: Position,
       status: PlayerStatus,
-      nextAction: Action = Action.Initial
+      nextAction: Action = Action.Initial,
+      movement: Movement = Movement(Direction(0, 0), 0)
   )
 
   trait PlayerBehavior:
@@ -29,9 +31,15 @@ object Player:
 
   object TeamControlBehavior extends PlayerBehavior:
     def decide(player: Player, state: SimulationState): Action =
-      val dx: Int = scala.util.Random.between(-1, 2)
-      val dy: Int = scala.util.Random.between(-1, 2)
-      Action.Move(Position(player.position.x + dx, player.position.y + dy))
+      val (dx, dy) =
+        if player.movement.speed == 0 then
+          (scala.util.Random.between(-1, 2), scala.util.Random.between(-1, 2))
+        else
+          (player.movement.direction.x, player.movement.direction.y)
+
+      val newX = (player.position.x + dx).max(3).min(fieldWidth * scale - 4)
+      val newY = (player.position.y + dy).max(3).min(fieldHeight * scale - 4)
+      Action.Move(Position(newX, newY))
 
   object BallControlBehavior extends PlayerBehavior:
     def decide(player: Player, state: SimulationState): Action = ???

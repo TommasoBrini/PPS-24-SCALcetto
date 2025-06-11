@@ -27,7 +27,7 @@ object SimulationFactory:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),
-        status = PlayerStatus.noControl
+        status = PlayerStatus.teamControl
       )
     }.toList
     Team(id, players)
