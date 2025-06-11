@@ -17,6 +17,13 @@ object Model:
       def y: Int = d.y
 
   case class Movement(direction: Direction, speed: Int)
+  object Movement:
+    def still: Movement = Movement(Direction.none, 0)
+
+  extension (p: Position)
+    @targetName("applyMovement")
+    def +(m: Movement): Position =
+      Position(p.x + m.direction.x * m.speed, p.y + m.direction.y * m.speed)
 
   enum Action:
     case Move(target: Direction)

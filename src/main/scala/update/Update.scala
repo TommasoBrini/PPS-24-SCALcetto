@@ -3,10 +3,10 @@ package update
 import model.Model.*
 import Event.*
 import update.Decide.*
+import update.Act.{act, isAGoal}
 import update.factory.SimulationFactory.*
 
 import scala.annotation.tailrec
-import scala.util.Random
 
 object Update:
   @tailrec
@@ -15,7 +15,10 @@ object Update:
     case Decide =>
       val newSimulationState: SimulationState = takeDecisions(simulationState)
       update(newSimulationState, Act)
-    case Act     => ??? // ACT THE NEXT ACTION FOR EACH PLAYER, AND UPDATE THE STATE OF THE SIMULATION  -- EMI
+    case Act =>
+      val state = act(simulationState)
+      if isAGoal(state) then update(state, Goal)
+      else state
     case Goal    => update(simulationState, Restart)
     case Restart => initialSimulationState()
     case _       => simulationState
