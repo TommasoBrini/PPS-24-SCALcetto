@@ -26,7 +26,7 @@ object SimulationFactory:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),
-        status = PlayerStatus.teamControl,
+        status = PlayerStatus.noControl,
         nextAction = None,
         movement = Movement(Direction(0, 0), 0)
       )

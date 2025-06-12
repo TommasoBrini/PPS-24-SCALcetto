@@ -21,12 +21,17 @@ object Model:
     def still: Movement = Movement(Direction.none, 0)
 
   extension (p: Position)
+    def getDirection(to: Position): Direction =
+      val dx = to.x - p.x
+      val dy = to.y - p.y
+      Direction(dx / (dx + dy), dy / (dx + dy))
+
     @targetName("applyMovement")
     def +(m: Movement): Position =
       Position(p.x + m.direction.x * m.speed, p.y + m.direction.y * m.speed)
 
   enum Action:
-    case Move(target: Direction)
+    case Move(direction: Direction)
     case Hit(direction: Direction, speed: Int)
 
   enum PlayerStatus:

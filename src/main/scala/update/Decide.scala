@@ -31,10 +31,6 @@ object Decide:
   }
 
   private[update] def decideOfPlayerWithNoControl(player: Player, ballPosition: Position): Player =
-    val dx        = ballPosition.x - player.position.x
-    val dy        = ballPosition.y - player.position.y
-    val sum       = dx + dy
-    val direction = Direction(dx / sum, dy / sum)
     player.copy(
-      nextAction = Some(Action.Move(direction))
+      nextAction = Some(Action.Move(player.position.getDirection(ballPosition)))
     )
