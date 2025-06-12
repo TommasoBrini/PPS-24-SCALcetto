@@ -1,4 +1,4 @@
-import model.Model.{Event, SimulationState}
+import model.Model.*
 import update.Update.*
 import view.View.SwingView
 
@@ -6,21 +6,31 @@ import javax.swing.Timer as SwingTimer
 import java.awt.event.{ActionEvent, ActionListener}
 
 object SimulationLoop:
-  def loop(model: SimulationState, nStep: Int): Unit =
-    val view: SwingView          = new SwingView(model)
-    var current: SimulationState = model
-    var remainingSteps: Int      = nStep
 
-    val timer: SwingTimer = new SwingTimer(
-      500,
-      new ActionListener {
-        override def actionPerformed(e: ActionEvent): Unit = {
-          if remainingSteps > 0 then
-            current = update(current, Event.Step)
-            view.render(current)
-            remainingSteps -= 1
-        }
-      }
+  private var timer: Option[SwingTimer] = None
+
+  def initialize(initialState: SimulationState, frameRate: Int = 30): Unit =
+    val delayMs: Int           = 1000 / frameRate
+    var state: SimulationState = initialState
+    val view: SwingView        = new SwingView(state)
+    view.onStart(start())
+    view.onPause(pause())
+    view.onResume(resume())
+
+    val newTimer: SwingTimer = new SwingTimer(
+      delayMs,
+      new ActionListener:
+        override def actionPerformed(e: ActionEvent): Unit =
+          state = update(state, Event.Step)
+          view.render(state)
     )
+    timer = Some(newTimer)
 
-    timer.start()
+  private def start(): Unit =
+    timer.foreach(_.start())
+
+  private def pause(): Unit =
+    timer.foreach(_.stop())
+
+  private def resume(): Unit =
+    timer.foreach(_.start())

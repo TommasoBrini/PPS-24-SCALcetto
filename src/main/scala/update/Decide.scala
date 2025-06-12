@@ -34,18 +34,22 @@ object Decide:
   //   => calculate potential advancement
   //   => if dribbles respawn behind the player
   // 5. Forward Moving
-  private def decidePlayerControl(teams: List[Team], player: Player): Player = (player, teams) match
+  private[update] def decidePlayerControl(teams: List[Team], player: Player): Player = (player, teams) match
     case (p, t) => ???
     case (p, t) => ???
 
-  private def forwardMove(playerPosition: Position): Position = playerPosition match
-    case player => ???
+  private[update] def passBall(matchState: SimulationState, ballPlayer: Player): Player = ???
 
-  private def checkTackle(teams: List[Player], player: Player): Boolean =
-    getOpponentsPositions(teams, player).contains(player.position)
+  private[update] def moveForward(ballPlayer: Player): Player = ???
 
-  private def getOpponentsPositions(teams: List[Player], player: Player): List[Position] =
-    teams.filter(_.team != player.team).map(_.position)
+  private[update] def passSuccessRate(ballPlayer: Player): Double =
+    Random.between(0, 1)
+
+  private[update] def moveForwardSuccessRate(ballPlayer: Player): Double =
+    Random.between(0, 1)
+
+  private[update] def shootSuccessRate(ballPlayer: Player): Double =
+    Random.between(0, 1)
 
   private[update] def decideOfPlayerInTeamWithBall(player: Player): Player = {
     val dx: Int     = Random.between(-1, 2)

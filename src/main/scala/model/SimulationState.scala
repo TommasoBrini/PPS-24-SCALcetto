@@ -30,8 +30,7 @@ object Model:
       position: Position,
       status: PlayerStatus,
       nextAction: Option[Action] = None,
-      movement: Movement,
-      team: PlayerTeam
+      movement: Movement
   )
 
   enum PlayerTeam:

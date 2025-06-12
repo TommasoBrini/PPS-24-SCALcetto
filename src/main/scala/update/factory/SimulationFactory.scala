@@ -28,8 +28,7 @@ object SimulationFactory:
         position = Position(posX, posY),
         status = PlayerStatus.noControl,
         nextAction = None,
-        movement = Movement(Direction(0, 0), 0),
-        team = PlayerTeam.TeamA
+        movement = Movement(Direction(0, 0), 0)
       )
     }.toList
     Team(id, players)
@@ -46,8 +45,7 @@ object SimulationFactory:
         position = Position(posX, posY),
         status = PlayerStatus.teamControl,
         nextAction = None,
-        movement = Movement(Direction(0, 0), 0),
-        team = PlayerTeam.TeamB
+        movement = Movement(Direction(0, 0), 0)
       )
     }.toList
     val ballPlayer: Player = Player(
@@ -55,7 +53,6 @@ object SimulationFactory:
       position = Position(realFieldWidth / 2, realFieldHeight / 2),
       status = PlayerStatus.ballControl,
       nextAction = None,
-      movement = Movement(Direction(0, 0), 0),
-      team = PlayerTeam.TeamB
+      movement = Movement(Direction(0, 0), 0)
     )
     Team(id, ballPlayer :: players)
