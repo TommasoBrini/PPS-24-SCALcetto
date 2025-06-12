@@ -12,3 +12,4 @@ object FieldConfig:
   val goalAreaHeight: Int  = 10
   val goalWidth: Int       = 1
   val goalHeight: Int      = 5
+  val playerSpeed: Int     = 1
