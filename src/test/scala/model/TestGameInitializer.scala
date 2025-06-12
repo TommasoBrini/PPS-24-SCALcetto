@@ -3,12 +3,12 @@ package model
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import model.Model.*
-import update.factory.SimulationFactory.*
 import config.FieldConfig.*
+import init.GameInitializer.initialSimulationState
 
-class TestSimulationFactory extends AnyFlatSpec with Matchers:
+class TestGameInitializer extends AnyFlatSpec with Matchers:
 
-  val state: SimulationState = initialSimulationState()
+  val state: MatchState = initialSimulationState()
 
   "A initialSimulationState" should "be created with the correct number of teams and players" in:
     state.teams.size shouldBe 2

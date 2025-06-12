@@ -1,4 +1,4 @@
-package update
+package update.decide
 
 import model.Model.*
 import model.Model.Action.Move

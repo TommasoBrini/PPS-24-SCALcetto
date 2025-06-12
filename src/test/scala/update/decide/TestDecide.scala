@@ -1,4 +1,4 @@
-package update
+package update.decide
 
 import model.Model.*
 import model.Model.Action.Move
@@ -36,9 +36,9 @@ class TestDecide extends AnyFlatSpec with Matchers:
       movement = Movement(Direction(0, 0), 0)
     )
 
-    val team: Team             = Team(1, List(player1))
-    val ball: Ball             = Ball(Position(10, 10), Movement(Direction.none, 0))
-    val state: SimulationState = SimulationState(List(team), ball)
+    val team: Team        = Team(1, List(player1))
+    val ball: Ball        = Ball(Position(10, 10), Movement(Direction.none, 0))
+    val state: MatchState = MatchState(List(team), ball)
 
     val updatedState = Decide.takeDecisions(state)
     val updatedTeam  = updatedState.teams.head
@@ -59,7 +59,7 @@ class TestDecide extends AnyFlatSpec with Matchers:
     val team         = Team(2, List(noControlPlayer))
     val ballPosition = Position(10, 10)
     val ball         = Ball(ballPosition, Movement(Direction(0, 0), 0))
-    val state        = SimulationState(List(team), ball)
+    val state        = MatchState(List(team), ball)
 
     val newState      = Decide.takeDecisions(state)
     val updatedPlayer = newState.teams.head.players.head

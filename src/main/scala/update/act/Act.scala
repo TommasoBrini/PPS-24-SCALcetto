@@ -1,19 +1,19 @@
-package update
+package update.act
 
-import model.Model.Action.*
-import model.Model.*
 import config.FieldConfig
 import model.Model
+import model.Model.*
+import model.Model.Action.*
 import model.Model.PlayerStatus.ballControl
 
 object Act:
-  def isAGoal(state: SimulationState): Boolean = false
+  def isAGoal(state: MatchState): Boolean = false
 
-  def act(state: SimulationState): SimulationState =
+  def executeAction(state: MatchState): MatchState =
     move(updateMovements(state))
 
-  private[update] def updateMovements(state: SimulationState): SimulationState =
-    SimulationState(
+  private[update] def updateMovements(state: MatchState): MatchState =
+    MatchState(
       state.teams.map(updateMovement),
       updateMovement(state.ball, state.teams.flatMap(_.players).find(_.status == ballControl))
     )
@@ -35,8 +35,8 @@ object Act:
       case _                                                     => ball.movement
     ball.copy(movement = movement)
 
-  private[update] def move(state: SimulationState): SimulationState =
-    SimulationState(state.teams.map(move), move(state.ball))
+  private[update] def move(state: MatchState): MatchState =
+    MatchState(state.teams.map(move), move(state.ball))
 
   private[update] def move(team: Team): Team =
     team.copy(players = team.players.map(move))

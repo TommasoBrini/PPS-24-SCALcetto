@@ -1,9 +1,9 @@
 import model.Model.*
-import update.factory.SimulationFactory
 import SimulationLoop.*
+import init.GameInitializer
 
 @main def SCALcetto =
 
-  val initialState: SimulationState = SimulationFactory.initialSimulationState()
+  val initialState: MatchState = GameInitializer.initialSimulationState()
 
   initialize(initialState, 50)

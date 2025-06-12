@@ -55,11 +55,11 @@ object Model:
 
   case class Ball(position: Position, movement: Movement)
 
-  case class SimulationState(teams: List[Team], ball: Ball)
+  case class MatchState(teams: List[Team], ball: Ball)
 
   enum Event:
-    case Step
-    case Decide
-    case Act
-    case Goal
-    case Restart
+    case StepEvent
+    case DecideEvent
+    case ActEvent
+    case GoalEvent
+    case RestartEvent

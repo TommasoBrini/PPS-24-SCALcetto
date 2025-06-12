@@ -2,23 +2,23 @@ package update
 
 import model.Model.*
 import Event.*
-import update.Decide.*
-import update.Act.{act, isAGoal}
-import update.factory.SimulationFactory.*
+import init.GameInitializer.initialSimulationState
+import decide.Decide.*
+import act.Act.{executeAction, isAGoal}
 
 import scala.annotation.tailrec
 
 object Update:
-  // chain of responsibility
   @tailrec
-  def update(simulationState: SimulationState, event: Event): SimulationState = event match
-    case Step => update(simulationState, Decide)
-    case Decide =>
-      val newSimulationState: SimulationState = takeDecisions(simulationState)
-      update(newSimulationState, Act)
-    case Act =>
-      val state = act(simulationState)
-      if isAGoal(state) then update(state, Goal)
+  def update(simulationState: MatchState, event: Event): MatchState = event match
+    case StepEvent => update(simulationState, DecideEvent)
+    case DecideEvent =>
+      val newSimulationState: MatchState = takeDecisions(simulationState)
+      update(newSimulationState, ActEvent)
+    case ActEvent =>
+      val state = executeAction(simulationState)
+      if isAGoal(state) then update(state, GoalEvent)
       else state
-    case Goal    => update(simulationState, Restart)
-    case Restart => initialSimulationState()
+    case GoalEvent    => update(simulationState, RestartEvent)
+    case RestartEvent => initialSimulationState()
+    case _            => simulationState
