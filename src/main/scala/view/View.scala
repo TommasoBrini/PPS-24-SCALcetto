@@ -3,7 +3,7 @@ package view
 import scala.swing.*
 import java.awt.{Color, Graphics2D}
 import config.FieldConfig.*
-import model.Model.SimulationState
+import model.Model.MatchState
 import model.Model.Position
 
 object View:
@@ -40,7 +40,7 @@ object View:
       size
     )
 
-  class MatchPanel(var state: SimulationState) extends Panel:
+  class MatchPanel(var state: MatchState) extends Panel:
 
     override def paintComponent(g: Graphics2D): Unit =
       super.paintComponent(g)
@@ -72,7 +72,7 @@ object View:
         val color = if team.id == 1 then Color.BLUE else Color.RED
         team.players.foreach(p => drawCenteredRect(g, p.position, playerSize, color))
 
-  class SwingView(initialState: SimulationState):
+  class SwingView(initialState: MatchState):
     private val panel: MatchPanel = new MatchPanel(initialState)
     panel.preferredSize = new Dimension(
       (fieldWidth * scale) + 2 * (goalWidth * scale),
@@ -115,6 +115,6 @@ object View:
       action
     }
 
-    def render(state: SimulationState): Unit =
+    def render(state: MatchState): Unit =
       panel.state = state
       panel.repaint()

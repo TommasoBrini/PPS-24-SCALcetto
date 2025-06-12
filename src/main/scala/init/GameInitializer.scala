@@ -1,20 +1,20 @@
-package update.factory
+package init
 
 import config.FieldConfig.*
 import model.Model.*
 
 import scala.util.Random
 
-object SimulationFactory:
+object GameInitializer:
 
   private val realFieldWidth: Int  = fieldWidth * scale
   private val realFieldHeight: Int = fieldHeight * scale
 
-  def initialSimulationState(): SimulationState =
+  def initialSimulationState(): MatchState =
     val teamsA: Team = createTeam(1, true)
     val teamsB: Team = createTeam(2, false)
     val ball: Ball   = Ball(Position(realFieldWidth / 2, realFieldHeight / 2), Movement(Direction(0, 0), 0))
-    SimulationState(List(teamsA, teamsB), ball)
+    MatchState(List(teamsA, teamsB), ball)
 
   private def createTeam(id: Int, isLeftSide: Boolean): Team =
     val minX: Int = if isLeftSide then 1 else realFieldWidth / 2 + 1
