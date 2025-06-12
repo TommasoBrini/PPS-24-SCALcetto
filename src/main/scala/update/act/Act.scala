@@ -23,15 +23,15 @@ object Act:
 
   private[update] def updateMovement(player: Player): Player =
     val movement = player.nextAction match
-      case Some(Move(direction)) => Movement(direction, FieldConfig.playerSpeed)
-      case Some(Hit(_, _))       => Movement.still
-      case _                     => player.movement
+      case Some(Move(direction, FieldConfig.playerSpeed)) => Movement(direction, FieldConfig.playerSpeed)
+      case Some(Hit(_, _))                                => Movement.still
+      case _                                              => player.movement
     player.copy(movement = movement)
 
   private[update] def updateMovement(ball: Ball, playerInControl: Option[Player]): Ball =
     val movement = playerInControl match
       case Some(Player(_, _, _, Some(Hit(direction, speed)), _)) => Movement(direction, speed)
-      case Some(player @ Player(_, _, _, Some(Move(_)), _))      => player.movement
+      case Some(player @ Player(_, _, _, Some(Move(_, _)), _))   => player.movement
       case _                                                     => ball.movement
     ball.copy(movement = movement)
 

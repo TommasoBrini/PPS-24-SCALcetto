@@ -1,8 +1,10 @@
 package update.decide
 
+import config.FieldConfig
 import model.Model.*
 
 import scala.util.Random
+import config.FieldConfig.*
 
 object Decide:
 
@@ -16,7 +18,7 @@ object Decide:
           player.status match
             case PlayerStatus.teamControl => decideOfPlayerInTeamWithBall(player)
             case PlayerStatus.noControl   => decideOfPlayerWithNoControl(player, state.ball.position)
-            case PlayerStatus.ballControl => decidePlayerControl(state.teams, player)
+            case PlayerStatus.ballControl => decidePlayerControl(player, state.teams)
         })
       }
     )
@@ -34,11 +36,16 @@ object Decide:
   //   => calculate potential advancement
   //   => if dribbles respawn behind the player
   // 5. Forward Moving
-  private[update] def decidePlayerControl(teams: List[Team], player: Player): Player = (player, teams) match
-    case (p, t) => ???
-    case (p, t) => ???
+  private[update] def decidePlayerControl(ballPlayer: Player, teams: List[Team]): Player = (ballPlayer, teams) match
+    case _ => passBall(ballPlayer, getClosestTeammate(ballPlayer, teams))
 
-  private[update] def passBall(matchState: MatchState, ballPlayer: Player): Player = ???
+  private[update] def passBall(ballPlayer: Player, receivePlayer: Player): Player =
+    ballPlayer.copy(
+      nextAction = Some(Action.Hit(ballPlayer.position.getDirection(receivePlayer.position), FieldConfig.ballSpeed))
+    )
+
+  private def getClosestTeammate(ballPlayer: Player, teams: List[Team]): Player =
+    teams.filter(_.players.contains(ballPlayer)).head.players.filter(_.id != ballPlayer.id).head
 
   private[update] def moveForward(ballPlayer: Player): Player = ???
 
@@ -56,11 +63,11 @@ object Decide:
     val dy: Int   = Random.between(-1, 2)
     val direction = Direction(dx, dy)
     player.copy(
-      nextAction = Some(Action.Move(direction))
+      nextAction = Some(Action.Move(direction, playerSpeed))
     )
   }
 
   private[update] def decideOfPlayerWithNoControl(player: Player, ballPosition: Position): Player =
     player.copy(
-      nextAction = Some(Action.Move(player.position.getDirection(ballPosition)))
+      nextAction = Some(Action.Move(player.position.getDirection(ballPosition), playerSpeed))
     )

@@ -1,5 +1,6 @@
 package update.decide
 
+import config.FieldConfig
 import model.Model.*
 import model.Model.Action.Move
 import org.scalatest.flatspec.AnyFlatSpec
@@ -16,14 +17,14 @@ class TestDecide extends AnyFlatSpec with Matchers:
     val player: Player = Player(1, Position(0, 0), PlayerStatus.teamControl, None, Movement(Direction.none, 0))
     val newPlayer      = Decide.decideOfPlayerInTeamWithBall(player)
     val position       = newPlayer.nextAction.get.asInstanceOf[Move].direction
-    newPlayer.nextAction.get shouldBe Move(position)
+    newPlayer.nextAction.get shouldBe Move(position, FieldConfig.playerSpeed)
 
   it should "set correct target" in:
     val player: Player  = Player(1, Position(0, 0), PlayerStatus.teamControl, None, Movement(Direction.none, 0))
     val newPlayer       = Decide.decideOfPlayerInTeamWithBall(player)
     val position        = newPlayer.nextAction.get.asInstanceOf[Move].direction
-    val differentX: Int = player.position.x - position.x
-    val differentY: Int = player.position.y - position.y
+    val differentX: Int = player.position.x - position.x.toInt
+    val differentY: Int = player.position.y - position.y.toInt
     differentX should be <= 1
     differentY should be <= 1
 

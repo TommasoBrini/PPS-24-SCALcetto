@@ -14,9 +14,10 @@ class ActSpec extends AnyFlatSpec with Matchers:
 
   "An act phase" should "update player movement if it is moving" in:
     val initial = Movement.still
-    val player  = Player(0, Position(0, 0), noControl, Some(Move(defaultDirection)), Movement.still)
-    val team    = Team(0, List(player))
-    val state   = MatchState(List(team), Ball(Position(0, 0), Movement.still))
+    val player =
+      Player(0, Position(0, 0), noControl, Some(Move(defaultDirection, FieldConfig.playerSpeed)), Movement.still)
+    val team  = Team(0, List(player))
+    val state = MatchState(List(team), Ball(Position(0, 0), Movement.still))
 
     executeAction(state).teams.flatMap(_.players)
       .forall(_.movement == Movement(defaultDirection, defaultSpeed)) should be(true)
@@ -32,8 +33,8 @@ class ActSpec extends AnyFlatSpec with Matchers:
 
   "A team" should "move when he has to" in:
     val initial = Position(0, 0)
-    val p1      = Player(0, initial, noControl, Some(Move(defaultDirection)), Movement.still)
-    val p2      = Player(1, initial, noControl, Some(Move(defaultDirection)), Movement.still)
+    val p1      = Player(0, initial, noControl, Some(Move(defaultDirection, FieldConfig.playerSpeed)), Movement.still)
+    val p2      = Player(1, initial, noControl, Some(Move(defaultDirection, FieldConfig.playerSpeed)), Movement.still)
     val team    = Team(0, List(p1, p2))
 
     updateMovement(team).players
@@ -56,7 +57,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     updateMovement(player).movement should be(lastMovement)
 
   it should "move when he has to" in:
-    val action = Move(defaultDirection)
+    val action = Move(defaultDirection, FieldConfig.playerSpeed)
     val player = Player(0, Position(0, 0), noControl, Some(action), Movement.still)
 
     updateMovement(player).movement should be(Movement(defaultDirection, FieldConfig.playerSpeed))
@@ -90,8 +91,9 @@ class ActSpec extends AnyFlatSpec with Matchers:
       updateMovement(ball, Some(player)).movement should be(initial)
 
   it should "move with the player that controls it" in:
-    val ball   = Ball(Position(0, 0), Movement.still)
-    val player = Player(0, Position(0, 0), ballControl, Some(Move(defaultDirection)), Movement.still)
+    val ball = Ball(Position(0, 0), Movement.still)
+    val player =
+      Player(0, Position(0, 0), ballControl, Some(Move(defaultDirection, FieldConfig.playerSpeed)), Movement.still)
 
     val updated = updateMovement(player)
     updateMovement(ball, Some(updated)).movement should be(Movement(defaultDirection, FieldConfig.playerSpeed))

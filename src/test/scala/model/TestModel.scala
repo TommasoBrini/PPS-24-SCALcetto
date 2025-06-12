@@ -1,5 +1,6 @@
 package model
 
+import config.FieldConfig
 import model.Model.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -38,7 +39,7 @@ class TestModel extends AnyFlatSpec with Matchers:
     player.movement.speed shouldEqual 0
 
   it should "allow setting a next action" in:
-    val action: Action = Action.Move(Direction(1, 1))
+    val action: Action = Action.Move(Direction(1, 1), FieldConfig.playerSpeed)
     val updatedPlayer  = player.copy(nextAction = Some(action))
     player.nextAction shouldEqual None
     updatedPlayer.nextAction shouldEqual Some(action)
