@@ -9,10 +9,10 @@ object SimulationLoop:
 
   private var timer: Option[SwingTimer] = None
 
-  def initialize(initialState: SimulationState, frameRate: Int = 30): Unit =
-    val delayMs: Int           = 1000 / frameRate
-    var state: SimulationState = initialState
-    val view: SwingView        = new SwingView(state)
+  def initialize(initialState: MatchState, frameRate: Int = 30): Unit =
+    val delayMs: Int      = 1000 / frameRate
+    var state: MatchState = initialState
+    val view: SwingView   = new SwingView(state)
     view.onStart(start())
     view.onPause(pause())
     view.onResume(resume())
@@ -21,7 +21,7 @@ object SimulationLoop:
       delayMs,
       new ActionListener:
         override def actionPerformed(e: ActionEvent): Unit =
-          state = update(state, Event.Step)
+          state = update(state, Event.StepEvent)
           view.render(state)
     )
     timer = Some(newTimer)

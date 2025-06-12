@@ -4,7 +4,7 @@ import model.Model.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class TestSimulationState extends AnyFlatSpec with Matchers:
+class TestModel extends AnyFlatSpec with Matchers:
 
   val player: Player = Player(1, Position(0, 0), PlayerStatus.noControl, None, Movement(Direction.none, 0))
 
@@ -59,10 +59,10 @@ class TestSimulationState extends AnyFlatSpec with Matchers:
     ball.movement.speed shouldEqual 0
 
   "A simulation state" should "contain teams and a ball" in:
-    val second_player: Player  = Player(2, Position(1, 1), PlayerStatus.noControl, None, Movement(Direction.none, 0))
-    val team1: Team            = Team(1, List(player))
-    val team2: Team            = Team(2, List(second_player))
-    val ball: Ball             = Ball(Position(0, 0), Movement(Direction.none, 0))
-    val state: SimulationState = SimulationState(List(team1, team2), ball)
+    val second_player: Player = Player(2, Position(1, 1), PlayerStatus.noControl, None, Movement(Direction.none, 0))
+    val team1: Team           = Team(1, List(player))
+    val team2: Team           = Team(2, List(second_player))
+    val ball: Ball            = Ball(Position(0, 0), Movement(Direction.none, 0))
+    val state: MatchState     = MatchState(List(team1, team2), ball)
     state.teams shouldEqual List(team1, team2)
     state.ball shouldEqual ball

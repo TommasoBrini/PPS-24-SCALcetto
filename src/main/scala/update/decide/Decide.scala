@@ -1,4 +1,4 @@
-package update
+package update.decide
 
 import model.Model.*
 
@@ -6,7 +6,7 @@ import scala.util.Random
 
 object Decide:
 
-  def takeDecisions(state: SimulationState): SimulationState =
+  def takeDecisions(state: MatchState): MatchState =
     // players with ball -> decidePlayerControl()      -- MUNI
     // player in team with ball -> moveRandom()         --  TOM
     // players in team without ball -> decidePlayerMovement()  -- TOM

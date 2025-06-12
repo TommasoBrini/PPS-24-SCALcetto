@@ -1,13 +1,12 @@
-package update
+package update.act
 
+import config.FieldConfig
+import model.Model.*
+import model.Model.Action.*
+import model.Model.PlayerStatus.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-
-import model.Model.*
-import update.Act.*
-import model.Model.PlayerStatus.*
-import model.Model.Action.*
-import config.FieldConfig
+import Act.*
 
 class ActSpec extends AnyFlatSpec with Matchers:
   val defaultSpeed                = 1
@@ -17,9 +16,9 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val initial = Movement.still
     val player  = Player(0, Position(0, 0), noControl, Some(Move(defaultDirection)), Movement.still)
     val team    = Team(0, List(player))
-    val state   = SimulationState(List(team), Ball(Position(0, 0), Movement.still))
+    val state   = MatchState(List(team), Ball(Position(0, 0), Movement.still))
 
-    act(state).teams.flatMap(_.players)
+    executeAction(state).teams.flatMap(_.players)
       .forall(_.movement == Movement(defaultDirection, defaultSpeed)) should be(true)
 
   it should "update ball movement if someone hits it" in:
@@ -27,9 +26,9 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val ball     = Ball(position, Movement.still)
     val player   = Player(0, position, ballControl, Some(Hit(defaultDirection, defaultSpeed)), Movement.still)
     val team     = Team(0, List(player))
-    val state    = SimulationState(List(team), Ball(Position(0, 0), Movement.still))
+    val state    = MatchState(List(team), Ball(Position(0, 0), Movement.still))
 
-    act(state).ball.movement should be(Movement(defaultDirection, defaultSpeed))
+    executeAction(state).ball.movement should be(Movement(defaultDirection, defaultSpeed))
 
   "A team" should "move when he has to" in:
     val initial = Position(0, 0)
