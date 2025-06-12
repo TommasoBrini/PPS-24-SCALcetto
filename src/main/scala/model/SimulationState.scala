@@ -30,8 +30,13 @@ object Model:
       position: Position,
       status: PlayerStatus,
       nextAction: Option[Action] = None,
-      movement: Movement
+      movement: Movement,
+      team: PlayerTeam
   )
+
+  enum PlayerTeam:
+    case TeamA
+    case TeamB
 
   case class Team(id: Int, players: List[Player])
 
