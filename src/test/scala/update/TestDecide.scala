@@ -8,20 +8,20 @@ import org.scalatest.matchers.should.Matchers
 class TestDecide extends AnyFlatSpec with Matchers:
 
   "Player in team with ball" should "take decision" in:
-    val player: Player = Player(1, Position(0, 0), PlayerStatus.teamControl, None, Movement(Direction.zero, 0))
+    val player: Player = Player(1, Position(0, 0), PlayerStatus.teamControl, None, Movement(Direction.none, 0))
     val newPlayer      = Decide.decideOfPlayerInTeamWithBall(player)
     newPlayer.nextAction.isDefined shouldBe true
 
   it should "set next action to Move" in:
-    val player: Player = Player(1, Position(0, 0), PlayerStatus.teamControl, None, Movement(Direction.zero, 0))
+    val player: Player = Player(1, Position(0, 0), PlayerStatus.teamControl, None, Movement(Direction.none, 0))
     val newPlayer      = Decide.decideOfPlayerInTeamWithBall(player)
-    val position       = newPlayer.nextAction.get.asInstanceOf[Move].target
+    val position       = newPlayer.nextAction.get.asInstanceOf[Move].direction
     newPlayer.nextAction.get shouldBe Move(position)
 
   it should "set correct target" in:
-    val player: Player  = Player(1, Position(0, 0), PlayerStatus.teamControl, None, Movement(Direction.zero, 0))
+    val player: Player  = Player(1, Position(0, 0), PlayerStatus.teamControl, None, Movement(Direction.none, 0))
     val newPlayer       = Decide.decideOfPlayerInTeamWithBall(player)
-    val position        = newPlayer.nextAction.get.asInstanceOf[Move].target
+    val position        = newPlayer.nextAction.get.asInstanceOf[Move].direction
     val differentX: Int = player.position.x - position.x
     val differentY: Int = player.position.y - position.y
     differentX should be <= 1
@@ -37,7 +37,7 @@ class TestDecide extends AnyFlatSpec with Matchers:
     )
 
     val team: Team             = Team(1, List(player1))
-    val ball: Ball             = Ball(Position(10, 10), Movement(Direction.zero, 0))
+    val ball: Ball             = Ball(Position(10, 10), Movement(Direction.none, 0))
     val state: SimulationState = SimulationState(List(team), ball)
 
     val updatedState = Decide.takeDecisions(state)
@@ -56,12 +56,14 @@ class TestDecide extends AnyFlatSpec with Matchers:
       movement = Movement(Direction(0, 0), 0)
     )
 
-    val team  = Team(2, List(noControlPlayer))
-    val ball  = Ball(Position(10, 10), Movement(Direction(0, 0), 0))
-    val state = SimulationState(List(team), ball)
+    val team         = Team(2, List(noControlPlayer))
+    val ballPosition = Position(10, 10)
+    val ball         = Ball(ballPosition, Movement(Direction(0, 0), 0))
+    val state        = SimulationState(List(team), ball)
 
     val newState      = Decide.takeDecisions(state)
     val updatedPlayer = newState.teams.head.players.head
     updatedPlayer.nextAction.isDefined shouldBe true
     updatedPlayer.nextAction.get.isInstanceOf[Action.Move] shouldBe true
-    updatedPlayer.nextAction.get.asInstanceOf[Action.Move].target shouldBe Position(10, 10)
+    updatedPlayer.nextAction.get.asInstanceOf[Action.Move]
+      .direction shouldBe noControlPlayer.position.getDirection(ballPosition)
