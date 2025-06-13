@@ -28,7 +28,7 @@ class TestGameInitializer extends AnyFlatSpec with Matchers:
     }
 
   it should "spawn team2 players in right half of the field" in:
-    state.teams(1).players.foreach { player =>
+    state.teams(1).players.filter(_.status == PlayerStatus.teamControl).foreach { player =>
       player.position.x should be > fieldWidth * scale / 2
       player.position.y should be >= 0
       player.position.y should be <= fieldHeight * scale - 2
@@ -39,7 +39,12 @@ class TestGameInitializer extends AnyFlatSpec with Matchers:
     all(allPlayers.map(_.position.y)) should be > 0
     all(allPlayers.map(_.position.y)) should be < fieldHeight * scale
 
-  it should "set all players to noControl status" in:
-    state.teams.flatMap(_.players).foreach { player =>
+  it should "set all players in team A to noControl status" in:
+    state.teams.head.players.foreach { player =>
       player.status shouldBe PlayerStatus.noControl
+    }
+
+  it should "set all players in team B to teamControl or ballControl status" in:
+    state.teams(1).players.foreach { player =>
+      player.status should (be(PlayerStatus.teamControl) or be(PlayerStatus.ballControl))
     }
