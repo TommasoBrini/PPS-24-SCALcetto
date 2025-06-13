@@ -4,7 +4,6 @@ import config.FieldConfig
 import model.Model
 import model.Model.*
 import model.Model.Action.*
-import model.Model.PlayerStatus.ballControl
 
 object Act:
   def isAGoal(state: MatchState): Boolean = false
@@ -15,23 +14,24 @@ object Act:
   private[update] def updateMovements(state: MatchState): MatchState =
     MatchState(
       state.teams.map(updateMovement),
-      updateMovement(state.ball, state.teams.flatMap(_.players).find(_.status == ballControl))
+      updateMovement(state.ball, state.teams.flatMap(_.players).find(_.hasBall))
     )
 
   private[update] def updateMovement(team: Team): Team =
     team.copy(players = team.players.map(updateMovement))
 
   private[update] def updateMovement(player: Player): Player =
-    val movement = player.nextAction match
-      case Some(Move(direction, FieldConfig.playerSpeed)) => Movement(direction, FieldConfig.playerSpeed)
-      case Some(Hit(_, _))                                => Movement.still
-      case _                                              => player.movement
-    player.copy(movement = movement)
+    player.nextAction match
+      case Some(Move(direction, FieldConfig.playerSpeed)) =>
+        player.copy(movement = Movement(direction, FieldConfig.playerSpeed))
+      case Some(Hit(_, _))  => player.copy(movement = Movement.still, ball = None)
+      case Some(Take(ball)) => player.copy(movement = Movement.still, ball = Some(ball))
+      case _                => player
 
   private[update] def updateMovement(ball: Ball, playerInControl: Option[Player]): Ball =
     val movement = playerInControl match
-      case Some(Player(_, _, _, Some(Hit(direction, speed)), _)) => Movement(direction, speed)
-      case Some(player @ Player(_, _, _, Some(Move(_, _)), _))   => player.movement
+      case Some(Player(_, _, _, _, Some(Hit(direction, speed)))) => Movement(direction, speed)
+      case Some(Player(_, _, movement, _, Some(Move(_, _))))     => movement
       case _                                                     => ball.movement
     ball.copy(movement = movement)
 

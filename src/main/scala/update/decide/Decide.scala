@@ -14,11 +14,12 @@ object Decide:
     // players in team without ball -> decidePlayerMovement()  -- TOM
     state.copy(
       teams = state.teams.map { team =>
+        val teamPossession = team.players.exists(_.ball.isDefined)
         team.copy(players = team.players.map { player =>
-          player.status match
-            case PlayerStatus.teamControl => decideOfPlayerInTeamWithBall(player)
-            case PlayerStatus.noControl   => decideOfPlayerWithNoControl(player, state.ball.position)
-            case PlayerStatus.ballControl => decidePlayerControl(player, state.teams)
+          player.ball match
+            case Some(_)             => decidePlayerControl(player, state.teams)
+            case _ if teamPossession => decideOfPlayerInTeamWithBall(player)
+            case _                   => player.copy(nextAction = decideOfPlayerWithNoControl(player, state.ball))
         })
       }
     )
@@ -67,7 +68,9 @@ object Decide:
     )
   }
 
-  private[update] def decideOfPlayerWithNoControl(player: Player, ballPosition: Position): Player =
-    player.copy(
-      nextAction = Some(Action.Move(player.position.getDirection(ballPosition), playerSpeed))
-    )
+  private[update] def decideOfPlayerWithNoControl(player: Player, ball: Ball): Option[Action] =
+    val dx = Math.abs(player.position.x - ball.position.x)
+    val dy = Math.abs(player.position.y - ball.position.y)
+    if dx < FieldConfig.takeBallRange && dy < FieldConfig.takeBallRange
+    then Some(Action.Take(ball))
+    else Some(Action.Move(player.position.getDirection(ball.position), playerSpeed))

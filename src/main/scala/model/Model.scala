@@ -23,30 +23,31 @@ object Model:
   def signum(i: Int): Int = if i < 0 then -1 else if i > 0 then 1 else 1
   extension (p: Position)
     def getDirection(to: Position): Direction =
-      val dx = to.x - p.x
-      val dy = to.y - p.y
-      (signum(dx), signum(dy))
+      val dx = to.x.toDouble - p.x
+      val dy = to.y.toDouble - p.y
+      (dx / Math.hypot(dx, dy), dy / Math.hypot(dx, dy))
 
     @targetName("applyMovement")
     def +(m: Movement): Position =
-      Position((p.x + m.direction.x * m.speed).toInt, (p.y + m.direction.y * m.speed).toInt)
+      val dx = m.direction.x * m.speed
+      val dy = m.direction.y * m.speed
+      val x  = (p.x + dx).round.toInt
+      val y  = (p.y + dy).round.toInt
+      Position(x, y)
 
   enum Action:
     case Move(direction: Direction, speed: Int)
     case Hit(direction: Direction, speed: Int)
-
-  enum PlayerStatus:
-    case ballControl
-    case teamControl
-    case noControl
+    case Take(ball: Ball)
 
   case class Player(
       id: Int,
       position: Position,
-      status: PlayerStatus,
-      nextAction: Option[Action] = None,
-      movement: Movement
-  )
+      movement: Movement,
+      ball: Option[Ball] = None,
+      nextAction: Option[Action] = None
+  ):
+    def hasBall: Boolean = ball.isDefined
 
   enum PlayerTeam:
     case TeamA

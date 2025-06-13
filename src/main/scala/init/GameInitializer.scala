@@ -11,9 +11,9 @@ object GameInitializer:
   private val realFieldHeight: Int = fieldHeight * scale
 
   def initialSimulationState(): MatchState =
-    val teamsA: Team = createTeam(1, true)
-    val teamsB: Team = createTeamWithBall(2, false)
     val ball: Ball   = Ball(Position(realFieldWidth / 2, realFieldHeight / 2), Movement(Direction(0, 0), 0))
+    val teamsA: Team = createTeam(1, true)
+    val teamsB: Team = createTeamWithBall(2, false, ball)
     MatchState(List(teamsA, teamsB), ball)
 
   private def createTeam(id: Int, isLeftSide: Boolean): Team =
@@ -26,14 +26,14 @@ object GameInitializer:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),
-        status = PlayerStatus.noControl,
+        ball = None,
         nextAction = None,
         movement = Movement(Direction(0, 0), 0)
       )
     }.toList
     Team(id, players)
 
-  private def createTeamWithBall(id: Int, isLeftSide: Boolean): Team =
+  private def createTeamWithBall(id: Int, isLeftSide: Boolean, b: Ball): Team =
     val minX: Int = if isLeftSide then 1 else realFieldWidth / 2 + 1
     val maxX: Int = if isLeftSide then realFieldWidth / 2 - 1 else realFieldWidth - 2
 
@@ -43,7 +43,7 @@ object GameInitializer:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),
-        status = PlayerStatus.teamControl,
+        ball = None,
         nextAction = None,
         movement = Movement(Direction(0, 0), 0)
       )
@@ -51,7 +51,7 @@ object GameInitializer:
     val ballPlayer: Player = Player(
       id = id * 10 + 22, // TODO change this 22, its ugly
       position = Position(realFieldWidth / 2, realFieldHeight / 2),
-      status = PlayerStatus.ballControl,
+      ball = Some(b),
       nextAction = None,
       movement = Movement(Direction(0, 0), 0)
     )
