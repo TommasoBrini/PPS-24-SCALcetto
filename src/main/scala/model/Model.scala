@@ -7,7 +7,6 @@ object Model:
   opaque type Position = (Int, Int)
   object Position:
     def apply(x: Int, y: Int): Position = (x, y)
-    def apply(p: Position): Position    = (p.x, p.y)
   extension (p: Position)
     def x: Int = p._1
     def y: Int = p._2
