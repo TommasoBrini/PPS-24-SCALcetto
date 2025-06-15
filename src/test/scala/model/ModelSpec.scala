@@ -4,7 +4,7 @@ import Model.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class TestModel extends AnyFlatSpec with Matchers:
+class ModelSpec extends AnyFlatSpec with Matchers:
 
   private val initial_x_position: Int = 3
   private val initial_y_position: Int = 4
