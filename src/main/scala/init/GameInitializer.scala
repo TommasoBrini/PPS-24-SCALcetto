@@ -49,7 +49,7 @@ object GameInitializer:
       )
     }.toList
     val ballPlayer: Player = Player(
-      id = id * 10 + 22, // TODO change this 22, its ugly
+      id = id * 10 + 22,
       position = Position(realFieldWidth / 2, realFieldHeight / 2),
       ball = Some(b),
       nextAction = None,
