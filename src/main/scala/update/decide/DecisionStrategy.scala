@@ -3,19 +3,44 @@ package update.decide
 import config.FieldConfig
 import model.Model.{Action, Ball, Direction, MatchState, Player, Team}
 
+import scala.swing.PasswordField
 import scala.util.Random
 
 trait DecisionStrategy:
   def decide(player: Player, matchState: MatchState): Player
 
 object BallPlayerStrategy extends DecisionStrategy:
+  // TODO this should not be here
+  enum BallPlayerAction:
+    case Pass
+    case Move
+    case Shoot
+
+  private def passSuccessRate(player: Player, matchState: MatchState): Double =
+    1.0
+  private def shootSuccessRate(player: Player, matchState: MatchState): Double =
+    Random.between(0.0, 1.0)
+  private def moveSuccessRate(player: Player, matchState: MatchState): Double =
+    Random.between(0.0, 1.0)
   private def getClosestTeammate(ballPlayer: Player, teams: List[Team]): Player =
     teams.filter(_.players.contains(ballPlayer)).head.players.filter(_.id != ballPlayer.id).head
 
   def decide(player: Player, matchState: MatchState): Player =
     val receiver: Player = getClosestTeammate(player, matchState.teams)
+    val successRateMap: Map[BallPlayerAction, (Player, MatchState) => Double] =
+      Map(
+        BallPlayerAction.Pass  -> passSuccessRate,
+        BallPlayerAction.Move  -> moveSuccessRate,
+        BallPlayerAction.Shoot -> shootSuccessRate
+      )
+    val bestAction: BallPlayerAction = successRateMap.maxBy(_._2(player, matchState))._1
+    val action: Some[Action] = bestAction match
+      case bestAction if bestAction == BallPlayerAction.Pass =>
+        Some(Action.Hit(player.position.getDirection(receiver.position), FieldConfig.ballSpeed))
+      case bestAction if bestAction == BallPlayerAction.Shoot => Some(null) // garbage
+      case _                                                  => Some(null) // garbage
     player.copy(
-      nextAction = Some(Action.Hit(player.position.getDirection(receiver.position), FieldConfig.ballSpeed))
+      nextAction = action
     )
 
 object TeamPossesionStrategy extends DecisionStrategy:
