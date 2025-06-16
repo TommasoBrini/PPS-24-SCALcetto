@@ -1,7 +1,7 @@
 package init
 
 import config.FieldConfig.*
-import model.Model.*
+import model.Match.*
 
 import scala.util.Random
 

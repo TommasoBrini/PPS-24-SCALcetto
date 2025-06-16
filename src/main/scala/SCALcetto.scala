@@ -1,4 +1,4 @@
-import model.Model.*
+import model.Match.*
 import SimulationLoop.*
 import init.GameInitializer
 

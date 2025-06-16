@@ -1,6 +1,6 @@
 package update
 
-import model.Model.*
+import model.Match.*
 import Event.*
 import init.GameInitializer.initialSimulationState
 import decide.Decide.*

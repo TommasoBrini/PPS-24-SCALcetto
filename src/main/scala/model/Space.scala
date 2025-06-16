@@ -2,7 +2,7 @@ package model
 
 import scala.annotation.targetName
 
-object Model:
+object Space:
 
   opaque type Position = (Int, Int)
   object Position:
@@ -12,18 +12,13 @@ object Model:
     def y: Int = p._2
 
   opaque type Direction = (Double, Double)
-
   object Direction:
-    def apply(p: Position): Direction    = (p.x, p.y)
-    def apply(x: Int, y: Int): Direction = (x, y)
-    def none: Direction                  = (0, 0)
+    def apply(x: Int, y: Int): Direction       = (x, y)
+    def apply(x: Double, y: Double): Direction = (x, y)
+    def none: Direction                        = (0, 0)
   extension (d: Direction)
     def x: Double = d._1
     def y: Double = d._2
-
-  case class Movement(direction: Direction, speed: Int)
-  object Movement:
-    def still: Movement = Movement(Direction.none, 0)
 
   extension (p: Position)
     def getDirection(to: Position): Direction =
@@ -31,6 +26,11 @@ object Model:
       val dy = to.y.toDouble - p.y
       (dx / Math.hypot(dx, dy), dy / Math.hypot(dx, dy))
 
+  case class Movement(direction: Direction, speed: Int)
+  object Movement:
+    def still: Movement = Movement(Direction.none, 0)
+
+  extension (p: Position)
     @targetName("applyMovement")
     def +(m: Movement): Position =
       val dx = m.direction.x * m.speed
