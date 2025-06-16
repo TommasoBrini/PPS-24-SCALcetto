@@ -4,7 +4,12 @@ import scala.annotation.targetName
 
 object Model:
 
-  case class Position(x: Int, y: Int)
+  opaque type Position = (Int, Int)
+  object Position:
+    def apply(x: Int, y: Int): Position = (x, y)
+  extension (p: Position)
+    def x: Int = p._1
+    def y: Int = p._2
 
   opaque type Direction = (Double, Double)
 
@@ -20,7 +25,6 @@ object Model:
   object Movement:
     def still: Movement = Movement(Direction.none, 0)
 
-  def signum(i: Int): Int = if i < 0 then -1 else if i > 0 then 1 else 1
   extension (p: Position)
     def getDirection(to: Position): Direction =
       val dx = to.x.toDouble - p.x
@@ -48,10 +52,6 @@ object Model:
       nextAction: Option[Action] = None
   ):
     def hasBall: Boolean = ball.isDefined
-
-  enum PlayerTeam:
-    case TeamA
-    case TeamB
 
   case class Team(id: Int, players: List[Player])
 
