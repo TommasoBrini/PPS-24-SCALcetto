@@ -1,0 +1,13 @@
+figure {
+  text-align: center;
+}
+figcaption {
+  font-size: 0.9em;
+  color: #888;
+}
+img + em {
+  display: block;
+  text-align: center;
+  font-size: 0.9em;
+  color: #888;
+}
