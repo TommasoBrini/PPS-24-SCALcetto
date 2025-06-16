@@ -4,9 +4,9 @@
 ![Release](https://github.com/TommasoBrini/PPS-24-SCALcetto/actions/workflows/Release.yml/badge.svg)
 
 ## COVERAGE
-MAIN ![Coverage](https://codecov.io/gh/TommasoBrini/PPS-24-SCALcetto/branch/main/graph/badge.svg)
+MAIN [![codecov](https://codecov.io/gh/TommasoBrini/PPS-24-SCALcetto/branch/main/graph/badge.svg?token=8MS683R0Q7)](https://codecov.io/gh/TommasoBrini/PPS-24-SCALcetto)
 
-DEVELOP ![Coverage](https://codecov.io/gh/TommasoBrini/PPS-24-SCALcetto/branch/develop/graph/badge.svg)
+DEVELOP [![codecov](https://codecov.io/gh/TommasoBrini/PPS-24-SCALcetto/branch/develop/graph/badge.svg?token=8MS683R0Q7)](https://codecov.io/gh/TommasoBrini/PPS-24-SCALcetto)
 
 ## INFO
 ![Version](https://img.shields.io/github/v/release/TommasoBrini/PPS-24-SCALcetto?include_prereleases)
