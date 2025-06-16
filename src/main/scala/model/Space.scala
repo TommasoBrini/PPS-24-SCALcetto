@@ -39,29 +39,26 @@ object Space:
       val y  = (p.y + dy).round.toInt
       Position(x, y)
 
-  enum Action:
-    case Move(direction: Direction, speed: Int)
-    case Hit(direction: Direction, speed: Int)
-    case Take(ball: Ball)
+  enum Bounce:
+    case Vertical, Horizontal, Both
 
-  case class Player(
-      id: Int,
-      position: Position,
-      movement: Movement,
-      ball: Option[Ball] = None,
-      nextAction: Option[Action] = None
-  ):
-    def hasBall: Boolean = ball.isDefined
+  extension (i: Int)
+    def isOutOfBound(bound: Int): Boolean = i < 0 || i > bound
 
-  case class Team(id: Int, players: List[Player])
+  import Bounce.*
+  extension (p: Position)
+    def isOutOfBound(widthBound: Int, heightBound: Int): Boolean =
+      p.x.isOutOfBound(widthBound) || p.y.isOutOfBound(heightBound)
+    def getBounce(widthBound: Int, heightBound: Int): Bounce =
+      if p.x.isOutOfBound(widthBound) && p.y.isOutOfBound(heightBound) then Both
+      else if p.x.isOutOfBound(widthBound) then Horizontal
+      else Vertical
 
-  case class Ball(position: Position, movement: Movement)
+  extension (d: Direction)
+    def bounce(bounce: Bounce): Direction = bounce match
+      case Both       => Direction(-d.x, -d.y)
+      case Horizontal => Direction(-d.x, d.y)
+      case Vertical   => Direction(d.x, -d.y)
 
-  case class MatchState(teams: List[Team], ball: Ball)
-
-  enum Event:
-    case StepEvent
-    case DecideEvent
-    case ActEvent
-    case GoalEvent
-    case RestartEvent
+  extension (m: Movement)
+    def bounce(bounce: Bounce): Movement = m.copy(direction = m.direction.bounce(bounce))

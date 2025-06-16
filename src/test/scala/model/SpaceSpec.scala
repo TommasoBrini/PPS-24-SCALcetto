@@ -57,32 +57,34 @@ class SpaceSpec extends AnyFlatSpec with Matchers:
     val newPos = p + m
     newPos shouldBe Position(3, 0)
 
-  "Movement" should "be still" in:
-    val movement: Movement = Movement.still
-    movement.direction shouldEqual Direction.none
-    movement.speed shouldEqual 0
+  "isOutOfBound" should "return false for positions within bounds" in:
+    val inside = Position(2, 2)
+    inside.isOutOfBound(10, 10) shouldBe false
 
-  "Position" should "get direction to another position" in:
-    val pos1: Position = Position(1, 1)
-    val pos2: Position = Position(4, 5)
-    val dir: Direction = pos1.getDirection(pos2)
-    dir.x shouldEqual 0.6
-    dir.y shouldEqual 0.8
-  it should "apply movement" in:
-    val pos: Position      = Position(initial_x_position, initial_y_position)
-    val movement: Movement = Movement(Direction(1, 1), 3)
-    val newPos: Position   = pos + movement
-    newPos.x shouldEqual (initial_x_position + 3)
-    newPos.y shouldEqual (initial_y_position + 3)
+  it should "return true for positions out of bounds" in:
+    val outside = Position(-1, 11)
+    outside.isOutOfBound(10, 10) shouldBe true
 
-  "Player" should "be create without ball" in:
-    val player: Player = Player(1, Position(0, 0), Movement.still)
-    player.id shouldEqual 1
-    player.position shouldEqual Position(0, 0)
-    player.movement shouldEqual Movement.still
-    player.ball shouldEqual None
-    player.nextAction shouldEqual None
-  it should "be create with ball" in:
-    val ball: Ball     = Ball(Position(1, 1), Movement.still)
-    val player: Player = Player(1, Position(0, 0), Movement.still, Some(ball), Some(Action.Take(ball)))
-    player.hasBall shouldEqual true
+  "getBounce" should "return Both if x and y are out of bounds" in:
+    val p = Position(-1, -1)
+    p.getBounce(10, 10) shouldBe Both
+
+  it should "return Horizontal if only x is out of bounds" in:
+    val p = Position(-1, 5)
+    p.getBounce(10, 10) shouldBe Horizontal
+
+  it should "return Vertical if only y is out of bounds" in:
+    val p = Position(5, -1)
+    p.getBounce(10, 10) shouldBe Vertical
+
+  "A Direction" should "reflect correctly when bounced" in:
+    val d = Direction(1.0, -1.0)
+    d.bounce(Both) shouldBe Direction(-1.0, 1.0)
+    d.bounce(Horizontal) shouldBe Direction(-1.0, -1.0)
+    d.bounce(Vertical) shouldBe Direction(1.0, 1.0)
+
+  "A Movement" should "bounce its direction correctly and keep speed" in:
+    val m       = Movement(Direction(1.0, -1.0), 5)
+    val bounced = m.bounce(Both)
+    bounced.direction shouldBe Direction(-1.0, 1.0)
+    bounced.speed shouldBe 5

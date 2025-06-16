@@ -8,6 +8,9 @@ import model.Match.Event.*
 object Act:
   def isAGoal(state: MatchState): Boolean = false
 
+  def isBallOut(state: MatchState): Boolean =
+    state.ball.position.isOutOfBound(FieldConfig.widthBound, FieldConfig.heightBound)
+
   def executeAction(state: MatchState): MatchState =
     move(updateMovements(state))
 

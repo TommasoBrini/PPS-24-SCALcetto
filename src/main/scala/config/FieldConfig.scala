@@ -1,10 +1,12 @@
 package config
 
 object FieldConfig:
+  val scale: Int           = 10
   val fieldWidth: Int      = 70
   val fieldHeight: Int     = 40
+  val widthBound: Int      = fieldWidth * scale
+  val heightBound: Int     = fieldHeight * scale
   val teamSize: Int        = 5
-  val scale: Int           = 10
   val ballSize: Int        = 10
   val playerSize: Int      = 10
   val InfoPanelHeight: Int = 50
