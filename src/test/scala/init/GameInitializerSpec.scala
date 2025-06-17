@@ -1,7 +1,7 @@
 package init
 
 import config.FieldConfig.*
-import model.Model.MatchState
+import model.Match.MatchState
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 

@@ -1,6 +1,6 @@
 package update.decide
 
-import model.Model.*
+import model.Match.*
 
 object Decide:
 
@@ -12,10 +12,10 @@ object Decide:
     )
 
   private def strategySelector(player: Player, matchState: MatchState): Player =
-    val teamPossesion: Boolean =
+    val teamPossession: Boolean =
       matchState.teams.exists(team => team.players.exists(_.ball.isDefined) && team.players.contains(player))
     val strategy: DecisionStrategy = player match
       case player if player.ball.isDefined => BallPlayerStrategy
-      case player if teamPossesion         => TeamPossesionStrategy
+      case player if teamPossession        => TeamPossesionStrategy
       case _                               => NoControlStrategy
     strategy.decide(player, matchState)

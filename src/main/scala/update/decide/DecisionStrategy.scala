@@ -1,7 +1,7 @@
 package update.decide
 
 import config.FieldConfig
-import model.Model.{Action, Ball, Direction, MatchState, Player, Team}
+import model.Match.*
 
 import scala.swing.PasswordField
 import scala.util.Random

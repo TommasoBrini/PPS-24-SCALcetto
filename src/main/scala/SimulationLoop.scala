@@ -1,4 +1,4 @@
-import model.Model.*
+import model.Match.*
 import update.Update.*
 import view.View.SwingView
 

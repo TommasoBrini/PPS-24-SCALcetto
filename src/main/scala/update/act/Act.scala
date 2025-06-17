@@ -1,12 +1,15 @@
 package update.act
 
 import config.FieldConfig
-import model.Model
-import model.Model.*
-import model.Model.Action.*
+import model.Match.*
+import model.Match.Action.*
+import model.Match.Event.*
 
 object Act:
   def isAGoal(state: MatchState): Boolean = false
+
+  def isBallOut(state: MatchState): Boolean =
+    state.ball.position.isOutOfBound(FieldConfig.widthBound, FieldConfig.heightBound)
 
   def executeAction(state: MatchState): MatchState =
     move(updateMovements(state))

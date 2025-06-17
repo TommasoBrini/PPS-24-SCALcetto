@@ -3,8 +3,8 @@ package view
 import scala.swing.*
 import java.awt.{Color, Graphics2D}
 import config.FieldConfig.*
-import model.Model.MatchState
-import model.Model.Position
+import model.Match.MatchState
+import model.Match.Position
 
 object View:
 

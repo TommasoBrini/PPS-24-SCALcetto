@@ -2,8 +2,8 @@ package update.decide
 
 import config.FieldConfig
 import init.GameInitializer
-import model.Model.*
-import model.Model.Action.*
+import model.Match.*
+import model.Match.Action.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
