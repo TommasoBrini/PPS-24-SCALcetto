@@ -2,7 +2,7 @@ import model.Match.*
 import SimulationLoop.*
 import init.GameInitializer
 
-/** v1.0.0
+/** new version -> v1.0.0
   */
 
 @main def SCALcetto =
