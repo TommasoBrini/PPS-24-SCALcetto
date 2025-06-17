@@ -1,3 +1,13 @@
+## [1.0.0](https://github.com/TommasoBrini/PPS-24-SCALcetto/compare/v0.2.0...v1.0.0) (2025-06-17)
+
+### ⚠ BREAKING CHANGES
+
+* **release:** first release
+
+### Features
+
+* **release:** first release ([38a42d3](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/38a42d3ef8df9190544f85817beb70597d2299f3))
+
 # [0.2.0](https://github.com/TommasoBrini/PPS-24-SCALcetto/compare/v0.1.1...v0.2.0) (2025-06-17)
 
 
