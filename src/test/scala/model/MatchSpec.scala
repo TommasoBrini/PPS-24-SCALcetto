@@ -1,13 +1,9 @@
 package model
 
 import model.Match.*
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
-
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
-import model.Match.*
 import model.Space.*
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 class MatchSpec extends AnyFlatSpec with Matchers:
 
