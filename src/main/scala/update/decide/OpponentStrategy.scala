@@ -8,10 +8,12 @@ object OpponentStrategy extends DecisionStrategy:
     val ball: Ball = matchState.ball
     val dx: Int    = Math.abs(player.position.x - ball.position.x)
     val dy: Int    = Math.abs(player.position.y - ball.position.y)
-    val act: Action =
-      if dx < FieldConfig.takeBallRange && dy < FieldConfig.takeBallRange
-      then Action.Take(ball)
-      else Action.Move(player.position.getDirection(ball.position), FieldConfig.playerSpeed)
+    val nextAct: Action = player.nextAction match
+      case Action.Stopped(step) if step > 0 => player.nextAction
+      case _ =>
+        if dx < FieldConfig.takeBallRange && dy < FieldConfig.takeBallRange
+        then Action.Take(ball)
+        else Action.Move(player.position.getDirection(ball.position), FieldConfig.playerSpeed)
     player.copy(
-      nextAction = act
+      nextAction = nextAct
     )

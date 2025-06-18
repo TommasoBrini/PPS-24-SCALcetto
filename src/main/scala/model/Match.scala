@@ -6,10 +6,11 @@ object Match:
 
   export Space.*
   enum Action:
+    case Initial
+    case Stopped(remainingStep: Int)
     case Move(direction: Direction, speed: Int)
     case Hit(direction: Direction, speed: Int)
     case Take(ball: Ball)
-    case Initial
 
   case class Player(
       id: Int,

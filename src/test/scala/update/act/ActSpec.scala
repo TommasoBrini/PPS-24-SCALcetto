@@ -49,6 +49,12 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val player       = Player(0, Position(0, 0), lastMovement, None, action)
     updateMovement(player).movement should be(lastMovement)
 
+  it should "stand still if he is stopped" in:
+    val action = Action.Stopped(2)
+    val player = Player(0, Position(0, 0), Movement.still, None, action)
+    updateMovement(player).position should be(Position(0, 0))
+    updateMovement(player).nextAction should be(Action.Stopped(1))
+
   it should "move when he has to" in:
     val action = Action.Move(defaultDirection, FieldConfig.playerSpeed)
     val player = Player(0, Position(0, 0), Movement.still, None, action)
