@@ -2,40 +2,52 @@ package update.decide
 
 import config.FieldConfig
 import model.Match.*
+import model.Match.Action.*
 
 import scala.util.Random
 
+enum PlayerAction:
+  case Pass(from: Player, to: Player)
+  case Shoot(striker: Player, goal: Position)
+  case MoveToGoal(attacker: Player, goal: Position)
+
+  def toAction: Action = this match
+    case Pass(from, to)             => Hit(from.position.getDirection(to.position), FieldConfig.ballSpeed)
+    case Shoot(striker, goal)       => Hit(striker.position.getDirection(goal), FieldConfig.ballSpeed)
+    case MoveToGoal(attacker, goal) => Move(attacker.position.getDirection(goal), FieldConfig.playerSpeed)
+
+import PlayerAction.*
 trait DecisionStrategy:
   def decide(player: Player, matchState: MatchState): Player
 
 object BallPlayerStrategy extends DecisionStrategy:
 
-  private def passSuccessRate(action: Action, player: Player, matchState: MatchState): Double =
-    Random.between(0.5, 0.9)
-
-  private def shootSuccessRate(action: Action, player: Player, matchState: MatchState): Double =
-    Random.between(0.0, 1.0)
-
-  private def moveSuccessRate(action: Action, player: Player, matchState: MatchState): Double =
-    Random.between(0.0, 1.0)
-
   private def getClosestTeammate(ballPlayer: Player, teams: List[Team]): Player =
     teams.filter(_.players.contains(ballPlayer)).head.players.filter(_.id != ballPlayer.id).head
 
-  private def allPasses(player: Player, matchState: MatchState): List[Action] = ???
+  private def possiblePasses(player: Player, state: MatchState): List[PlayerAction] =
+    for
+      team     <- state.teams.filter(_.players.contains(player))
+      teammate <- team.players.filter(!_.equals(player))
+    yield Pass(player, teammate)
 
-  private def allMove(player: Player, matchState: MatchState): List[Action] = ???
+  private def possibleMoves(player: Player, matchState: MatchState): List[PlayerAction] = ???
 
-  private def allShoot(player: Player, matchState: MatchState): List[Action] = ???
+  private def possibleShots(player: Player, matchState: MatchState): List[PlayerAction] = ???
 
   private def calculateBestAction(player: Player, state: MatchState): Action =
+    val possibleActions = possiblePasses(player, state) ++
+      possibleMoves(player, state) ++ possibleShots(player, state)
+    type Rating = Double
+    val actionRatings: Map[PlayerAction, Rating] = possibleActions
+      .map(action => (action, calculateActionRating(action, player, state))).toMap
+    actionRatings.maxBy(_._2)._1.toAction
 
-    val successActions: Map[Action, (Action, Player, MatchState) => Double] =
-      allPasses(player, state).map((_, passSuccessRate)).toMap ++
-        allMove(player, state).map((_, moveSuccessRate)) ++
-        allShoot(player, state).map((_, shootSuccessRate))
-
-    successActions.maxBy(t => t._2(t._1, player, state))._1
+  private def calculateActionRating(action: PlayerAction, player: Player, state: MatchState): Double =
+    action match
+      case Pass(from, to)             => 1 / from.position.getDistance(to.position)
+      case Shoot(striker, goal)       => ???
+      case MoveToGoal(attacker, goal) => ???
 
   def decide(player: Player, state: MatchState): Player =
     player.copy(

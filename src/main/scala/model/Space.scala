@@ -8,8 +8,9 @@ object Space:
   object Position:
     def apply(x: Int, y: Int): Position = (x, y)
   extension (p: Position)
-    def x: Int = p._1
-    def y: Int = p._2
+    def x: Int                            = p._1
+    def y: Int                            = p._2
+    def getDistance(p2: Position): Double = Math.hypot(p2.x - p.x, p2.y - p.y)
 
   opaque type Direction = (Double, Double)
   object Direction:
@@ -22,8 +23,8 @@ object Space:
 
   extension (p: Position)
     def getDirection(to: Position): Direction =
-      val dx = to.x.toDouble - p.x
-      val dy = to.y.toDouble - p.y
+      val dx = to.x - p.x
+      val dy = to.y - p.y
       (dx / Math.hypot(dx, dy), dy / Math.hypot(dx, dy))
 
   case class Movement(direction: Direction, speed: Int)
