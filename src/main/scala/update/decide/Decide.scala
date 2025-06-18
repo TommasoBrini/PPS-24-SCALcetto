@@ -16,6 +16,6 @@ object Decide:
       matchState.teams.exists(team => team.players.exists(_.ball.isDefined) && team.players.contains(player))
     val strategy: DecisionStrategy = player match
       case player if player.ball.isDefined => BallPlayerStrategy
-      case player if teamPossession        => TeamPossesionStrategy
+      case player if teamPossession        => TeamPossessionStrategy
       case _                               => NoControlStrategy
     strategy.decide(player, matchState)
