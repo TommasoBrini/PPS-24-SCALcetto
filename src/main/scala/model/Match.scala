@@ -9,13 +9,14 @@ object Match:
     case Move(direction: Direction, speed: Int)
     case Hit(direction: Direction, speed: Int)
     case Take(ball: Ball)
+    case Initial
 
   case class Player(
       id: Int,
       position: Position,
       movement: Movement,
       ball: Option[Ball] = None,
-      nextAction: Option[Action] = None
+      nextAction: Action = Action.Initial
   ):
     def hasBall: Boolean = ball.isDefined
 

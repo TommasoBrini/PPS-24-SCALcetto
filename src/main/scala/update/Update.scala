@@ -27,4 +27,3 @@ object Update:
       MatchState(state.teams, state.ball.copy(movement = state.ball.movement.bounce(bounceType)))
     case GoalEvent    => update(state, RestartEvent)
     case RestartEvent => initialSimulationState()
-    case _            => state

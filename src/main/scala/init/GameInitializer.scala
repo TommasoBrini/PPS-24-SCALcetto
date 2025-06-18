@@ -26,8 +26,6 @@ object GameInitializer:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),
-        ball = None,
-        nextAction = None,
         movement = Movement(Direction(0, 0), 0)
       )
     }.toList
@@ -43,8 +41,6 @@ object GameInitializer:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),
-        ball = None,
-        nextAction = None,
         movement = Movement(Direction(0, 0), 0)
       )
     }.toList
@@ -52,7 +48,6 @@ object GameInitializer:
       id = id * 10 + 22,
       position = Position(realFieldWidth / 2, realFieldHeight / 2),
       ball = Some(b),
-      nextAction = None,
       movement = Movement(Direction(0, 0), 0)
     )
     Team(id, ballPlayer :: players)

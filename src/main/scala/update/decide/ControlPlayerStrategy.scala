@@ -28,9 +28,9 @@ object ControlPlayerStrategy extends DecisionStrategy:
       teammate <- team.players.filter(!_.equals(player))
     yield Pass(player, teammate)
 
-  private def possibleMoves(player: Player, matchState: MatchState): List[PlayerDecision] = Nil
+  private def possibleMoves(player: Player, matchState: MatchState): List[PlayerDecision] = Nil // todo
 
-  private def possibleShots(player: Player, matchState: MatchState): List[PlayerDecision] = Nil
+  private def possibleShots(player: Player, matchState: MatchState): List[PlayerDecision] = Nil // todo
 
   private def calculateBestAction(player: Player, state: MatchState): Action =
     val possibleActions = possiblePasses(player, state) ++
@@ -43,10 +43,10 @@ object ControlPlayerStrategy extends DecisionStrategy:
   private def calculateActionRating(action: PlayerDecision, player: Player, state: MatchState): Double =
     action match
       case Pass(from, to)             => 1 / from.position.getDistance(to.position)
-      case Shoot(striker, goal)       => ???
-      case MoveToGoal(attacker, goal) => ???
+      case Shoot(striker, goal)       => ??? // todo
+      case MoveToGoal(attacker, goal) => ??? // todo
 
   def decide(player: Player, state: MatchState): Player =
     player.copy(
-      nextAction = Some(calculateBestAction(player, state))
+      nextAction = calculateBestAction(player, state)
     )

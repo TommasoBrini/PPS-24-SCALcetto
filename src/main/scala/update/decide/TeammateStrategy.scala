@@ -12,5 +12,5 @@ object TeammateStrategy extends DecisionStrategy:
     val dy: Int   = Random.between(-1, 2)
     val direction = Direction(dx, dy)
     player.copy(
-      nextAction = Some(Action.Move(direction, FieldConfig.playerSpeed))
+      nextAction = Action.Move(direction, FieldConfig.playerSpeed)
     )
