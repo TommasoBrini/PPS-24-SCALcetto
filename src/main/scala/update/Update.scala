@@ -4,6 +4,7 @@ import model.Match.*
 import Event.*
 import init.GameInitializer.initialSimulationState
 import decide.Decide.*
+import validate.Validate.*
 import act.Act.{executeAction, isAGoal, isBallOut}
 import config.FieldConfig
 import config.FieldConfig.{heightBound, widthBound}
@@ -15,7 +16,10 @@ object Update:
   def update(state: MatchState, event: Event): MatchState = event match
     case StepEvent => update(state, DecideEvent)
     case DecideEvent =>
-      val newState: MatchState = takeDecisions(state)
+      val newState: MatchState = decide(state)
+      update(newState, ValidateEvent)
+    case ValidateEvent =>
+      val newState: MatchState = validate(state)
       update(newState, ActEvent)
     case ActEvent =>
       val newState: MatchState = executeAction(state)

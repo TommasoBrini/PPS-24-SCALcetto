@@ -35,9 +35,9 @@ object Act:
 
   private[update] def updateMovement(ball: Ball, playerInControl: Option[Player]): Ball =
     val movement = playerInControl match
-      case Some(Player(_, _, _, _, Hit(direction, speed))) => Movement(direction, speed)
-      case Some(Player(_, _, movement, _, Move(_, _)))     => movement
-      case _                                               => ball.movement
+      case Some(Player(_, _, _, _, Hit(direction, speed), _)) => Movement(direction, speed)
+      case Some(Player(_, _, movement, _, Move(_, _), _))     => movement
+      case _                                                  => ball.movement
     ball.copy(movement = movement)
 
   private[update] def move(state: MatchState): MatchState =

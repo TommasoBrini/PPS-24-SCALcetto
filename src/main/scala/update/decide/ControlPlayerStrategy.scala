@@ -46,7 +46,5 @@ object ControlPlayerStrategy extends DecisionStrategy:
       case Shoot(striker, goal)       => ??? // todo
       case MoveToGoal(attacker, goal) => ??? // todo
 
-  def decide(player: Player, state: MatchState): Player =
-    player.copy(
-      nextAction = calculateBestAction(player, state)
-    )
+  def decide(player: Player, state: MatchState): Action =
+    calculateBestAction(player, state)

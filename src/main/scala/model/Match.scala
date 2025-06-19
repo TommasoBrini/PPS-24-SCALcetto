@@ -1,6 +1,7 @@
 package model
 
 import Space.*
+import model.Match.Action.Initial
 
 object Match:
 
@@ -17,7 +18,8 @@ object Match:
       position: Position,
       movement: Movement,
       ball: Option[Ball] = None,
-      nextAction: Action = Action.Initial
+      nextAction: Action = Action.Initial,
+      decidedAction: Action = Initial
   ):
     def hasBall: Boolean = ball.isDefined
 
@@ -30,6 +32,7 @@ object Match:
   enum Event:
     case StepEvent
     case DecideEvent
+    case ValidateEvent
     case ActEvent
     case BallOutEvent
     case GoalEvent

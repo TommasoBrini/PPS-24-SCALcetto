@@ -4,7 +4,7 @@ import model.Match.*
 
 object Decide:
 
-  def takeDecisions(state: MatchState): MatchState =
+  def decide(state: MatchState): MatchState =
     state.copy(
       teams = state.teams.map { team =>
         team.copy(players = team.players.map(player => strategySelector(player, state)))
@@ -18,4 +18,4 @@ object Decide:
       case player if player.ball.isDefined => ControlPlayerStrategy
       case player if teamPossession        => TeammateStrategy
       case _                               => OpponentStrategy
-    strategy.decide(player, matchState)
+    player.copy(decidedAction = strategy.decide(player, matchState))
