@@ -28,7 +28,7 @@ object GameInitializer:
         id = id * 10 + i,
         position = Position(posX, posY),
         movement = Movement(Direction(0, 0), 0),
-        decidedAction = Initial
+        decision = Decision.Initial
       )
     }.toList
     Team(id, players)
@@ -44,7 +44,7 @@ object GameInitializer:
         id = id * 10 + i,
         position = Position(posX, posY),
         movement = Movement(Direction(0, 0), 0),
-        decidedAction = Initial
+        decision = Decision.Initial
       )
     }.toList
     val ballPlayer: Player = Player(
@@ -52,6 +52,6 @@ object GameInitializer:
       position = Position(realFieldWidth / 2, realFieldHeight / 2),
       ball = Some(b),
       movement = Movement(Direction(0, 0), 0),
-      decidedAction = Initial
+      decision = Decision.Initial
     )
     Team(id, ballPlayer :: players)

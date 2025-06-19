@@ -10,8 +10,7 @@ object Validate {
   def validate(team: Team): Team =
     Team(team.id, team.players.map(validate))
 
-  def validate(player: Player): Player = player.decidedAction match
-    case Hit(_, _) => player.copy(nextAction = player.decidedAction)
-    case _         => player.copy(nextAction = player.decidedAction)
+  def validate(player: Player): Player = player.decision match
+    case _ => player.copy(nextAction = player.decision.toAction)
 
 }

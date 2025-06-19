@@ -3,8 +3,6 @@ package update.act
 import config.FieldConfig
 import model.Match.{Action, *}
 import model.Match.Action.*
-import model.Match.Event.*
-
 object Act:
   def isAGoal(state: MatchState): Boolean = false
 

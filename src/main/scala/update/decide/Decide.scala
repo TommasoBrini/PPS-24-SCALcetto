@@ -18,4 +18,4 @@ object Decide:
       case player if player.ball.isDefined => ControlPlayerStrategy
       case player if teamPossession        => TeammateStrategy
       case _                               => OpponentStrategy
-    player.copy(decidedAction = strategy.decide(player, matchState))
+    player.copy(decision = strategy.decide(player, matchState))
