@@ -17,3 +17,4 @@ object FieldConfig:
   val playerSpeed: Int     = 1
   val ballSpeed: Int       = 3
   val takeBallRange: Int   = 10
+  val stoppedSteps: Int    = 10

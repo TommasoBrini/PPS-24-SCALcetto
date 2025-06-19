@@ -16,7 +16,7 @@ class MatchSpec extends AnyFlatSpec with Matchers:
     player.position shouldBe pos
     player.movement shouldBe mov
     player.ball shouldBe None
-    player.nextAction shouldBe None
+    player.nextAction shouldBe Action.Initial
 
   it should "correctly report hasBall when carrying a ball" in:
     val ball              = Ball(Position(5, 5), Movement(Direction.none, 0))

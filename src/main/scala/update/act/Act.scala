@@ -1,7 +1,7 @@
 package update.act
 
 import config.FieldConfig
-import model.Match.*
+import model.Match.{Action, *}
 import model.Match.Action.*
 import model.Match.Event.*
 
@@ -25,17 +25,19 @@ object Act:
 
   private[update] def updateMovement(player: Player): Player =
     player.nextAction match
-      case Some(Move(direction, FieldConfig.playerSpeed)) =>
+      case Move(direction, FieldConfig.playerSpeed) =>
         player.copy(movement = Movement(direction, FieldConfig.playerSpeed))
-      case Some(Hit(_, _))  => player.copy(movement = Movement.still, ball = None)
-      case Some(Take(ball)) => player.copy(movement = Movement.still, ball = Some(ball))
-      case _                => player
+      case Hit(_, _) =>
+        player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(FieldConfig.stoppedSteps))
+      case Take(ball)    => player.copy(movement = Movement.still, ball = Some(ball))
+      case Stopped(step) => player.copy(nextAction = Stopped(step - 1))
+      case _             => player
 
   private[update] def updateMovement(ball: Ball, playerInControl: Option[Player]): Ball =
     val movement = playerInControl match
-      case Some(Player(_, _, _, _, Some(Hit(direction, speed)))) => Movement(direction, speed)
-      case Some(Player(_, _, movement, _, Some(Move(_, _))))     => movement
-      case _                                                     => ball.movement
+      case Some(Player(_, _, _, _, Hit(direction, speed))) => Movement(direction, speed)
+      case Some(Player(_, _, movement, _, Move(_, _)))     => movement
+      case _                                               => ball.movement
     ball.copy(movement = movement)
 
   private[update] def move(state: MatchState): MatchState =
