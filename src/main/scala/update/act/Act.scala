@@ -4,11 +4,6 @@ import config.FieldConfig
 import model.Match.{Action, *}
 import model.Match.Action.*
 object Act:
-  def isAGoal(state: MatchState): Boolean = false
-
-  def isBallOut(state: MatchState): Boolean =
-    state.ball.position.isOutOfBound(FieldConfig.widthBound, FieldConfig.heightBound)
-
   def executeAction(state: MatchState): MatchState =
     move(updateMovements(state))
 
@@ -49,3 +44,8 @@ object Act:
 
   private[update] def move(ball: Ball): Ball =
     ball.copy(position = ball.position + ball.movement)
+
+  def isAGoal(state: MatchState): Boolean = false
+
+  def isBallOut(state: MatchState): Boolean =
+    state.ball.position.isOutOfBound(FieldConfig.widthBound, FieldConfig.heightBound)
