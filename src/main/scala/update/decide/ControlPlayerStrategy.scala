@@ -17,9 +17,6 @@ object ControlPlayerStrategy extends DecisionStrategy:
         possiblePasses(player, state) ++
           possibleMoves(player, state) ++ possibleShots(player, state)
 
-    /*
-    val possibleActions = possiblePasses(player, state) ++
-      possibleMoves(player, state) ++ possibleShots(player, state)*/
     type Rating = Double
     val decisionRatings: Map[Decision, Rating] = possibleActions
       .map(decision => (decision, calculateActionRating(decision, player, state))).toMap
