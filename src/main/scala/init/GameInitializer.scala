@@ -2,6 +2,7 @@ package init
 
 import config.FieldConfig.*
 import model.Match.*
+import model.Match.Action.Initial
 
 import scala.util.Random
 
@@ -26,7 +27,8 @@ object GameInitializer:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),
-        movement = Movement(Direction(0, 0), 0)
+        movement = Movement(Direction(0, 0), 0),
+        decision = Decision.Initial
       )
     }.toList
     Team(id, players)
@@ -41,13 +43,15 @@ object GameInitializer:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),
-        movement = Movement(Direction(0, 0), 0)
+        movement = Movement(Direction(0, 0), 0),
+        decision = Decision.Initial
       )
     }.toList
     val ballPlayer: Player = Player(
       id = id * 10 + 22,
       position = Position(realFieldWidth / 2, realFieldHeight / 2),
       ball = Some(b),
-      movement = Movement(Direction(0, 0), 0)
+      movement = Movement(Direction(0, 0), 0),
+      decision = Decision.Initial
     )
     Team(id, ballPlayer :: players)
