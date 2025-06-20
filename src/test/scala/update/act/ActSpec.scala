@@ -114,9 +114,9 @@ class ActSpec extends AnyFlatSpec with Matchers:
         position = Position(0, FieldConfig.heightBound / 2)
       )
     )
-    isAGoal(goalState) should be (true)
+    isAGoal(goalState) should be(true)
 
-  "Goal " should " be true when you hit the second door" in :
+  "Goal " should " be true when you hit the second door" in:
     val state: MatchState = GameInitializer.initialSimulationState()
     val goalState = state.copy(
       ball = state.ball.copy(

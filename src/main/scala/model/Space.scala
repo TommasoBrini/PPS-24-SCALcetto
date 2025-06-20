@@ -57,8 +57,8 @@ object Space:
       else if p.x.isOutOfBound(widthBound) then Horizontal
       else Vertical
     def isGoal: Boolean =
-      val firstGoalPost: Int = (FieldConfig.heightBound - FieldConfig.goalHeight) / 2
-      val secondGoalPost: Int =  firstGoalPost + FieldConfig.goalHeight
+      val firstGoalPost: Int  = (FieldConfig.heightBound - FieldConfig.goalHeight) / 2
+      val secondGoalPost: Int = firstGoalPost + FieldConfig.goalHeight
       (p.x <= 0 || p.x >= FieldConfig.widthBound) && (p.y >= firstGoalPost && p.y <= secondGoalPost)
 
   extension (d: Direction)
