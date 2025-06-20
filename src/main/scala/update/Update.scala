@@ -14,7 +14,9 @@ import scala.annotation.tailrec
 object Update:
   @tailrec
   def update(state: MatchState, event: Event): MatchState = event match
-    case StepEvent => update(state, DecideEvent)
+    case StepEvent =>
+      println("x: " + state.ball.position.x + " y: " + state.ball.position.y)
+      update(state, DecideEvent)
     case DecideEvent =>
       val newState: MatchState = decide(state)
       update(newState, ValidateEvent)
