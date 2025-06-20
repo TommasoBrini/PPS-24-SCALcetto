@@ -21,7 +21,7 @@ object Act:
       case Move(direction, FieldConfig.playerSpeed) =>
         player.copy(movement = Movement(direction, FieldConfig.playerSpeed))
       case Hit(_, _) =>
-        player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(FieldConfig.stoppedSteps))
+        player.copy(movement = Movement.still, ball = None, decision = Decision.Confusion(FieldConfig.stoppedSteps))
       case Take(ball)    => player.copy(movement = Movement.still, ball = Some(ball))
       case Stopped(step) => player.copy(nextAction = Stopped(step - 1))
       case _             => player

@@ -18,7 +18,8 @@ object Match:
     case Confusion(remainingStep: Int)
     case Pass(from: Player, to: Player)
     case Shoot(striker: Player, goal: Position)
-    case MoveToGoal(attacker: Player, goal: Position)
+    case Run(direction: Direction)
+    case MoveToGoal(player: Player, goalPosition: Position)
     case MoveToBall(direction: Direction, speed: Int)
     case Tackle(ball: Ball)
 
