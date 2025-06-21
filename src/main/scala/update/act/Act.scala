@@ -3,28 +3,40 @@ package update.act
 import config.FieldConfig
 import model.Match.{Action, *}
 import model.Match.Action.*
+
+import java.security.KeyStore.TrustedCertificateEntry
 object Act:
   def executeAction(state: MatchState): MatchState =
     move(updateMovements(state))
 
   private[update] def updateMovements(state: MatchState): MatchState =
+    val newOwnerOpt = state.teams.flatMap(_.players).find(_.nextAction match
+      case Take(_) => true
+      case _       => false
+    )
+    val ballOwner: Option[Player] =
+      if newOwnerOpt.isDefined then newOwnerOpt else state.teams.flatMap(_.players).find(_.hasBall)
     MatchState(
-      state.teams.map(updateMovement),
-      updateMovement(state.ball, state.teams.flatMap(_.players).find(_.hasBall))
+      state.teams.map(updateMovement(_, ballOwner)),
+      updateMovement(state.ball, ballOwner)
     )
 
-  private[update] def updateMovement(team: Team): Team =
-    team.copy(players = team.players.map(updateMovement))
+  private[update] def updateMovement(team: Team, ballOwner: Option[Player]): Team =
+    team.copy(players = team.players.map(updateMovement(_, ballOwner)))
 
-  private[update] def updateMovement(player: Player): Player =
-    player.nextAction match
-      case Move(direction, FieldConfig.playerSpeed) =>
-        player.copy(movement = Movement(direction, FieldConfig.playerSpeed))
-      case Hit(_, _) =>
-        player.copy(movement = Movement.still, ball = None, decision = Decision.Confusion(FieldConfig.stoppedSteps))
-      case Take(ball)    => player.copy(movement = Movement.still, ball = Some(ball))
-      case Stopped(step) => player.copy(nextAction = Stopped(step - 1))
-      case _             => player
+  private[update] def updateMovement(player: Player, ballOwner: Option[Player]): Player =
+    if player.hasBall && ballOwner.isDefined && player.id != ballOwner.get.id then
+      player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(FieldConfig.stoppedAfterTackle))
+    else
+      player.nextAction match
+        case Take(ball) =>
+          player.copy(movement = Movement.still, ball = Some(ball))
+        case Hit(_, _) =>
+          player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(FieldConfig.stoppedAfterHit))
+        case Move(direction, FieldConfig.playerSpeed) =>
+          player.copy(movement = Movement(direction, FieldConfig.playerSpeed))
+        case Stopped(step) => player.copy(movement = Movement.still)
+        case _             => player
 
   private[update] def updateMovement(ball: Ball, playerInControl: Option[Player]): Ball =
     val movement = playerInControl match

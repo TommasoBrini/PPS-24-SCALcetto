@@ -33,7 +33,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val p1      = Player(0, initial, Movement.still, None, Action.Move(defaultDirection, FieldConfig.playerSpeed))
     val p2      = Player(1, initial, Movement.still, None, Action.Move(defaultDirection, FieldConfig.playerSpeed))
     val team    = Team(0, List(p1, p2))
-    updateMovement(team).players
+    updateMovement(team, None).players
       .forall(_.movement == Movement(defaultDirection, FieldConfig.playerSpeed)) should be(true)
 
   it should "move correctly" in:
@@ -48,18 +48,18 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val action       = Action.Initial
     val lastMovement = Movement(defaultDirection, defaultSpeed)
     val player       = Player(0, Position(0, 0), lastMovement, None, action)
-    updateMovement(player).movement should be(lastMovement)
+    updateMovement(player, None).movement should be(lastMovement)
 
   it should "stand still if he is stopped" in:
     val action = Action.Stopped(2)
     val player = Player(0, Position(0, 0), Movement.still, None, action)
-    updateMovement(player).position should be(Position(0, 0))
-    updateMovement(player).nextAction should be(Action.Stopped(1))
+    updateMovement(player, None).position should be(Position(0, 0))
+    updateMovement(player, None).nextAction should be(Action.Stopped(2))
 
   it should "move when he has to" in:
     val action = Action.Move(defaultDirection, FieldConfig.playerSpeed)
     val player = Player(0, Position(0, 0), Movement.still, None, action)
-    updateMovement(player).movement should be(Movement(defaultDirection, FieldConfig.playerSpeed))
+    updateMovement(player, None).movement should be(Movement(defaultDirection, FieldConfig.playerSpeed))
 
   it should "stand still when hitting the ball" in:
     val direction = Direction(2, 2)
@@ -67,7 +67,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val ball      = Ball(Position(0, 0), Movement.still)
     val notStill  = Movement(defaultDirection, defaultSpeed)
     val player    = Player(0, Position(0, 0), notStill, Some(ball), Action.Hit(direction, speed))
-    updateMovement(player).movement should be(Movement.still)
+    updateMovement(player, Some(player)).movement should be(Movement.still)
 
   it should "move correctly" in:
     val initial  = Position(0, 0)
@@ -91,7 +91,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val ball = Ball(Position(0, 0), Movement.still)
     val player =
       Player(0, Position(0, 0), Movement.still, Some(ball), Action.Move(defaultDirection, FieldConfig.playerSpeed))
-    val updated = updateMovement(player)
+    val updated = updateMovement(player, Some(player))
     updateMovement(ball, Some(updated)).movement should be(Movement(defaultDirection, FieldConfig.playerSpeed))
 
   it should "be hit by player correctly" in:
