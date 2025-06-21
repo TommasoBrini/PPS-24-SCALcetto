@@ -1,7 +1,6 @@
 package model
 
 import Space.*
-import config.FieldConfig
 
 object Match:
 

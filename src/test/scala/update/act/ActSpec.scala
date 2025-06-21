@@ -5,6 +5,7 @@ import model.Match.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import Act.*
+import init.GameInitializer
 
 class ActSpec extends AnyFlatSpec with Matchers:
   val defaultSpeed                = 1
@@ -105,3 +106,21 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val movement = Movement(defaultDirection, defaultSpeed)
     val ball     = Ball(initial, movement)
     move(ball).position should be(initial + movement)
+
+  "Goal " should " be true when you hit the first door" in:
+    val state: MatchState = GameInitializer.initialSimulationState()
+    val goalState = state.copy(
+      ball = state.ball.copy(
+        position = Position(0, FieldConfig.heightBound / 2)
+      )
+    )
+    isAGoal(goalState) should be(true)
+
+  "Goal " should " be true when you hit the second door" in:
+    val state: MatchState = GameInitializer.initialSimulationState()
+    val goalState = state.copy(
+      ball = state.ball.copy(
+        position = Position(FieldConfig.widthBound, FieldConfig.heightBound / 2)
+      )
+    )
+    isAGoal(goalState) should be(true)

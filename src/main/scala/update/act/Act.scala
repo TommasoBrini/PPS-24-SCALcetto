@@ -45,7 +45,8 @@ object Act:
   private[update] def move(ball: Ball): Ball =
     ball.copy(position = ball.position + ball.movement)
 
-  def isAGoal(state: MatchState): Boolean = false
+  def isAGoal(state: MatchState): Boolean =
+    state.ball.position.isGoal
 
   def isBallOut(state: MatchState): Boolean =
     state.ball.position.isOutOfBound(FieldConfig.widthBound, FieldConfig.heightBound)
