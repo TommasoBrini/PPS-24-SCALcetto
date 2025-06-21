@@ -18,9 +18,12 @@ object Match:
     case Pass(from: Player, to: Player)
     case Shoot(striker: Player, goal: Position)
     case Run(direction: Direction)
-    case MoveToGoal(player: Player, goalPosition: Position)
-    case MoveToBall(direction: Direction, speed: Int)
+    case MoveToGoal(goalDirection: Direction)
     case Tackle(ball: Ball)
+    case ReceivePass(ball: Ball)
+    case Intercept(ball: Ball)
+    case MoveToBall(direction: Direction, speed: Int)
+    case MoveRandom(direction: Direction)
 
   case class Player(
       id: Int,
