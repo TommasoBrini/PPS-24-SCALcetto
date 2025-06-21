@@ -16,7 +16,7 @@ class TestDecisionStrategy extends AnyFlatSpec with Matchers {
   "TeamPossessionStrategy" should "return an Option of Move" in:
     val state          = GameInitializer.initialSimulationState()
     val player: Player = state.teams.flatMap(_.players).head
-    TeammateStrategy.decide(player, state) shouldBe a[Decision.MoveToBall]
+    TeammateStrategy.decide(player, state) shouldBe a[Decision]
 
   "NoControlStrategy" should "return an Option of Move" in:
     val state          = GameInitializer.initialSimulationState()

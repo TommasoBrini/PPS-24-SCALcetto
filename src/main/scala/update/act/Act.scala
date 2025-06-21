@@ -14,18 +14,18 @@ object Act:
       case Take(_) => true
       case _       => false
     )
-    val ownerBall: Option[Player] =
+    val ballOwner: Option[Player] =
       if newOwnerOpt.isDefined then newOwnerOpt else state.teams.flatMap(_.players).find(_.hasBall)
     MatchState(
-      state.teams.map(updateMovement(_, ownerBall)),
-      updateMovement(state.ball, ownerBall)
+      state.teams.map(updateMovement(_, ballOwner)),
+      updateMovement(state.ball, ballOwner)
     )
 
-  private[update] def updateMovement(team: Team, newOwner: Option[Player]): Team =
-    team.copy(players = team.players.map(updateMovement(_, newOwner)))
+  private[update] def updateMovement(team: Team, ballOwner: Option[Player]): Team =
+    team.copy(players = team.players.map(updateMovement(_, ballOwner)))
 
-  private[update] def updateMovement(player: Player, newOwner: Option[Player]): Player =
-    if player.hasBall && newOwner.isDefined && player.id != newOwner.get.id then
+  private[update] def updateMovement(player: Player, ballOwner: Option[Player]): Player =
+    if player.hasBall && ballOwner.isDefined && player.id != ballOwner.get.id then
       player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(FieldConfig.stoppedAfterTackle))
     else
       player.nextAction match
