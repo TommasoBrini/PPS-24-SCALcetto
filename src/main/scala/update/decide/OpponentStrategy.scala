@@ -11,7 +11,7 @@ object OpponentStrategy extends DecisionStrategy:
     val dx: Int    = Math.abs(player.position.x - ball.position.x)
     val dy: Int    = Math.abs(player.position.y - ball.position.y)
     val nextDecision: Decision = player.decision match
-      case Decision.Confusion(step) if step > 0 => Decision.Initial
+      case Decision.Confusion(step) if step > 0 => Decision.Confusion(step - 1)
       case _ =>
         if dx < FieldConfig.takeBallRange && dy < FieldConfig.takeBallRange
         then Decision.Tackle(ball)
