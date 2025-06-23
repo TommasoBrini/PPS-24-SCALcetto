@@ -46,7 +46,7 @@ object ControlPlayerStrategy extends DecisionStrategy:
     Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2))
 
   private def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
-    FieldConfig.takeBallRange > Math.abs(distanceBetweenPoints(start, end) - distanceBetweenPoints(
+    FieldConfig.tackleRange > Math.abs(distanceBetweenPoints(start, end) - distanceBetweenPoints(
       start,
       mid
     ) + distanceBetweenPoints(mid, end))
@@ -69,20 +69,25 @@ object ControlPlayerStrategy extends DecisionStrategy:
       .flatMap(_.players)
       .filterNot(_.hasBall)
       .filter(opp => positionIsInBetween(striker.position, goal, opp.position))
+    val shootRating: Double = striker.position.getDistance(goal) match
+      case dist if dist <= FieldConfig.lowDistanceShoot  => 3 // todo change this values next meeting
+      case dist if dist <= FieldConfig.midDistanceShoot  => 0.70
+      case dist if dist <= FieldConfig.highDistanceShoot => 0.30
+      case _                                             => 0.0
     if opponentsInBetween.isEmpty
-    then 1.0
+    then shootRating
     else 0.0
 
   private def calculateActionRating(playerDecision: Decision, player: Player, state: MatchState): Double =
     playerDecision match
       case Decision.Pass(from, to)        => 1 / from.position.getDistance(to.position)
-      case Decision.Shoot(striker, goal)     => shootRating(striker, state, goal)
-      case Decision.MoveToGoal(direction) => 5   // moveToGoalRating(player, direction, state)
+      case Decision.Shoot(striker, goal)  => shootRating(striker, state, goal)
+      case Decision.MoveToGoal(direction) => 1 // moveToGoalRating(player, direction, state)
       case Decision.Run(direction)        => runRating(player, direction, state)
       case _                              => 0
 
   private def moveToGoalRating(player: Player, goalDirection: Direction, state: MatchState): Double =
-    if pathClear(player.position, goalDirection, state) then 1.0 else 0.0
+    if pathClear(player.position, goalDirection, state) then 0.9 else 0.0
 
   private def runRating(player: Player, dir: Direction, state: MatchState): Double =
     0 // todo
