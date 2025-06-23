@@ -1,7 +1,7 @@
 package update.decide
 
 import config.FieldConfig
-import model.Match.{Decision, MatchState, Player}
+import model.Match.{Action, Decision, MatchState, Player}
 import model.Space.Direction
 
 import scala.util.Random
@@ -11,8 +11,7 @@ object TeammateStrategy extends DecisionStrategy:
     val dx: Int   = Random.between(-1, 2)
     val dy: Int   = Random.between(-1, 2)
     val direction = Direction(dx, dy)
-    val nextDecision: Decision = player.decision match
-      // TODO understand how to implement effectively this Stop
-      case Decision.Confusion(step) if step > 0 => Decision.Initial
-      case _                                    => Decision.MoveToBall(direction, FieldConfig.playerSpeed)
+    val nextDecision: Decision = player.nextAction match
+      case Action.Stopped(step) if step > 0 => Decision.Confusion(step - 1)
+      case _                                => Decision.MoveRandom(direction)
     nextDecision
