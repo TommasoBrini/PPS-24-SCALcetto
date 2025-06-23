@@ -33,32 +33,32 @@ object ControlPlayerStrategy extends DecisionStrategy:
       if matchState.teams.head.players.contains(player)
       then Position(FieldConfig.fieldWidth * FieldConfig.scale, (FieldConfig.fieldHeight * FieldConfig.scale) / 2)
       else Position(0, (FieldConfig.fieldHeight * FieldConfig.scale) / 2)
-    val toGoalDecision = Decision.MoveToGoal(player, goalPosition)
+    val goalDirection = Decision.MoveToGoal(player.position.getDirection(goalPosition))
     val runDirections =
       for
         dx <- -1 to 0
         dy <- -1 to 1
         if dx != 0 || dy != 0
       yield Decision.Run(Direction(dx, dy))
-    toGoalDecision :: runDirections.toList
+    goalDirection :: runDirections.toList
 
   private def possibleShots(player: Player, matchState: MatchState): List[Decision] = Nil // todo
 
   private def calculateActionRating(playerDecision: Decision, player: Player, state: MatchState): Double =
     playerDecision match
-      case Decision.Pass(from, to)           => 1 / from.position.getDistance(to.position)
-      case Decision.Shoot(striker, goal)     => ??? // todo
-      case Decision.MoveToGoal(player, goal) => moveToGoalRating(player, goal, state)
-      case Decision.Run(direction)           => runRating(player, direction, state)
-      case _                                 => 0
+      case Decision.Pass(from, to)        => 1 / from.position.getDistance(to.position)
+      case Decision.Shoot(striker, goal)  => ??? // todo
+      case Decision.MoveToGoal(direction) => 5   // moveToGoalRating(player, direction, state)
+      case Decision.Run(direction)        => runRating(player, direction, state)
+      case _                              => 0
 
-  private def moveToGoalRating(player: Player, goalPos: Position, state: MatchState): Double =
-    if pathClear(player.position, goalPos, state) then 1.0 else 0.0
+  private def moveToGoalRating(player: Player, goalDirection: Direction, state: MatchState): Double =
+    if pathClear(player.position, goalDirection, state) then 1.0 else 0.0
 
   private def runRating(player: Player, dir: Direction, state: MatchState): Double =
-    0
+    0 // todo
 
-  private def pathClear(from: Position, to: Position, state: MatchState): Boolean =
+  private def pathClear(from: Position, dir: Direction, state: MatchState): Boolean =
     val sideRange: Int     = 15
     val verticalRange: Int = 15
 
@@ -70,7 +70,6 @@ object ControlPlayerStrategy extends DecisionStrategy:
       val dx = opponent.position.x - from.x
       val dy = opponent.position.y - from.y
 
-      val dir              = from.getDirection(to)
       val projectedForward = dx * dir.x + dy * dir.y
       val projectedSide    = math.abs(-dx * dir.y + dy * dir.x)
 
