@@ -42,12 +42,41 @@ object ControlPlayerStrategy extends DecisionStrategy:
       yield Decision.Run(Direction(dx, dy))
     toGoalDecision :: runDirections.toList
 
-  private def possibleShots(player: Player, matchState: MatchState): List[Decision] = Nil // todo
+  private def distanceBetweenPoints(start: Position, end: Position): Double =
+    Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2))
+
+  private def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
+    FieldConfig.takeBallRange > Math.abs(distanceBetweenPoints(start, end) - distanceBetweenPoints(
+      start,
+      mid
+    ) + distanceBetweenPoints(mid, end))
+
+  private def possibleShots(player: Player, matchState: MatchState): List[Decision] =
+    val goalX: Int =
+      if matchState.teams.head.players.contains(player)
+      then FieldConfig.goalEastX
+      else FieldConfig.goalWestX
+
+    val goalPositions: List[Position] = List(
+      Position(goalX, FieldConfig.firstPoleY),
+      Position(goalX, FieldConfig.midGoalY),
+      Position(goalX, FieldConfig.secondPoleY)
+    )
+    goalPositions.map(Decision.Shoot(player, _))
+
+  private def shootRating(striker: Player, state: MatchState, goal: Position): Double =
+    val opponentsInBetween: List[Player] = state.teams
+      .flatMap(_.players)
+      .filterNot(_.hasBall)
+      .filter(opp => positionIsInBetween(striker.position, goal, opp.position))
+    if opponentsInBetween.isEmpty
+    then 1.0
+    else 0.0
 
   private def calculateActionRating(playerDecision: Decision, player: Player, state: MatchState): Double =
     playerDecision match
       case Decision.Pass(from, to)           => 1 / from.position.getDistance(to.position)
-      case Decision.Shoot(striker, goal)     => ??? // todo
+      case Decision.Shoot(striker, goal)     => shootRating(striker, state, goal) // todo
       case Decision.MoveToGoal(player, goal) => moveToGoalRating(player, goal, state)
       case Decision.Run(direction)           => runRating(player, direction, state)
       case _                                 => 0
