@@ -29,7 +29,7 @@ object Validate {
     decision match
       case Confusion(step)      => Action.Stopped(step)
       case Pass(from, to)       => Action.Hit(from.position.getDirection(to.position), FieldConfig.ballSpeed)
-      case Shoot(striker, goal) => ??? // todo
+      case Shoot(striker, goal) => Action.Hit(striker.position.getDirection(goal), FieldConfig.ballSpeed + 1) // todo
       case Run(direction)       => Action.Move(direction, FieldConfig.playerSpeed)
       case MoveToGoal(goalDirection) =>
         Action.Move(goalDirection, FieldConfig.playerSpeed)
