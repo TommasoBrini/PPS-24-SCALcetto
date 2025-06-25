@@ -1,21 +1,23 @@
 package config
 
 object FieldConfig:
-  val scale: Int              = 10
-  val fieldWidth: Int         = 70
-  val fieldHeight: Int        = 40
-  val widthBound: Int         = fieldWidth * scale
-  val heightBound: Int        = fieldHeight * scale
-  val teamSize: Int           = 5
-  val ballSize: Int           = 10
-  val playerSize: Int         = 10
-  val InfoPanelHeight: Int    = 50
-  val playerSpeed: Int        = 1
-  val ballSpeed: Int          = 3
-  val interceptBallRange: Int = 7
-  val tackleRange: Int        = 7
-  val stoppedAfterHit: Int    = 10
-  val stoppedAfterTackle: Int = 15
+  val scale: Int                 = 10
+  val fieldWidth: Int            = 70
+  val fieldHeight: Int           = 40
+  val widthBound: Int            = fieldWidth * scale
+  val heightBound: Int           = fieldHeight * scale
+  val teamSize: Int              = 5
+  val ballSize: Int              = 10
+  val playerSize: Int            = 10
+  val InfoPanelHeight: Int       = 50
+  val playerSpeed: Int           = 2
+  val ballSpeed: Int             = 3
+  val interceptBallRange: Int    = 7
+  val tackleRange: Int           = 7
+  val stoppedAfterHit: Int       = 10
+  val stoppedAfterTackle: Int    = 15
+  val moveRandomSteps: Int       = 40
+  val passDirectionRange: Double = 0.6
 
   // GOAL
   val goalAreaWidth: Int        = 6
