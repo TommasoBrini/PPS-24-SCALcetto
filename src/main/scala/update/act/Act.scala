@@ -14,10 +14,14 @@ object Act:
       case Take(_) => true
       case _       => false
     )
+    val updateTeams = state.teams.map { team =>
+      team.copy(hasBall = if newOwnerOpt.isDefined then team.players.contains(newOwnerOpt.get) else team.hasBall)
+    }
+
     val ballOwner: Option[Player] =
       if newOwnerOpt.isDefined then newOwnerOpt else state.teams.flatMap(_.players).find(_.hasBall)
     MatchState(
-      state.teams.map(updateMovement(_, ballOwner)),
+      updateTeams.map(updateMovement(_, ballOwner)),
       updateMovement(state.ball, ballOwner)
     )
 

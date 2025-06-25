@@ -15,7 +15,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val initial = Movement.still
     val player =
       Player(0, Position(0, 0), Movement.still, None, Action.Move(defaultDirection, FieldConfig.playerSpeed))
-    val team  = Team(0, List(player))
+    val team  = Team(0, List(player), false)
     val state = MatchState(List(team), Ball(Position(0, 0), Movement.still))
     executeAction(state).teams.flatMap(_.players)
       .forall(_.movement == Movement(defaultDirection, defaultSpeed)) should be(true)
@@ -24,7 +24,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val position = Position(0, 0)
     val ball     = Ball(position, Movement.still)
     val player   = Player(0, position, Movement.still, Some(ball), Action.Hit(defaultDirection, defaultSpeed))
-    val team     = Team(0, List(player))
+    val team     = Team(0, List(player), true)
     val state    = MatchState(List(team), Ball(Position(0, 0), Movement.still))
     executeAction(state).ball.movement should be(Movement(defaultDirection, defaultSpeed))
 
@@ -32,7 +32,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val initial = Position(0, 0)
     val p1      = Player(0, initial, Movement.still, None, Action.Move(defaultDirection, FieldConfig.playerSpeed))
     val p2      = Player(1, initial, Movement.still, None, Action.Move(defaultDirection, FieldConfig.playerSpeed))
-    val team    = Team(0, List(p1, p2))
+    val team    = Team(0, List(p1, p2), false)
     updateMovement(team, None).players
       .forall(_.movement == Movement(defaultDirection, FieldConfig.playerSpeed)) should be(true)
 
@@ -41,7 +41,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val movement = Movement(defaultDirection, defaultSpeed)
     val p1       = Player(0, initial, movement, None, Action.Initial)
     val p2       = Player(1, initial, movement, None, Action.Initial)
-    val team     = Team(0, List(p1, p2))
+    val team     = Team(0, List(p1, p2), false)
     move(team).players.forall(_.position == initial + movement) should be(true)
 
   "A player" should "keep last movement if he has no new action" in:
