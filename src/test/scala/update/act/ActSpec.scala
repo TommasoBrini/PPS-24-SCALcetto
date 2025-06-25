@@ -44,7 +44,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val movement = Movement(defaultDirection, defaultSpeed)
     val p1       = Player(0, initial, movement, None, Action.Initial)
     val p2       = Player(1, initial, movement, None, Action.Initial)
-    val team     = Team(0, List(p1, p2))
+    val team     = Team(0, List(p1, p2), false)
     move(team).players.forall(_.position == initial + movement) should be(true)
 
   "A player" should "keep last movement if he has no new action" in:
