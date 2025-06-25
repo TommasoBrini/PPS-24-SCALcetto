@@ -55,7 +55,6 @@ object Validate {
       case _                                => Action.Initial
 
   // SHOOT
-
   private def shootSuccess(striker: Player, goal: Position): Double = striker.position.getDistance(goal) match
     case goalDistance if goalDistance <= FieldConfig.lowDistanceShoot  => 0.1
     case goalDistance if goalDistance <= FieldConfig.midDistanceShoot  => 0.6

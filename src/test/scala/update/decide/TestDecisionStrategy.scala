@@ -22,4 +22,5 @@ class TestDecisionStrategy extends AnyFlatSpec with Matchers {
     val state          = GameInitializer.initialSimulationState()
     val player: Player = state.teams.flatMap(_.players).head
     OpponentStrategy.decide(player, state) shouldBe a[Decision.MoveToBall]
+
 }
