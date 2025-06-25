@@ -1,10 +1,23 @@
 #!/bin/bash
-echo "Check formatting scalafmt..."
-sbt scalafmtAll || {
-  echo "Unformatted code! Run 'sbt scalafmtAll' before commit."
+
+echo "Checking formatting with scalafmt..."
+
+staged_files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.scala$')
+
+sbt scalafmtAll > /dev/null || {
+  echo "scalafmt failed!"
   exit 1
 }
-git add *
 
-echo "Checked."
+unformatted=$(git diff --name-only $staged_files)
+
+if [ -n "$unformatted" ]; then
+  echo "Error: Some staged files are not formatted correctly:"
+  echo "$unformatted"
+  echo "Please run 'sbt scalafmtAll' and re-add the formatted files:"
+  echo "  git add <file>"
+  exit 1
+fi
+
+echo "Done: Formatting OK."
 exit 0
