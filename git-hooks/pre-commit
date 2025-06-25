@@ -1,9 +1,14 @@
 #!/bin/bash
 echo "Check formatting scalafmt..."
-sbt scalafmtCheckAll || {
+sbt scalafmtAll || {
   echo "Unformatted code! Run 'sbt scalafmtAll' before commit."
   exit 1
 }
+git add *
+
+
+
+
 
 echo "Checked."
 exit 0

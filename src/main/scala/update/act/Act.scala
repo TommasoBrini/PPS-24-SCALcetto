@@ -39,11 +39,14 @@ object Act:
         case _             => player
 
   private[update] def updateMovement(ball: Ball, playerInControl: Option[Player]): Ball =
-    val movement = playerInControl match
+    val movement: Movement = playerInControl match
       case Some(Player(_, _, _, _, Hit(direction, speed), _)) => Movement(direction, speed)
       case Some(Player(_, _, movement, _, Move(_, _), _))     => movement
       case _                                                  => ball.movement
-    ball.copy(movement = movement)
+    val newPosition = playerInControl match
+      case Some(Player(_, p, m, _, _, _)) => p + (m * (FieldConfig.ballSize / 2))
+      case _                              => ball.position
+    ball.copy(position = newPosition, movement = movement)
 
   private[update] def move(state: MatchState): MatchState =
     MatchState(state.teams.map(move), move(state.ball))

@@ -33,6 +33,11 @@ object Space:
   object Movement:
     def still: Movement = Movement(Direction.none, 0)
 
+    extension (m: Movement)
+      @targetName("applyScale")
+      def *(factor: Int): Movement =
+        Movement(m.direction, m.speed * factor)
+
   extension (p: Position)
     @targetName("applyMovement")
     def +(m: Movement): Position =
