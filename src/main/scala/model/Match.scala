@@ -36,7 +36,7 @@ object Match:
   ):
     def hasBall: Boolean = ball.isDefined
 
-  case class Team(id: Int, players: List[Player], hasBall: Boolean)
+  case class Team(id: Int, players: List[Player], hasBall: Boolean = false)
 
   case class Ball(position: Position, movement: Movement = Movement.still):
     def isHeadingToward(player: Player, tolerance: Double): Boolean =
