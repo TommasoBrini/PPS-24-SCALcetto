@@ -6,9 +6,5 @@ sbt scalafmtAll || {
 }
 git add *
 
-
-
-
-
 echo "Checked."
 exit 0
