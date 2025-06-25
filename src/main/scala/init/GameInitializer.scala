@@ -26,9 +26,7 @@ object GameInitializer:
       val posY: Int = Random.between(1, realFieldHeight - 1)
       Player(
         id = id * 10 + i,
-        position = Position(posX, posY),
-        movement = Movement(Direction(0, 0), 0),
-        decision = Decision.Initial
+        position = Position(posX, posY)
       )
     }.toList
     Team(id, players, false)

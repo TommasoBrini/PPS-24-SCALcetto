@@ -34,10 +34,7 @@ object OpponentStrategy extends DecisionStrategy:
         then
           Decision.Intercept(ball)
         else
-          Decision.MoveToBall(
-            player.position.getDirection(ball.position),
-            FieldConfig.playerSpeed
-          )
+          Decision.MoveToBall(player.position.getDirection(ball.position))
     nextDecision
 
   private def mark(player: Player, state: MatchState): Decision =

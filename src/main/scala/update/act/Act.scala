@@ -6,7 +6,7 @@ import model.Match.Action.*
 
 import java.security.KeyStore.TrustedCertificateEntry
 object Act:
-  def executeAction(state: MatchState): MatchState =
+  def act(state: MatchState): MatchState =
     move(updateMovements(state))
 
   private[update] def updateMovements(state: MatchState): MatchState =
@@ -33,14 +33,12 @@ object Act:
       player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(FieldConfig.stoppedAfterTackle))
     else
       player.nextAction match
-        case Take(ball) =>
-          player.copy(movement = Movement.still, ball = Some(ball))
+        case Take(ball) => player.copy(movement = Movement.still, ball = Some(ball))
         case Hit(_, _) =>
           player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(FieldConfig.stoppedAfterHit))
-        case Move(direction, FieldConfig.playerSpeed) =>
-          player.copy(movement = Movement(direction, FieldConfig.playerSpeed))
-        case Stopped(step) => player.copy(movement = Movement.still)
-        case _             => player
+        case Move(direction, speed) => player.copy(movement = Movement(direction, speed))
+        case Stopped(step)          => player.copy(movement = Movement.still)
+        case _                      => player
 
   private[update] def updateMovement(ball: Ball, playerInControl: Option[Player]): Ball =
     val movement: Movement = playerInControl match
