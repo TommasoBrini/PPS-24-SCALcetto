@@ -4,7 +4,6 @@ import config.FieldConfig
 import model.Match.{Action, *}
 import model.Match.Action.*
 
-import java.security.KeyStore.TrustedCertificateEntry
 object Act:
   def executeAction(state: MatchState): MatchState =
     move(updateMovements(state))
