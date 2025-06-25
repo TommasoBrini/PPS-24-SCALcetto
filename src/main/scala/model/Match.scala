@@ -28,7 +28,7 @@ object Match:
   case class Player(
       id: Int,
       position: Position,
-      movement: Movement,
+      movement: Movement = Movement.still,
       ball: Option[Ball] = None,
       nextAction: Action = Action.Initial,
       decision: Decision = Decision.Initial

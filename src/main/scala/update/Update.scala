@@ -5,7 +5,7 @@ import Event.*
 import init.GameInitializer.initialSimulationState
 import decide.Decide.*
 import validate.Validate.*
-import act.Act.{executeAction, isAGoal, isBallOut}
+import act.Act.{act, isAGoal, isBallOut}
 import config.FieldConfig
 import config.FieldConfig.{heightBound, widthBound}
 
@@ -23,7 +23,7 @@ object Update:
       val newState: MatchState = validate(state)
       update(newState, ActEvent)
     case ActEvent =>
-      val newState: MatchState = executeAction(state)
+      val newState: MatchState = act(state)
       if isAGoal(newState) then update(newState, GoalEvent)
       else if isBallOut(newState) then update(newState, BallOutEvent)
       else newState
