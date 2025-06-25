@@ -11,7 +11,7 @@ object Validate {
     state.copy(teams = state.teams.map(validate))
 
   def validate(team: Team): Team =
-    Team(team.id, team.players.map(validate))
+    Team(team.id, team.players.map(validate), team.hasBall)
 
   def validate(player: Player): Player =
     player.copy(nextAction =
@@ -41,7 +41,8 @@ object Validate {
       case MoveToBall(direction, speed) => Action.Move(direction, speed)
       case MoveRandom(direction) =>
         Action.Move(direction, FieldConfig.playerSpeed)
-      case _ => Action.Initial
+      case Mark(player, target) => Action.Move(player.position.getDirection(target.position), FieldConfig.playerSpeed)
+      case _                    => Action.Initial
 
   private def getFailureAction(decision: Decision): Action =
     decision match

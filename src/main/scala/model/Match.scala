@@ -24,6 +24,7 @@ object Match:
     case Intercept(ball: Ball)
     case MoveToBall(direction: Direction, speed: Int)
     case MoveRandom(direction: Direction)
+    case Mark(defender: Player, target: Player)
 
   case class Player(
       id: Int,
@@ -35,7 +36,7 @@ object Match:
   ):
     def hasBall: Boolean = ball.isDefined
 
-  case class Team(id: Int, players: List[Player])
+  case class Team(id: Int, players: List[Player], hasBall: Boolean)
 
   case class Ball(position: Position, movement: Movement)
 

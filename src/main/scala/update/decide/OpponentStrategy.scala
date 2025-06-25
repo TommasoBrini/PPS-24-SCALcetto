@@ -1,6 +1,7 @@
 package update.decide
 
 import config.FieldConfig
+import model.Match.Decision.MoveToBall
 import model.Match.{Action, Ball, Decision, MatchState, Player}
 import model.Space.Position
 
@@ -32,5 +33,33 @@ object OpponentStrategy extends DecisionStrategy:
         else if dxPlayer.isEmpty && dxBall < FieldConfig.interceptBallRange && dyBall < FieldConfig.interceptBallRange
         then
           Decision.Intercept(ball)
-        else Decision.MoveToBall(player.position.getDirection(ball.position), FieldConfig.playerSpeed)
+        else
+          Decision.MoveToBall(
+            player.position.getDirection(ball.position),
+            FieldConfig.playerSpeed
+          )
     nextDecision
+
+  private def mark(player: Player, state: MatchState): Decision =
+
+    val opponentPlayers = state.teams
+      .find(!_.players.contains(player))
+      .map(_.players)
+      .getOrElse(List.empty)
+
+    println(s"Opponent players: ${opponentPlayers.map(_.id)}")
+
+    val markedOpponentIds: Set[Int] = state.teams
+      .flatMap(_.players)
+      .flatMap(_.decision match
+        case Decision.Mark(_, target) => Some(target.id)
+        case _                        => None
+      ).toSet
+
+    val unmarkedOpponents = opponentPlayers.filterNot(p => markedOpponentIds.contains(p.id))
+
+    if unmarkedOpponents.nonEmpty then
+      val target = unmarkedOpponents.minBy(_.position.getDistance(player.position))
+      Decision.Mark(player, target)
+    else
+      Decision.Confusion(2)
