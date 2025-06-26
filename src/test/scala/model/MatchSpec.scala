@@ -1,31 +1,12 @@
 package model
 
 import model.Match.*
+import model.player.Player
 import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class MatchSpec extends AnyFlatSpec with Matchers:
-
-  "A Player" should "store id, position, and movement correctly" in:
-    val pos    = Position(1, 2)
-    val mov    = Movement(Direction(1.0, 0.0), 3)
-    val player = Player(42, pos, mov)
-
-    player.id shouldBe 42
-    player.position shouldBe pos
-    player.movement shouldBe mov
-    player.ball shouldBe None
-    player.nextAction shouldBe Action.Initial
-
-  it should "correctly report hasBall when carrying a ball" in:
-    val ball              = Ball(Position(5, 5), Movement(Direction.none, 0))
-    val playerWithBall    = Player(1, Position(0, 0), Movement.still, Some(ball))
-    val playerWithoutBall = Player(2, Position(0, 0), Movement.still)
-
-    playerWithBall.hasBall shouldBe true
-    playerWithoutBall.hasBall shouldBe false
-
   "A Team" should "contain an id and a list of players" in:
     val players = List(
       Player(1, Position(1, 1), Movement.still),

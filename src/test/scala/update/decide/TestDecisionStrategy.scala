@@ -1,12 +1,11 @@
 package update.decide
 
-import config.FieldConfig
 import init.GameInitializer
 import model.Match.*
-import model.Match.Action.*
+import model.player.Player
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import update.decide.behaviours.{ControlPlayerBehavior, OpponentBehaviour, TeammateBehavior}
+import update.decide.behaviours.{ControlPlayerBehavior, OpponentBehavior, TeammateBehavior}
 
 class TestDecisionStrategy extends AnyFlatSpec with Matchers {
   "BallPlayerStrategy" should "return an Option of Action" in:
@@ -16,11 +15,11 @@ class TestDecisionStrategy extends AnyFlatSpec with Matchers {
 
   "TeamPossessionStrategy" should "return an Option of Move" in:
     val state          = GameInitializer.initialSimulationState()
-    val player: Player = state.teams.flatMap(_.players).head
+    val player: Player = state.teams.flatMap(_.players).head.asTeammate
     TeammateBehavior.decide(player, state) shouldBe a[Decision]
 
   "NoControlStrategy" should "return an Option of Move" in:
     val state          = GameInitializer.initialSimulationState()
-    val player: Player = state.teams.flatMap(_.players).head
-    OpponentBehaviour(None).decide(player, state) shouldBe a[Decision.MoveToBall]
+    val player: Player = state.teams.flatMap(_.players).head.asOpponent
+    OpponentBehavior(None).decide(player, state) shouldBe a[Decision.MoveToBall]
 }

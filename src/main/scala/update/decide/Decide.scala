@@ -1,7 +1,8 @@
 package update.decide
 
 import model.Match.*
-import update.decide.behaviours.{ControlPlayerBehavior, OpponentBehaviour, TeammateBehavior}
+import model.player.Player
+import update.decide.behaviours.*
 
 object Decide:
 
@@ -12,23 +13,24 @@ object Decide:
           if teamA.hasBall then (teamB, teamA)
           else (teamA, teamB)
 
-        val markings = assignMarkings(defenders.players, attackers.players)
+        val markings: Map[Player, Player] = assignMarkings(defenders.players, attackers.players)
 
-        def decideFor(player: Player, team: Team, opponents: Team): Decision =
-          val behavior =
-            if player.hasBall then ControlPlayerBehavior
-            else if team.players.exists(_.hasBall) then TeammateBehavior
-            else new OpponentBehaviour(markings.get(player))
+        val updatedTeams: List[Team] = state.teams.map { team =>
 
-          behavior.decide(player, state)
+          val newPlayers = team.players.map { player =>
+            val behavior: PlayerBehavior = player match
+              case _: Player.ControlPlayer  => ControlPlayerBehavior
+              case _: Player.OpponentPlayer => OpponentBehavior(markings.get(player))
+              case _: Player.TeammatePlayer => TeammateBehavior
+              case _                        => DefaultBehavior
+            player.copy(decision = behavior.decide(player, state))
+          }
 
-        val newTeams = List(teamA, teamB).map { team =>
-          val opponents  = if team.id == teamA.id then teamB else teamA
-          val newPlayers = team.players.map(p => p.copy(decision = decideFor(p, team, opponents)))
           team.copy(players = newPlayers)
         }
 
-        state.copy(teams = newTeams)
+        state.copy(teams = updatedTeams)
+
       case _ =>
         throw new IllegalArgumentException("MatchState must contain exactly two teams.")
 

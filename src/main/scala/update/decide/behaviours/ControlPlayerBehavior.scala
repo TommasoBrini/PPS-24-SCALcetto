@@ -1,12 +1,16 @@
 package update.decide.behaviours
 import config.FieldConfig
 import model.Match.*
+import model.player.Player
 
 object ControlPlayerBehavior extends PlayerBehavior:
-  def decide(player: Player, matchState: MatchState): Decision =
-    calculateBestAction(player, matchState)
+  def decide(player: Player, matchState: MatchState): Decision = player match
+    case controlPlayer: Player.ControlPlayer =>
+      calculateBestAction(controlPlayer, matchState)
+    case _ =>
+      throw new IllegalArgumentException("ControlPlayerBehavior can only be used with ControlPlayer instances")
 
-  private def calculateBestAction(player: Player, state: MatchState): Decision =
+  private def calculateBestAction(player: Player.ControlPlayer, state: MatchState): Decision =
     val possibleActions =
       if player.decision == Decision.Initial
       then possiblePasses(player, state)
@@ -19,24 +23,24 @@ object ControlPlayerBehavior extends PlayerBehavior:
       .map(decision => (decision, calculateActionRating(decision, player, state))).toMap
     decisionRatings.maxBy(_._2)._1
 
-  private def possiblePasses(player: Player, state: MatchState): List[Decision] =
+  private def possiblePasses(player: Player.ControlPlayer, state: MatchState): List[Decision] =
     for
       team     <- state.teams.filter(_.players.contains(player))
       teammate <- team.players.filter(!_.equals(player))
-    yield Decision.Pass(player, teammate)
+    yield player.decidePass(teammate)
 
-  private[update] def possibleMoves(player: Player, matchState: MatchState): List[Decision] =
+  private[update] def possibleMoves(player: Player.ControlPlayer, matchState: MatchState): List[Decision] =
     val goalPosition: Position =
       if matchState.teams.head.players.contains(player)
       then Position(FieldConfig.fieldWidth * FieldConfig.scale, (FieldConfig.fieldHeight * FieldConfig.scale) / 2)
       else Position(0, (FieldConfig.fieldHeight * FieldConfig.scale) / 2)
-    val goalDirection = Decision.MoveToGoal(player.position.getDirection(goalPosition))
+    val goalDirection = player.decideMoveToGoal(player.position.getDirection(goalPosition))
     val runDirections =
       for
         dx <- -1 to 0
         dy <- -1 to 1
         if dx != 0 || dy != 0
-      yield Decision.Run(Direction(dx, dy))
+      yield player.decideRun(Direction(dx, dy))
     goalDirection :: runDirections.toList
 
   private def distanceBetweenPoints(start: Position, end: Position): Double =
@@ -48,7 +52,7 @@ object ControlPlayerBehavior extends PlayerBehavior:
       mid
     ) + distanceBetweenPoints(mid, end))
 
-  private def possibleShots(player: Player, matchState: MatchState): List[Decision] =
+  private def possibleShots(player: Player.ControlPlayer, matchState: MatchState): List[Decision] =
     val goalX: Int =
       if matchState.teams.head.players.contains(player)
       then FieldConfig.goalEastX
@@ -59,7 +63,7 @@ object ControlPlayerBehavior extends PlayerBehavior:
       Position(goalX, FieldConfig.midGoalY),
       Position(goalX, FieldConfig.secondPoleY)
     )
-    goalPositions.map(Decision.Shoot(player, _))
+    goalPositions.map(player.decideShoot)
 
   private def shootRating(striker: Player, state: MatchState, goal: Position): Double =
     val opponentsInBetween: List[Player] = state.teams

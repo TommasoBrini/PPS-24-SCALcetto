@@ -1,12 +1,14 @@
 package update.validate
 
-import model.Match.{Action, Decision, MatchState, Player, Team}
+import model.Match.{Action, Decision, MatchState, Team}
 import Decision.*
 import config.FieldConfig
+import model.player.Player
 
 import scala.util.Random
 
-object Validate {
+object Validate:
+
   def validate(state: MatchState): MatchState =
     state.copy(teams = state.teams.map(validate))
 
@@ -45,5 +47,3 @@ object Validate {
       case Pass(from, to) => Action.Hit(from.position.getDirection(to.position), FieldConfig.ballSpeed)
       case Tackle(_)      => Action.Stopped(FieldConfig.stoppedAfterTackle)
       case _              => Action.Initial
-
-}

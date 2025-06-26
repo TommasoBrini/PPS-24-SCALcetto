@@ -3,11 +3,13 @@ package update.act
 import config.FieldConfig
 import model.Match.{Action, *}
 import model.Match.Action.*
+import model.player.Player
 
 import java.security.KeyStore.TrustedCertificateEntry
 object Act:
   def act(state: MatchState): MatchState =
-    move(updateMovements(state))
+    val updateState: MatchState = move(updateMovements(state))
+    updatePlayers(updateState)
 
   private[update] def updateMovements(state: MatchState): MatchState =
     val newOwnerOpt = state.teams.flatMap(_.players).find(_.nextAction match
@@ -67,3 +69,18 @@ object Act:
 
   def isBallOut(state: MatchState): Boolean =
     state.ball.position.isOutOfBound(FieldConfig.widthBound, FieldConfig.heightBound)
+
+  private def updatePlayers(state: MatchState): MatchState =
+    val updateTeams: List[Team] = state.teams.map { team =>
+      val updatePlayers: List[Player] = team.players.map { player =>
+        if !team.hasBall then
+          player.copy().asOpponent
+        else if player.hasBall then
+          player.copy().asControlPlayer
+        else {
+          player.copy().asTeammate
+        }
+      }
+      team.copy(players = updatePlayers)
+    }
+    state.copy(teams = updateTeams)

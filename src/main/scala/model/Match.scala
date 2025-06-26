@@ -1,6 +1,8 @@
 package model
 
 import Space.*
+import model.player.Player
+import model.decisions.{CanDecideConfusion, CanDecideToRun}
 
 object Match:
 
@@ -14,27 +16,17 @@ object Match:
 
   enum Decision:
     case Initial
+    case Run(direction: Direction)
     case Confusion(remainingStep: Int)
     case Pass(from: Player, to: Player)
     case Shoot(striker: Player, goal: Position)
-    case Run(direction: Direction)
     case MoveToGoal(goalDirection: Direction)
-    case Tackle(ball: Ball)
-    case ReceivePass(ball: Ball)
-    case Intercept(ball: Ball)
-    case MoveToBall(directionToBall: Direction)
-    case MoveRandom(direction: Direction, steps: Int)
     case Mark(defender: Player, target: Player)
-
-  case class Player(
-      id: Int,
-      position: Position,
-      movement: Movement = Movement.still,
-      ball: Option[Ball] = None,
-      nextAction: Action = Action.Initial,
-      decision: Decision = Decision.Initial
-  ):
-    def hasBall: Boolean = ball.isDefined
+    case Tackle(ball: Ball)
+    case Intercept(ball: Ball)
+    case MoveRandom(direction: Direction, steps: Int)
+    case ReceivePass(ball: Ball)
+    case MoveToBall(directionToBall: Direction)
 
   case class Team(id: Int, players: List[Player], hasBall: Boolean = false)
 
