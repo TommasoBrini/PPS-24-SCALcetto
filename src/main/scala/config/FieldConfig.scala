@@ -14,7 +14,7 @@ object FieldConfig:
   val ballSpeed: Int             = 3
   val interceptBallRange: Int    = 7
   val tackleRange: Int           = 7
-  val stoppedAfterHit: Int       = 10
+  val stoppedAfterHit: Int       = 100
   val stoppedAfterTackle: Int    = 15
   val moveRandomSteps: Int       = 40
   val passDirectionRange: Double = 0.6

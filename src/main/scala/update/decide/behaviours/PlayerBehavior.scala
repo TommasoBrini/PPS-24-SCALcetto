@@ -1,6 +1,6 @@
-package update.decide
+package update.decide.behaviours
 
 import model.Match.*
 
-trait DecisionStrategy:
+trait PlayerBehavior:
   def decide(player: Player, matchState: MatchState): Decision
