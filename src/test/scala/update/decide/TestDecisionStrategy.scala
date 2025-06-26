@@ -1,6 +1,5 @@
 package update.decide
 
-import config.FieldConfig
 import init.GameInitializer
 import model.Match.*
 import model.Match.Action.*
@@ -16,11 +15,12 @@ class TestDecisionStrategy extends AnyFlatSpec with Matchers {
   "TeamPossessionStrategy" should "return an Option of Move" in:
     val state          = GameInitializer.initialSimulationState()
     val player: Player = state.teams.flatMap(_.players).head
-    TeammateStrategy.decide(player, state) shouldBe a[Decision]
+    TeammateStrategy decide (player, state) shouldBe a[Decision]
 
   "NoControlStrategy" should "return an Option of Move" in:
     val state          = GameInitializer.initialSimulationState()
     val player: Player = state.teams.flatMap(_.players).head
     OpponentStrategy.decide(player, state) shouldBe a[Decision.MoveToBall]
 
+  ""
 }
