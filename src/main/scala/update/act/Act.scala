@@ -5,7 +5,7 @@ import model.Match.{Action, *}
 import model.Match.Action.*
 
 object Act:
-  def executeAction(state: MatchState): MatchState =
+  def act(state: MatchState): MatchState =
     move(updateMovements(state))
 
   private[update] def updateMovements(state: MatchState): MatchState =
@@ -13,10 +13,14 @@ object Act:
       case Take(_) => true
       case _       => false
     )
+    val updateTeams = state.teams.map { team =>
+      team.copy(hasBall = if newOwnerOpt.isDefined then team.players.contains(newOwnerOpt.get) else team.hasBall)
+    }
+
     val ballOwner: Option[Player] =
       if newOwnerOpt.isDefined then newOwnerOpt else state.teams.flatMap(_.players).find(_.hasBall)
     MatchState(
-      state.teams.map(updateMovement(_, ballOwner)),
+      updateTeams.map(updateMovement(_, ballOwner)),
       updateMovement(state.ball, ballOwner)
     )
 
@@ -28,14 +32,12 @@ object Act:
       player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(FieldConfig.stoppedAfterTackle))
     else
       player.nextAction match
-        case Take(ball) =>
-          player.copy(movement = Movement.still, ball = Some(ball))
+        case Take(ball) => player.copy(movement = Movement.still, ball = Some(ball))
         case Hit(_, _) =>
           player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(FieldConfig.stoppedAfterHit))
-        case Move(direction, FieldConfig.playerSpeed) =>
-          player.copy(movement = Movement(direction, FieldConfig.playerSpeed))
-        case Stopped(step) => player.copy(movement = Movement.still)
-        case _             => player
+        case Move(direction, speed) => player.copy(movement = Movement(direction, speed))
+        case Stopped(step)          => player.copy(movement = Movement.still)
+        case _                      => player
 
   private[update] def updateMovement(ball: Ball, playerInControl: Option[Player]): Ball =
     val movement: Movement = playerInControl match

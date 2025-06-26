@@ -26,12 +26,10 @@ object GameInitializer:
       val posY: Int = Random.between(1, realFieldHeight - 1)
       Player(
         id = id * 10 + i,
-        position = Position(posX, posY),
-        movement = Movement(Direction(0, 0), 0),
-        decision = Decision.Initial
+        position = Position(posX, posY)
       )
     }.toList
-    Team(id, players)
+    Team(id, players, false)
 
   private def createTeamWithBall(id: Int, isLeftSide: Boolean, b: Ball): Team =
     val minX: Int = if isLeftSide then 1 else realFieldWidth / 2 + 1
@@ -54,4 +52,4 @@ object GameInitializer:
       movement = Movement(Direction(0, 0), 0),
       decision = Decision.Initial
     )
-    Team(id, ballPlayer :: players)
+    Team(id, ballPlayer :: players, true)

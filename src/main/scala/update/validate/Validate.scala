@@ -12,7 +12,7 @@ object Validate {
     state.copy(teams = state.teams.map(validate))
 
   def validate(team: Team): Team =
-    Team(team.id, team.players.map(validate))
+    Team(team.id, team.players.map(validate), team.hasBall)
 
   def validate(player: Player): Player =
     val accuracy = Random.nextDouble()
@@ -30,22 +30,18 @@ object Validate {
 
   private def getSuccessAction(decision: Decision): Action =
     decision match
-      case Confusion(step) => Action.Stopped(step)
-      case Pass(from, to)  => Action.Hit(from.position.getDirection(to.position), FieldConfig.ballSpeed)
-      case Shoot(striker, goal) =>
-        Action.Hit(striker.position.getDirection(goal), FieldConfig.ballSpeed + 1) // todo
-      case Run(direction) => Action.Move(direction, FieldConfig.playerSpeed)
-      case MoveToGoal(goalDirection) =>
-        Action.Move(goalDirection, FieldConfig.playerSpeed)
-      case Tackle(ball) => Action.Take(ball)
-      case ReceivePass(ball) =>
-        Action.Take(ball)
-      case Intercept(ball) =>
-        Action.Take(ball)
-      case MoveToBall(direction, speed) => Action.Move(direction, speed)
-      case MoveRandom(direction) =>
-        Action.Move(direction, FieldConfig.playerSpeed)
-      case _ => Action.Initial
+      case Confusion(step)      => Action.Stopped(step)
+      case Pass(from, to)       => Action.Hit(from.position.getDirection(to.position), FieldConfig.ballSpeed)
+      case Shoot(striker, goal) => Action.Hit(striker.position.getDirection(goal), FieldConfig.ballSpeed + 1) // todo
+      case Run(direction)       => Action.Move(direction, FieldConfig.playerSpeed)
+      case MoveToGoal(goalDirection) => Action.Move(goalDirection, FieldConfig.playerSpeed)
+      case Tackle(ball)              => Action.Take(ball)
+      case ReceivePass(ball)         => Action.Take(ball)
+      case Intercept(ball)           => Action.Take(ball)
+      case MoveToBall(direction)     => Action.Move(direction, FieldConfig.playerSpeed)
+      case MoveRandom(direction, _)  => Action.Move(direction, FieldConfig.playerSpeed)
+      case Mark(player, target) => Action.Move(player.position.getDirection(target.position), FieldConfig.playerSpeed)
+      case _                    => Action.Initial
 
   private def getFailureAction(decision: Decision, accuracy: Double): Action =
     (decision, accuracy) match
@@ -62,7 +58,8 @@ object Validate {
     case _                                                             => 0.0
 
   private def failedShoot(striker: Player, goal: Position, accuracy: Double): Action =
-    val targetOffset: Double = FieldConfig.goalHeightScaled.toDouble * Math.abs(shootSuccess(striker, goal) - accuracy)
+    val targetOffset: Double =
+      FieldConfig.goalHeightScaled.toDouble * Math.abs(shootSuccess(striker, goal) - accuracy) * 2
     val newShootingTarget: Position = Random.nextDouble() match
       case rand if rand >= 0.5 => Position(goal.x, goal.y - targetOffset.toInt)
       case _                   => Position(goal.x, goal.y + targetOffset.toInt)

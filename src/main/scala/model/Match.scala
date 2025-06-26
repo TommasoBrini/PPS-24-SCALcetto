@@ -22,22 +22,27 @@ object Match:
     case Tackle(ball: Ball)
     case ReceivePass(ball: Ball)
     case Intercept(ball: Ball)
-    case MoveToBall(direction: Direction, speed: Int)
-    case MoveRandom(direction: Direction)
+    case MoveToBall(directionToBall: Direction)
+    case MoveRandom(direction: Direction, steps: Int)
+    case Mark(defender: Player, target: Player)
 
   case class Player(
       id: Int,
       position: Position,
-      movement: Movement,
+      movement: Movement = Movement.still,
       ball: Option[Ball] = None,
       nextAction: Action = Action.Initial,
       decision: Decision = Decision.Initial
   ):
     def hasBall: Boolean = ball.isDefined
 
-  case class Team(id: Int, players: List[Player])
+  case class Team(id: Int, players: List[Player], hasBall: Boolean = false)
 
-  case class Ball(position: Position, movement: Movement)
+  case class Ball(position: Position, movement: Movement = Movement.still):
+    def isHeadingToward(player: Player, tolerance: Double): Boolean =
+      val toPlayer: Direction = position.getDirection(player.position)
+      val actual: Direction   = movement.direction
+      Math.abs(actual.x - toPlayer.x) + Math.abs(actual.y - toPlayer.y) < tolerance
 
   case class MatchState(teams: List[Team], ball: Ball)
 

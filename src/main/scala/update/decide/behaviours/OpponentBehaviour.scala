@@ -1,12 +1,9 @@
-package update.decide
-
+package update.decide.behaviours
 import config.FieldConfig
-import model.Match.{Action, Ball, Decision, MatchState, Player}
-import model.Space.Position
+import model.Match.*
 
-import scala.util.Random
+class OpponentBehaviour(target: Option[Player]) extends PlayerBehavior:
 
-object OpponentStrategy extends DecisionStrategy:
   def decide(player: Player, matchState: MatchState): Decision =
 
     val ballPlayerPosition: Option[Position] = matchState.teams.flatMap(_.players).find(_.hasBall) match
@@ -32,5 +29,7 @@ object OpponentStrategy extends DecisionStrategy:
         else if dxPlayer.isEmpty && dxBall < FieldConfig.interceptBallRange && dyBall < FieldConfig.interceptBallRange
         then
           Decision.Intercept(ball)
-        else Decision.MoveToBall(player.position.getDirection(ball.position), FieldConfig.playerSpeed)
+        else
+          target.map(t => Decision.Mark(player, t))
+            .getOrElse(Decision.MoveToBall(player.position.getDirection(ball.position)))
     nextDecision

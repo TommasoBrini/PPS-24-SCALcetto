@@ -1,13 +1,10 @@
-package update.decide
-
+package update.decide.behaviours
 import config.FieldConfig
-import model.Match.{Decision, MatchState, Player, Team}
-import model.Space.{Direction, Position}
+import model.Match.*
 
-object ControlPlayerStrategy extends DecisionStrategy:
-
-  def decide(player: Player, state: MatchState): Decision =
-    calculateBestAction(player, state)
+object ControlPlayerBehavior extends PlayerBehavior:
+  def decide(player: Player, matchState: MatchState): Decision =
+    calculateBestAction(player, matchState)
 
   private def calculateBestAction(player: Player, state: MatchState): Decision =
     val possibleActions =
