@@ -21,7 +21,7 @@ object Validate {
 
   private def getSuccessRate(decision: Decision): Double =
     decision match
-      case Pass(_, _) => 1
+      case Pass(_, _) => 0.7
       case Tackle(_)  => 0.5
       case _          => 1
 
@@ -42,8 +42,7 @@ object Validate {
 
   private def getFailureAction(decision: Decision): Action =
     decision match
-      case Pass(from, to) => Action.Hit(from.position.getDirection(to.position), FieldConfig.ballSpeed)
+      case Pass(from, to) => Action.Hit(from.position.getDirection(to.position).jitter, FieldConfig.ballSpeed)
       case Tackle(_)      => Action.Stopped(FieldConfig.stoppedAfterTackle)
       case _              => Action.Initial
-
 }
