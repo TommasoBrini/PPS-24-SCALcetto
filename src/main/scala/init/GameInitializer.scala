@@ -2,6 +2,7 @@ package init
 
 import config.FieldConfig.*
 import model.Match.*
+import model.Match.Action.Initial
 
 import scala.util.Random
 
@@ -25,13 +26,10 @@ object GameInitializer:
       val posY: Int = Random.between(1, realFieldHeight - 1)
       Player(
         id = id * 10 + i,
-        position = Position(posX, posY),
-        ball = None,
-        nextAction = None,
-        movement = Movement(Direction(0, 0), 0)
+        position = Position(posX, posY)
       )
     }.toList
-    Team(id, players)
+    Team(id, players, false)
 
   private def createTeamWithBall(id: Int, isLeftSide: Boolean, b: Ball): Team =
     val minX: Int = if isLeftSide then 1 else realFieldWidth / 2 + 1
@@ -43,16 +41,15 @@ object GameInitializer:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),
-        ball = None,
-        nextAction = None,
-        movement = Movement(Direction(0, 0), 0)
+        movement = Movement(Direction(0, 0), 0),
+        decision = Decision.Initial
       )
     }.toList
     val ballPlayer: Player = Player(
       id = id * 10 + 22,
       position = Position(realFieldWidth / 2, realFieldHeight / 2),
       ball = Some(b),
-      nextAction = None,
-      movement = Movement(Direction(0, 0), 0)
+      movement = Movement(Direction(0, 0), 0),
+      decision = Decision.Initial
     )
-    Team(id, ballPlayer :: players)
+    Team(id, ballPlayer :: players, true)
