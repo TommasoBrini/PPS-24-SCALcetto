@@ -73,7 +73,7 @@ object ControlPlayerBehavior extends PlayerBehavior:
     playerDecision match
       case Decision.Pass(from, to)        => 1 / from.position.getDistance(to.position)
       case Decision.Shoot(striker, goal)  => shootRating(striker, state, goal)
-      case Decision.MoveToGoal(direction) => 1 // moveToGoalRating(player, direction, state)
+      case Decision.MoveToGoal(direction) => moveToGoalRating(player, direction, state)
       case Decision.Run(direction)        => runRating(player, direction, state)
       case _                              => 0
 
