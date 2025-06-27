@@ -3,6 +3,7 @@ package model
 import config.FieldConfig
 
 import scala.annotation.targetName
+import scala.util.Random
 
 object Space:
 
@@ -76,3 +77,6 @@ object Space:
 
   extension (m: Movement)
     def bounce(bounce: Bounce): Movement = m.copy(direction = m.direction.bounce(bounce))
+
+  extension (d: Direction)
+    def jitter: Direction = (d.x + Random.between(-0.2, 0.2), d.y + Random.between(-0.2, 0.2))

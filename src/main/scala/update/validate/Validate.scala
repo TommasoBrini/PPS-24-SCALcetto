@@ -23,7 +23,7 @@ object Validate {
 
   private def getSuccessRate(decision: Decision): Double =
     decision match
-      case Pass(_, _)           => 1
+      case Pass(_, _)           => 0.7
       case Tackle(_)            => 0.5
       case Shoot(striker, goal) => shootSuccess(striker, goal)
       case _                    => 1
@@ -45,12 +45,11 @@ object Validate {
 
   private def getFailureAction(decision: Decision, accuracy: Double): Action =
     (decision, accuracy) match
-      case (Pass(from, to), _) => Action.Hit(from.position.getDirection(to.position), FieldConfig.ballSpeed)
+      case (Pass(from, to), _) => Action.Hit(from.position.getDirection(to.position).jitter, FieldConfig.ballSpeed)
       case (Tackle(_), _)      => Action.Stopped(FieldConfig.stoppedAfterTackle)
       case (Shoot(striker, goal), accuracy) => failedShoot(striker, goal, accuracy)
       case _                                => Action.Initial
 
-  // SHOOT
   private def shootSuccess(striker: Player, goal: Position): Double = striker.position.getDistance(goal) match
     case goalDistance if goalDistance <= FieldConfig.lowDistanceShoot  => 0.1
     case goalDistance if goalDistance <= FieldConfig.midDistanceShoot  => 0.6
