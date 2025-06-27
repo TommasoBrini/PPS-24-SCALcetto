@@ -43,15 +43,13 @@ object Validate {
       case Mark(player, target) => Action.Move(player.position.getDirection(target.position), FieldConfig.playerSpeed)
       case _                    => Action.Initial
 
-
   private def getFailureAction(decision: Decision, accuracy: Double): Action =
     (decision, accuracy) match
-      case Pass(from, to)                   => Action.Hit(from.position.getDirection(to.position).jitter, FieldConfig.ballSpeed)
-      case (Tackle(_), _)                   => Action.Stopped(FieldConfig.stoppedAfterTackle)
+      case (Pass(from, to), _) => Action.Hit(from.position.getDirection(to.position).jitter, FieldConfig.ballSpeed)
+      case (Tackle(_), _)      => Action.Stopped(FieldConfig.stoppedAfterTackle)
       case (Shoot(striker, goal), accuracy) => failedShoot(striker, goal, accuracy)
       case _                                => Action.Initial
 
-  
   private def shootSuccess(striker: Player, goal: Position): Double = striker.position.getDistance(goal) match
     case goalDistance if goalDistance <= FieldConfig.lowDistanceShoot  => 0.1
     case goalDistance if goalDistance <= FieldConfig.midDistanceShoot  => 0.6
@@ -65,6 +63,5 @@ object Validate {
       case rand if rand >= 0.5 => Position(goal.x, goal.y - targetOffset.toInt)
       case _                   => Position(goal.x, goal.y + targetOffset.toInt)
     Action.Hit(striker.position.getDirection(newShootingTarget), FieldConfig.ballSpeed + 1)
-
 
 }
