@@ -39,14 +39,8 @@ object ControlPlayerBehavior extends PlayerBehavior:
       yield Decision.Run(Direction(dx, dy))
     goalDirection :: runDirections.toList
 
-  private def distanceBetweenPoints(start: Position, end: Position): Double =
-    Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2))
-
   private def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
-    FieldConfig.tackleRange > Math.abs(distanceBetweenPoints(start, end) - distanceBetweenPoints(
-      start,
-      mid
-    ) + distanceBetweenPoints(mid, end))
+    FieldConfig.tackleRange > Math.abs(start.getDistance(end) - start.getDistance(mid) + mid.getDistance(end))
 
   private def possibleShots(player: Player, matchState: MatchState): List[Decision] =
     val goalX: Int =
