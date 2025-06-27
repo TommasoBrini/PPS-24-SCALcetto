@@ -30,7 +30,7 @@ class OpponentBehavior(target: Option[Player]) extends PlayerBehavior:
           then
             opponent.decideIntercept(ball)
           else
-            target.map(t => opponent.decideMark(player, t))
+            target.map(t => opponent.decideMark(t))
               .getOrElse(opponent.decideMoveToBall(opponent.position.getDirection(ball.position)))
       nextDecision
     case _ =>

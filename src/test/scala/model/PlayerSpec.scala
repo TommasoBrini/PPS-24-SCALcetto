@@ -63,7 +63,7 @@ class PlayerSpec extends AnyFlatSpec with Matchers:
   "A opponent" should "be able to mark an opponent" in:
     val defender = Player(1, Position(0, 0)).asOpponent
     val target   = Player(2, Position(1, 1))
-    defender.decideMark(defender, target) shouldBe Decision.Mark(defender, target)
+    defender.decideMark(target) shouldBe Decision.Mark(defender, target)
 
   it should "be able to tackle a ball" in:
     val ball: Ball = Ball(Position(5, 5), Movement(Direction.none, 0))

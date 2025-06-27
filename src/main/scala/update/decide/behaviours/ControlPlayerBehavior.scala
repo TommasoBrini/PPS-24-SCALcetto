@@ -1,5 +1,5 @@
 package update.decide.behaviours
-import config.FieldConfig
+import config.{FieldConfig, Util}
 import model.Match.*
 import model.player.Player
 
@@ -88,25 +88,7 @@ object ControlPlayerBehavior extends PlayerBehavior:
       case _                              => 0
 
   private def moveToGoalRating(player: Player, goalDirection: Direction, state: MatchState): Double =
-    if pathClear(player.position, goalDirection, state) then 0.9 else 0.0
+    if Util.isPathClear(player.position, goalDirection, state) then 0.9 else 0.0
 
   private def runRating(player: Player, dir: Direction, state: MatchState): Double =
     0 // todo
-
-  private def pathClear(from: Position, dir: Direction, state: MatchState): Boolean =
-    val sideRange: Int     = 15
-    val verticalRange: Int = 15
-
-    val opponents = state.teams
-      .flatMap(_.players)
-      .filterNot(_.hasBall)
-
-    opponents.forall { opponent =>
-      val dx = opponent.position.x - from.x
-      val dy = opponent.position.y - from.y
-
-      val projectedForward = dx * dir.x + dy * dir.y
-      val projectedSide    = math.abs(-dx * dir.y + dy * dir.x)
-
-      !(projectedForward >= 0 && projectedForward <= verticalRange && projectedSide <= sideRange)
-    }

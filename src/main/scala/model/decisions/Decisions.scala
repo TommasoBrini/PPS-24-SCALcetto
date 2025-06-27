@@ -19,7 +19,7 @@ trait CanDecideToMoveToGoal:
   def decideMoveToGoal(direction: Direction): Decision = Decision.MoveToGoal(direction)
 
 trait CanDecideToMark:
-  def decideMark(defender: Player, target: Player): Decision = Decision.Mark(defender, target)
+  def decideMark(target: Player): Decision = Decision.Mark(this.asInstanceOf[Player], target)
 
 trait CanDecideToTackle:
   def decideTackle(ball: Ball): Decision = Decision.Tackle(ball)
