@@ -44,14 +44,8 @@ object ControlPlayerBehavior extends PlayerBehavior:
       yield player.decideRun(Direction(dx, dy))
     goalDirection :: runDirections.toList
 
-  private def distanceBetweenPoints(start: Position, end: Position): Double =
-    Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2))
-
   private def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
-    FieldConfig.tackleRange > Math.abs(distanceBetweenPoints(start, end) - distanceBetweenPoints(
-      start,
-      mid
-    ) + distanceBetweenPoints(mid, end))
+    FieldConfig.tackleRange > Math.abs(start.getDistance(end) - start.getDistance(mid) + mid.getDistance(end))
 
   private def shootRating(striker: Player, state: MatchState, goal: Position): Double =
     val opponentsInBetween: List[Player] = state.teams
@@ -71,7 +65,7 @@ object ControlPlayerBehavior extends PlayerBehavior:
     playerDecision match
       case Decision.Pass(from, to)        => 1 / from.position.getDistance(to.position)
       case Decision.Shoot(striker, goal)  => shootRating(striker, state, goal)
-      case Decision.MoveToGoal(direction) => 1 // moveToGoalRating(player, direction, state)
+      case Decision.MoveToGoal(direction) => moveToGoalRating(player, direction, state)
       case Decision.Run(direction)        => runRating(player, direction, state)
       case _                              => 0
 
