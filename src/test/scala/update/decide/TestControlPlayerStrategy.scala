@@ -8,6 +8,7 @@ import config.FieldConfig.*
 import init.GameInitializer.{realFieldHeight, realFieldWidth}
 import junit.runner.Version.id
 import update.Update.update
+import model.player.Player
 
 import scala.::
 import scala.util.Random
