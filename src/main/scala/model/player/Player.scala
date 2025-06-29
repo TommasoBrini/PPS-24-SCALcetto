@@ -1,5 +1,6 @@
 package model.player
 
+import config.FieldConfig
 import model.Match.*
 import model.player
 import model.Space.*
@@ -30,3 +31,26 @@ object Player:
   type ControlPlayer  = Player & CanDecideToPass & CanDecideToShoot & CanDecideToMoveToGoal
   type OpponentPlayer = Player & CanDecideToMark & CanDecideToTackle & CanDecideToIntercept
   type TeammatePlayer = Player & CanDecideToMoveRandom & CanDecideToReceivePass
+
+import Player.*
+
+extension (player: Player)
+  def possibleDecision(state: MatchState): List[Decision] =
+    player match
+      case _: ControlPlayer  => possibleShots(state)
+      case _: OpponentPlayer => ???
+      case _: TeammatePlayer => ???
+      case _                 => throw new IllegalArgumentException("Unknown player type")
+
+  private def possibleShots(matchState: MatchState): List[Decision] =
+    val goalX: Int =
+      if matchState.teams.head.players.contains(player)
+      then FieldConfig.goalEastX
+      else FieldConfig.goalWestX
+
+    val goalPositions: List[Position] = List(
+      Position(goalX, FieldConfig.firstPoleY),
+      Position(goalX, FieldConfig.midGoalY),
+      Position(goalX, FieldConfig.secondPoleY)
+    )
+    goalPositions.map(player.asControlPlayer.decideShoot)

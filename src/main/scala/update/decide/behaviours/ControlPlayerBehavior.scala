@@ -2,6 +2,7 @@ package update.decide.behaviours
 import config.{FieldConfig, Util}
 import model.Match.*
 import model.player.Player
+import model.player.possibleDecision
 
 object ControlPlayerBehavior extends PlayerBehavior:
   def decide(player: Player, matchState: MatchState): Decision = player match
@@ -10,13 +11,13 @@ object ControlPlayerBehavior extends PlayerBehavior:
     case _ =>
       throw new IllegalArgumentException("ControlPlayerBehavior can only be used with ControlPlayer instances")
 
-  private def calculateBestAction(player: Player.ControlPlayer, state: MatchState): Decision =
+  private def calculateBestAction(player: Player, state: MatchState): Decision =
     val possibleActions =
       if player.decision == Decision.Initial
-      then possiblePasses(player, state)
+      then possiblePasses(player.asControlPlayer, state)
       else
-        possiblePasses(player, state) ++
-          possibleMoves(player, state) ++ possibleShots(player, state)
+        possiblePasses(player.asControlPlayer, state) ++
+          possibleMoves(player.asControlPlayer, state) ++ player.possibleDecision(state)
 
     type Rating = Double
     val decisionRatings: Map[Decision, Rating] = possibleActions
@@ -51,19 +52,6 @@ object ControlPlayerBehavior extends PlayerBehavior:
       start,
       mid
     ) + distanceBetweenPoints(mid, end))
-
-  private def possibleShots(player: Player.ControlPlayer, matchState: MatchState): List[Decision] =
-    val goalX: Int =
-      if matchState.teams.head.players.contains(player)
-      then FieldConfig.goalEastX
-      else FieldConfig.goalWestX
-
-    val goalPositions: List[Position] = List(
-      Position(goalX, FieldConfig.firstPoleY),
-      Position(goalX, FieldConfig.midGoalY),
-      Position(goalX, FieldConfig.secondPoleY)
-    )
-    goalPositions.map(player.decideShoot)
 
   private def shootRating(striker: Player, state: MatchState, goal: Position): Double =
     val opponentsInBetween: List[Player] = state.teams

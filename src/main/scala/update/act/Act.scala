@@ -5,7 +5,6 @@ import model.Match.{Action, *}
 import model.Match.Action.*
 import model.player.Player
 
-import java.security.KeyStore.TrustedCertificateEntry
 object Act:
   def act(state: MatchState): MatchState =
     val updateState: MatchState = move(updateMovements(state))
