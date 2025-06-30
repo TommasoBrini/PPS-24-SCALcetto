@@ -58,7 +58,13 @@ object Act:
     team.copy(players = team.players.map(move))
 
   private[update] def move(p: Player) =
-    p.copy(position = p.position + p.movement)
+    val newPosition = p.position + p.movement
+    // Keep player within field boundaries
+    val clampedPosition = Position(
+      newPosition.x.max(0).min(FieldConfig.widthBound),
+      newPosition.y.max(0).min(FieldConfig.heightBound)
+    )
+    p.copy(position = clampedPosition)
 
   private[update] def move(ball: Ball): Ball =
     ball.copy(position = ball.position + ball.movement)

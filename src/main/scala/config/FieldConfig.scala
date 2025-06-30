@@ -9,7 +9,6 @@ object FieldConfig:
   val teamSize: Int              = 10
   val ballSize: Int              = 10
   val playerSize: Int            = 10
-  val InfoPanelHeight: Int       = 50
   val playerSpeed: Int           = 2
   val ballSpeed: Int             = 3
   val interceptBallRange: Int    = 7
