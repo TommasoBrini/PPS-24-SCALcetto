@@ -1,16 +1,10 @@
 package model
 
-import config.UIConfig
-
-import scala.annotation.targetName
-import scala.util.Random
-
 object Space:
 
   opaque type Position = (Int, Int)
   object Position:
     def apply(x: Int, y: Int): Position = (x, y)
-
   extension (p: Position)
     def x: Int                            = p._1
     def y: Int                            = p._2
@@ -41,9 +35,3 @@ object Space:
 
   enum Bounce:
     case VerticalBounce, HorizontalBounce, ObliqueBounce
-
-  extension (p: Position)
-    def clampToField: Position =
-      val clampedX = Math.max(0, Math.min(p.x, UIConfig.fieldWidth))
-      val clampedY = Math.max(0, Math.min(p.y, UIConfig.fieldHeight))
-      Position(clampedX, clampedY)

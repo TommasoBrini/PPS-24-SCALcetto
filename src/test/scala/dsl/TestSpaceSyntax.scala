@@ -5,8 +5,9 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.shouldBe
 import SpaceSyntax.*
-import config.UIConfig
 import model.Space.Bounce.*
+
+import scala.util.Random
 
 class TestSpaceSyntax extends AnyFlatSpec with Matchers:
 
@@ -48,3 +49,15 @@ class TestSpaceSyntax extends AnyFlatSpec with Matchers:
     val m      = Movement(d, 3)
     val newPos = p + m
     newPos shouldBe Position(3, 0)
+
+  "Direction jitter" should " add the same noise when Random is seeded" in:
+    Random.setSeed(42L)
+    val direction = Direction(1.0, -3.0)
+    val first     = direction.jitter
+
+    Random.setSeed(42L)
+    val second = direction.jitter
+
+    assert(first == second)
+    assert(math.abs(first.x - direction.x) <= 0.2)
+    assert(math.abs(first.y - direction.y) <= 0.2)

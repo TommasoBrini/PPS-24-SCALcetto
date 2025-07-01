@@ -39,6 +39,11 @@ object SpaceSyntax {
         val secondGoalPost: Int = firstGoalPost + UIConfig.goalHeight
         (p.x <= 0 || p.x >= UIConfig.fieldWidth) && (p.y >= firstGoalPost && p.y <= secondGoalPost)
 
+      def clampToField: Position =
+        val clampedX = Math.max(0, Math.min(p.x, UIConfig.fieldWidth))
+        val clampedY = Math.max(0, Math.min(p.y, UIConfig.fieldHeight))
+        Position(clampedX, clampedY)
+
   object DirectionSyntax:
     private def bounceCalculator(bounce: Bounce, x: Double, y: Double): Direction = bounce match
       case ObliqueBounce    => Direction(-x, -y)
