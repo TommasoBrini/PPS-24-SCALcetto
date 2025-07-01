@@ -1,6 +1,7 @@
 package update.act
 
-import config.FieldConfig
+import config.UIConfig
+import config.MatchConfig
 import model.Match.*
 import model.Match.Action.*
 import org.scalatest.flatspec.AnyFlatSpec
@@ -34,11 +35,11 @@ class ActSpec extends AnyFlatSpec with Matchers:
 
   "A team" should "move when he has to" in:
     val initial = Position(0, 0)
-    val p1 = Player(0, initial, movement = Movement.still, nextAction = Move(defaultDirection, FieldConfig.playerSpeed))
-    val p2 = Player(1, initial, movement = Movement.still, nextAction = Move(defaultDirection, FieldConfig.playerSpeed))
+    val p1 = Player(0, initial, movement = Movement.still, nextAction = Move(defaultDirection, MatchConfig.playerSpeed))
+    val p2 = Player(1, initial, movement = Movement.still, nextAction = Move(defaultDirection, MatchConfig.playerSpeed))
     val team = Team(0, List(p1, p2))
     updateMovement(team, None).players
-      .forall(_.movement == Movement(defaultDirection, FieldConfig.playerSpeed)) should be(true)
+      .forall(_.movement == Movement(defaultDirection, MatchConfig.playerSpeed)) should be(true)
 
   it should "move correctly" in:
     val initial  = Position(0, 0)
@@ -58,8 +59,8 @@ class ActSpec extends AnyFlatSpec with Matchers:
     updateMovement(player, None).movement should be(Movement.still)
 
   it should "move when he has to" in:
-    val player = Player(0, Position(0, 0), nextAction = Move(defaultDirection, FieldConfig.playerSpeed))
-    updateMovement(player, None).movement should be(Movement(defaultDirection, FieldConfig.playerSpeed))
+    val player = Player(0, Position(0, 0), nextAction = Move(defaultDirection, MatchConfig.playerSpeed))
+    updateMovement(player, None).movement should be(Movement(defaultDirection, MatchConfig.playerSpeed))
 
   it should "stand still when hitting the ball" in:
     val direction = Direction(2, 2)
@@ -80,18 +81,17 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val ball    = Ball(Position(0, 0), movement = initial)
     updateMovement(ball, None).movement should be(initial)
 
-  it should "keep the same movement if the player that controls it" +
-    "doesn't move or hit it" in:
-      val initial = Movement.still
-      val ball    = Ball(Position(0, 0), initial)
-      val player  = Player(0, Position(0, 0), Movement.still, Some(ball))
-      updateMovement(ball, Some(player)).movement should be(initial)
+  it should "keep the same movement if the player that controls it" + "doesn't move or hit it" in:
+    val initial = Movement.still
+    val ball    = Ball(Position(0, 0), initial)
+    val player  = Player(0, Position(0, 0), Movement.still, Some(ball))
+    updateMovement(ball, Some(player)).movement should be(initial)
 
   it should "move with the player that controls it" in:
     val ball    = Ball(Position(0, 0))
-    val player  = Player(0, Position(0, 0), Movement.still, Some(ball), Move(defaultDirection, FieldConfig.playerSpeed))
+    val player  = Player(0, Position(0, 0), Movement.still, Some(ball), Move(defaultDirection, MatchConfig.playerSpeed))
     val updated = updateMovement(player, Some(player))
-    updateMovement(ball, Some(updated)).movement should be(Movement(defaultDirection, FieldConfig.playerSpeed))
+    updateMovement(ball, Some(updated)).movement should be(Movement(defaultDirection, MatchConfig.playerSpeed))
 
   it should "be hit by player correctly" in:
     val ball      = Ball(Position(0, 0), Movement.still)
@@ -110,7 +110,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val state: MatchState = GameInitializer.initialSimulationState()
     val goalState = state.copy(
       ball = state.ball.copy(
-        position = Position(0, FieldConfig.heightBound / 2)
+        position = Position(0, UIConfig.fieldHeight / 2)
       )
     )
     isAGoal(goalState) should be(true)
@@ -119,7 +119,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val state: MatchState = GameInitializer.initialSimulationState()
     val goalState = state.copy(
       ball = state.ball.copy(
-        position = Position(FieldConfig.widthBound, FieldConfig.heightBound / 2)
+        position = Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)
       )
     )
     isAGoal(goalState) should be(true)

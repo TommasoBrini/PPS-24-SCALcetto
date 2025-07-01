@@ -1,6 +1,6 @@
 package model.player
 
-import config.FieldConfig
+import config.UIConfig
 import model.Match.*
 import model.player
 import model.Space.*
@@ -45,12 +45,12 @@ extension (player: Player)
   private def possibleShots(matchState: MatchState): List[Decision] =
     val goalX: Int =
       if matchState.teams.head.players.contains(player)
-      then FieldConfig.goalEastX
-      else FieldConfig.goalWestX
+      then UIConfig.goalEastX
+      else UIConfig.goalWestX
 
     val goalPositions: List[Position] = List(
-      Position(goalX, FieldConfig.firstPoleY),
-      Position(goalX, FieldConfig.midGoalY),
-      Position(goalX, FieldConfig.secondPoleY)
+      Position(goalX, UIConfig.firstPoleY),
+      Position(goalX, UIConfig.midGoalY),
+      Position(goalX, UIConfig.secondPoleY)
     )
     goalPositions.map(player.asControlPlayer.decideShoot)

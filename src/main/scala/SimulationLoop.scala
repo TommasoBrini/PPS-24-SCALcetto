@@ -10,52 +10,40 @@ import java.awt.event.{ActionEvent, ActionListener}
 object SimulationLoop:
 
   private var timer: Option[SwingTimer] = None
-  private var currentState: MatchState  = _
   private var view: SwingView           = _
-  private var frameRate: Int            = defaultFrameRate
-  private var isRunning: Boolean        = false
+  private var state: MatchState         = _
 
-  def initialize(initialState: MatchState, initialFrameRate: Int = defaultFrameRate): Unit =
-    frameRate = initialFrameRate
-    currentState = initialState
-    view = new SwingView(currentState)
-
-    // Set up event handlers
-    view.onStart(start())
+  def initialize(initialState: MatchState, initialFrameRate: Int = 30): Unit =
+    val delayMs: Int = 1000 / initialFrameRate
+    state = initialState
+    view = new SwingView(state)
+    view.onStart(start(delayMs))
     view.onPause(pause())
     view.onResume(resume())
     view.onReset(reset())
+    view.render(state)
 
-    // Initial render
-    view.render(currentState)
-
-  private def start(): Unit =
-    if !isRunning then
-      createTimer()
-      timer.foreach(_.start())
-      isRunning = true
+  private def start(delayMs: Int): Unit =
+    createTimer(delayMs)
+    timer.foreach(_.start())
 
   private def pause(): Unit =
     timer.foreach(_.stop())
-    isRunning = false
 
   private def resume(): Unit =
-    if !isRunning then
-      timer.foreach(_.start())
-      isRunning = true
+    timer.foreach(_.start())
 
   private def reset(): Unit =
     pause()
-    currentState = GameInitializer.initialSimulationState()
-    view.render(currentState)
+    state = GameInitializer.initialSimulationState()
+    view.render(state)
 
-  private def createTimer(): Unit =
-    val delayMs: Int = 1000 / frameRate
+  private def createTimer(delayMs: Int): Unit =
     val newTimer: SwingTimer = new SwingTimer(
       delayMs,
       new ActionListener:
         override def actionPerformed(e: ActionEvent): Unit =
-          currentState = update(currentState, Event.StepEvent)
-          view.render(currentState)
+          state = update(state, Event.StepEvent)
+          view.render(state)
     )
     timer = Some(newTimer)

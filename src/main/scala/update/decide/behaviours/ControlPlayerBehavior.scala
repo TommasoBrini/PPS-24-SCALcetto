@@ -1,5 +1,5 @@
 package update.decide.behaviours
-import config.{FieldConfig, Util}
+import config.{MatchConfig, UIConfig, Util}
 import model.Match.*
 import model.player.Player
 import model.player.possibleDecision
@@ -33,8 +33,8 @@ object ControlPlayerBehavior extends PlayerBehavior:
   private[update] def possibleMoves(player: Player.ControlPlayer, matchState: MatchState): List[Decision] =
     val goalPosition: Position =
       if matchState.teams.head.players.contains(player)
-      then Position(FieldConfig.fieldWidth * FieldConfig.scale, (FieldConfig.fieldHeight * FieldConfig.scale) / 2)
-      else Position(0, (FieldConfig.fieldHeight * FieldConfig.scale) / 2)
+      then Position(UIConfig.fieldWidth, (UIConfig.fieldHeight) / 2)
+      else Position(0, (UIConfig.fieldHeight) / 2)
     val goalDirection = player.decideMoveToGoal(player.position.getDirection(goalPosition))
     val runDirections =
       for
@@ -45,7 +45,7 @@ object ControlPlayerBehavior extends PlayerBehavior:
     goalDirection :: runDirections.toList
 
   private def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
-    FieldConfig.tackleRange > Math.abs(start.getDistance(end) - start.getDistance(mid) + mid.getDistance(end))
+    MatchConfig.tackleRange > Math.abs(start.getDistance(end) - start.getDistance(mid) + mid.getDistance(end))
 
   private def shootRating(striker: Player, state: MatchState, goal: Position): Double =
     val opponentsInBetween: List[Player] = state.teams
@@ -53,9 +53,9 @@ object ControlPlayerBehavior extends PlayerBehavior:
       .filterNot(_.hasBall)
       .filter(opp => positionIsInBetween(striker.position, goal, opp.position))
     val shootRating: Double = striker.position.getDistance(goal) match
-      case dist if dist <= FieldConfig.lowDistanceShoot  => 3 // todo change this values next meeting
-      case dist if dist <= FieldConfig.midDistanceShoot  => 0.70
-      case dist if dist <= FieldConfig.highDistanceShoot => 0.30
+      case dist if dist <= MatchConfig.lowDistanceShoot  => 3 // todo change this values next meeting
+      case dist if dist <= MatchConfig.midDistanceShoot  => 0.70
+      case dist if dist <= MatchConfig.highDistanceShoot => 0.30
       case _                                             => 0.0
     if opponentsInBetween.isEmpty
     then shootRating

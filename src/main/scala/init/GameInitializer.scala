@@ -1,6 +1,7 @@
 package init
 
-import config.FieldConfig.*
+import config.UIConfig
+import config.MatchConfig
 import model.Match.*
 import model.Match.Action.Initial
 import model.player.Player
@@ -9,8 +10,8 @@ import scala.util.Random
 
 object GameInitializer:
 
-  private val realFieldWidth: Int  = fieldWidth * scale
-  private val realFieldHeight: Int = fieldHeight * scale
+  private val realFieldWidth: Int  = UIConfig.fieldWidth
+  private val realFieldHeight: Int = UIConfig.fieldHeight
 
   def initialSimulationState(): MatchState =
     val ball: Ball   = Ball(Position(realFieldWidth / 2, realFieldHeight / 2), Movement(Direction(0, 0), 0))
@@ -22,7 +23,7 @@ object GameInitializer:
     val minX: Int = if isLeftSide then 1 else realFieldWidth / 2 + 1
     val maxX: Int = if isLeftSide then realFieldWidth / 2 - 1 else realFieldWidth - 2
 
-    val players = (0 until teamSize).map { i =>
+    val players = (0 until MatchConfig.teamSize).map { i =>
       val posX: Int = Random.between(minX, maxX + 1)
       val posY: Int = Random.between(1, realFieldHeight - 1)
       Player(
@@ -36,7 +37,7 @@ object GameInitializer:
     val minX: Int = if isLeftSide then 1 else realFieldWidth / 2 + 1
     val maxX: Int = if isLeftSide then realFieldWidth / 2 - 1 else realFieldWidth - 2
 
-    val players: List[Player] = (0 until teamSize - 1).map { i =>
+    val players: List[Player] = (0 until MatchConfig.teamSize - 1).map { i =>
       val posX: Int = Random.between(minX, maxX + 1)
       val posY: Int = Random.between(1, realFieldHeight - 1)
       Player(

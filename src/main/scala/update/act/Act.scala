@@ -1,9 +1,11 @@
 package update.act
 
-import config.FieldConfig
+import config.MatchConfig
+import config.UIConfig.*
 import model.Match.{Action, *}
 import model.Match.Action.*
 import model.player.Player
+import config.UIConfig
 
 object Act:
   def act(state: MatchState): MatchState =
@@ -31,12 +33,12 @@ object Act:
 
   private[update] def updateMovement(player: Player, ballOwner: Option[Player]): Player =
     if player.hasBall && ballOwner.isDefined && player.id != ballOwner.get.id then
-      player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(FieldConfig.stoppedAfterTackle))
+      player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(MatchConfig.stoppedAfterTackle))
     else
       player.nextAction match
         case Take(ball) => player.copy(movement = Movement.still, ball = Some(ball))
         case Hit(_, _) =>
-          player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(FieldConfig.stoppedAfterHit))
+          player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(MatchConfig.stoppedAfterHit))
         case Move(direction, speed) => player.copy(movement = Movement(direction, speed))
         case Stopped(step)          => player.copy(movement = Movement.still)
         case _                      => player
@@ -47,7 +49,7 @@ object Act:
       case Some(Player(_, _, movement, _, Move(_, _), _))     => movement
       case _                                                  => ball.movement
     val newPosition = playerInControl match
-      case Some(Player(_, p, m, _, _, _)) => p + (m * (FieldConfig.ballSize / 2))
+      case Some(Player(_, p, m, _, _, _)) => p + (m * (UIConfig.ballSize / 2))
       case _                              => ball.position
     ball.copy(position = newPosition, movement = movement)
 
@@ -61,8 +63,8 @@ object Act:
     val newPosition = p.position + p.movement
     // Keep player within field boundaries
     val clampedPosition = Position(
-      newPosition.x.max(0).min(FieldConfig.widthBound),
-      newPosition.y.max(0).min(FieldConfig.heightBound)
+      newPosition.x.max(0).min(UIConfig.fieldWidth),
+      newPosition.y.max(0).min(UIConfig.fieldHeight)
     )
     p.copy(position = clampedPosition)
 
@@ -73,7 +75,7 @@ object Act:
     state.ball.position.isGoal
 
   def isBallOut(state: MatchState): Boolean =
-    state.ball.position.isOutOfBound(FieldConfig.widthBound, FieldConfig.heightBound)
+    state.ball.position.isOutOfBound(UIConfig.fieldWidth, UIConfig.fieldHeight)
 
   private def updatePlayers(state: MatchState): MatchState =
     val updateTeams: List[Team] = state.teams.map { team =>

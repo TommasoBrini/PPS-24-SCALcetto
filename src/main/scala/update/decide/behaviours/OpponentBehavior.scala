@@ -1,5 +1,5 @@
 package update.decide.behaviours
-import config.FieldConfig
+import config.MatchConfig
 import model.Match.*
 import model.player.Player
 
@@ -23,10 +23,10 @@ class OpponentBehavior(target: Option[Player]) extends PlayerBehavior:
       val nextDecision: Decision = opponent.nextAction match
         case Action.Stopped(step) if step > 0 => opponent.decideConfusion(step - 1)
         case _ =>
-          if dxPlayer.isDefined && dyPlayer.isDefined && dxPlayer.get < FieldConfig.tackleRange && dyPlayer.get < FieldConfig.tackleRange
+          if dxPlayer.isDefined && dyPlayer.isDefined && dxPlayer.get < MatchConfig.tackleRange && dyPlayer.get < MatchConfig.tackleRange
           then
             opponent.decideTackle(ball)
-          else if dxPlayer.isEmpty && dxBall < FieldConfig.interceptBallRange && dyBall < FieldConfig.interceptBallRange
+          else if dxPlayer.isEmpty && dxBall < MatchConfig.interceptBallRange && dyBall < MatchConfig.interceptBallRange
           then
             opponent.decideIntercept(ball)
           else

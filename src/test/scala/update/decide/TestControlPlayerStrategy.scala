@@ -1,10 +1,10 @@
 package update.decide
 
-import config.FieldConfig
+import config.MatchConfig
+import config.UIConfig
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 import model.Match.*
-import config.FieldConfig.*
 import init.GameInitializer.{realFieldHeight, realFieldWidth}
 import junit.runner.Version.id
 import update.Update.update
@@ -16,9 +16,9 @@ import scala.util.Random
 class TestControlPlayerStrategy extends AnyFunSpec with Matchers {
 
   private def generateTeamLeftInLine(id: Int): Team =
-    val players = (0 until teamSize).map { i =>
+    val players = (0 until MatchConfig.teamSize).map { i =>
       val posX: Int = 1
-      val posY: Int = Random.between(1, fieldHeight * scale)
+      val posY: Int = Random.between(1, UIConfig.fieldHeight)
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),
@@ -29,9 +29,9 @@ class TestControlPlayerStrategy extends AnyFunSpec with Matchers {
     Team(id, players)
 
   private def generateTeamRightTeamWithBall(id: Int): Team =
-    val players: List[Player] = (0 until teamSize - 1).map { i =>
-      val posX: Int = widthBound / 2
-      val posY: Int = Random.between(1, heightBound - 1)
+    val players: List[Player] = (0 until MatchConfig.teamSize - 1).map { i =>
+      val posX: Int = UIConfig.fieldWidth / 2
+      val posY: Int = Random.between(1, UIConfig.fieldHeight - 1)
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),

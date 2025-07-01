@@ -1,5 +1,5 @@
 package update.decide.behaviours
-import config.FieldConfig
+import config.MatchConfig
 import model.Match.*
 import model.Match.Action.Stopped
 import model.player.Player
@@ -10,8 +10,8 @@ import scala.util.Random
 object TeammateBehavior extends PlayerBehavior:
   def decide(player: Player, state: MatchState): Decision = player match
     case teammate: Player.TeammatePlayer =>
-      if state.ball.isHeadingToward(player, FieldConfig.passDirectionRange) then
-        if teammate.position.getDistance(state.ball.position) < FieldConfig.interceptBallRange
+      if state.ball.isHeadingToward(player, MatchConfig.passDirectionRange) then
+        if teammate.position.getDistance(state.ball.position) < MatchConfig.interceptBallRange
         then teammate.decideReceivePass(state.ball)
         else teammate.decideMoveToBall(teammate.position.getDirection(state.ball.position))
       else
@@ -22,6 +22,6 @@ object TeammateBehavior extends PlayerBehavior:
               case MoveRandom(dir, steps) if steps > 0 => teammate.decideMoveRandom(dir, steps - 1)
               case _ =>
                 val direction = Direction(Random.between(-1.toDouble, 1), Random.between(-1.toDouble, 1))
-                teammate.decideMoveRandom(direction, FieldConfig.moveRandomSteps)
+                teammate.decideMoveRandom(direction, MatchConfig.moveRandomSteps)
     case _ =>
       throw new IllegalArgumentException("TeammateBehavior can only be used with TeammatePlayer instances")
