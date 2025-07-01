@@ -4,6 +4,7 @@ import config.UIConfig
 import config.MatchConfig
 import model.Match.{Action, *}
 import model.Match.Action.*
+import dsl.SpaceSyntax.*
 
 object Act:
   def act(state: MatchState): MatchState =
@@ -66,4 +67,4 @@ object Act:
     state.ball.position.isGoal
 
   def isBallOut(state: MatchState): Boolean =
-    state.ball.position.isOutOfBound(UIConfig.fieldWidth, UIConfig.fieldHeight)
+    state.ball.position isOutOfBound (UIConfig.fieldWidth, UIConfig.fieldHeight)

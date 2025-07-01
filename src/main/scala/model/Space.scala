@@ -10,6 +10,7 @@ object Space:
   opaque type Position = (Int, Int)
   object Position:
     def apply(x: Int, y: Int): Position = (x, y)
+
   extension (p: Position)
     def x: Int                            = p._1
     def y: Int                            = p._2
@@ -51,32 +52,7 @@ object Space:
       Position(x, y)
 
   enum Bounce:
-    case Vertical, Horizontal, Both
-
-  extension (i: Int)
-    def isOutOfBound(bound: Int): Boolean = i < 0 || i > bound
-
-  import Bounce.*
-  extension (p: Position)
-    def isOutOfBound(widthBound: Int, heightBound: Int): Boolean =
-      p.x.isOutOfBound(widthBound) || p.y.isOutOfBound(heightBound)
-    def getBounce(widthBound: Int, heightBound: Int): Bounce =
-      if p.x.isOutOfBound(widthBound) && p.y.isOutOfBound(heightBound) then Both
-      else if p.x.isOutOfBound(widthBound) then Horizontal
-      else Vertical
-    def isGoal: Boolean =
-      val firstGoalPost: Int  = (UIConfig.fieldHeight - (UIConfig.goalHeight)) / 2
-      val secondGoalPost: Int = firstGoalPost + UIConfig.goalHeight
-      (p.x <= 0 || p.x >= UIConfig.fieldWidth) && (p.y >= firstGoalPost && p.y <= secondGoalPost)
-
-  extension (d: Direction)
-    def bounce(bounce: Bounce): Direction = bounce match
-      case Both       => Direction(-d.x, -d.y)
-      case Horizontal => Direction(-d.x, d.y)
-      case Vertical   => Direction(d.x, -d.y)
-
-  extension (m: Movement)
-    def bounce(bounce: Bounce): Movement = m.copy(direction = m.direction.bounce(bounce))
+    case VerticalBounce, HorizontalBounce, ObliqueBounce
 
   extension (d: Direction)
     def jitter: Direction = (d.x + Random.between(-0.2, 0.2), d.y + Random.between(-0.2, 0.2))

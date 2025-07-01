@@ -2,7 +2,6 @@ package update.decide
 
 import model.Match.*
 import update.decide.behaviours.{ControlPlayerBehavior, OpponentBehaviour, TeammateBehavior}
-
 object Decide:
 
   def decide(state: MatchState): MatchState =
