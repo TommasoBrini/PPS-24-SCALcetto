@@ -1,5 +1,6 @@
 package update.decide.behaviours
-import config.FieldConfig
+import config.UIConfig
+import config.MatchConfig
 import model.Match.*
 
 object ControlPlayerBehavior extends PlayerBehavior:
@@ -28,8 +29,8 @@ object ControlPlayerBehavior extends PlayerBehavior:
   private[update] def possibleMoves(player: Player, matchState: MatchState): List[Decision] =
     val goalPosition: Position =
       if matchState.teams.head.players.contains(player)
-      then Position(FieldConfig.fieldWidth * FieldConfig.scale, (FieldConfig.fieldHeight * FieldConfig.scale) / 2)
-      else Position(0, (FieldConfig.fieldHeight * FieldConfig.scale) / 2)
+      then Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)
+      else Position(0, UIConfig.fieldHeight / 2)
     val goalDirection = Decision.MoveToGoal(player.position.getDirection(goalPosition))
     val runDirections =
       for
@@ -40,18 +41,18 @@ object ControlPlayerBehavior extends PlayerBehavior:
     goalDirection :: runDirections.toList
 
   private def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
-    FieldConfig.tackleRange > Math.abs(start.getDistance(end) - start.getDistance(mid) + mid.getDistance(end))
+    MatchConfig.tackleRange > Math.abs(start.getDistance(end) - start.getDistance(mid) + mid.getDistance(end))
 
   private def possibleShots(player: Player, matchState: MatchState): List[Decision] =
     val goalX: Int =
       if matchState.teams.head.players.contains(player)
-      then FieldConfig.goalEastX
-      else FieldConfig.goalWestX
+      then UIConfig.goalEastX
+      else UIConfig.goalWestX
 
     val goalPositions: List[Position] = List(
-      Position(goalX, FieldConfig.firstPoleY),
-      Position(goalX, FieldConfig.midGoalY),
-      Position(goalX, FieldConfig.secondPoleY)
+      Position(goalX, UIConfig.firstPoleY),
+      Position(goalX, UIConfig.midGoalY),
+      Position(goalX, UIConfig.secondPoleY)
     )
     goalPositions.map(Decision.Shoot(player, _))
 
@@ -61,9 +62,9 @@ object ControlPlayerBehavior extends PlayerBehavior:
       .filterNot(_.hasBall)
       .filter(opp => positionIsInBetween(striker.position, goal, opp.position))
     val shootRating: Double = striker.position.getDistance(goal) match
-      case dist if dist <= FieldConfig.lowDistanceShoot  => 3 // todo change this values next meeting
-      case dist if dist <= FieldConfig.midDistanceShoot  => 0.70
-      case dist if dist <= FieldConfig.highDistanceShoot => 0.30
+      case dist if dist <= MatchConfig.lowDistanceShoot  => 3 // todo change this values next meeting
+      case dist if dist <= MatchConfig.midDistanceShoot  => 0.70
+      case dist if dist <= MatchConfig.highDistanceShoot => 0.30
       case _                                             => 0.0
     if opponentsInBetween.isEmpty
     then shootRating
