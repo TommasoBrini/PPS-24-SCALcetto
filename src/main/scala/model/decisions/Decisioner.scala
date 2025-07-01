@@ -12,7 +12,8 @@ object Decisioner:
   extension (player: Player)
     def possibleDecision(state: MatchState): List[Decision] =
       player match
-        case p: ControlPlayer  => p.possibleShots(state) ++ p.possibleMoves(state) ++ p.possiblePasses(state)
+        case p: ControlPlayer =>
+          p.possibleShots(state) ++ p.possibleMoves(state) ++ p.possiblePasses(state) ++ p.possibleMovesToGoal(state)
         case _: OpponentPlayer => ???
         case _: TeammatePlayer => ???
         case _                 => throw new IllegalArgumentException("Unknown player type")

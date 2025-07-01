@@ -2,11 +2,11 @@ package update.act
 
 import config.UIConfig
 import config.MatchConfig
-import model.Match.{Action, *}
+import model.Match.{Action, Ball, MatchState, Movement, Team}
 import model.Match.Action.*
-import dsl.SpaceSyntax.*
 import model.player.Player
 import model.decisions.PlayerDecisionFactory.*
+import dsl.SpaceSyntax.*
 
 object Act:
   def act(state: MatchState): MatchState =
