@@ -5,6 +5,7 @@ import Decision.*
 import config.MatchConfig
 import config.UIConfig
 import model.Space.Position
+import dsl.SpaceSyntax.*
 
 import scala.util.Random
 
