@@ -6,6 +6,7 @@ import config.MatchConfig
 import config.UIConfig
 import model.player.Player
 import model.Space.Position
+import dsl.SpaceSyntax.*
 
 import scala.util.Random
 

@@ -4,6 +4,7 @@ import config.UIConfig
 import config.MatchConfig
 import model.Match.{Action, *}
 import model.Match.Action.*
+import dsl.SpaceSyntax.*
 import model.player.Player
 import model.decisions.PlayerDecisionFactory.*
 
@@ -75,11 +76,11 @@ object Act:
     val updateTeams: List[Team] = state.teams.map { team =>
       val updatePlayers: List[Player] = team.players.map { player =>
         if !team.hasBall then
-          player.copy().asOpponentDecisionPlayer
+          player.asOpponentDecisionPlayer
         else if player.hasBall then
-          player.copy().asControlDecisionPlayer
+          player.asControlDecisionPlayer
         else {
-          player.copy().asTeammateDecisionPlayer
+          player.asTeammateDecisionPlayer
         }
       }
       team.copy(players = updatePlayers)

@@ -12,16 +12,19 @@ import model.decisions.CommonPlayerDecisions.*
 object ControlPlayerBehavior extends PlayerBehavior:
   def decide(player: Player, matchState: MatchState): Decision = player match
     case controlPlayer: DecisorPlayer.ControlPlayer =>
-      calculateBestAction(controlPlayer, matchState)
+      val decision = calculateBestAction(controlPlayer, matchState)
+      println(s"ControlPlayerBehavior: $decision")
+      decision
     case _ =>
       throw new IllegalArgumentException("ControlPlayerBehavior can only be used with ControlPlayer instances")
 
   private def calculateBestAction(player: Player, state: MatchState): Decision =
     val possibleActions =
-      /*if player.decision == Decision.Initial
-      then player.asControlDecisionPlayer.possiblePasses(state)
-      else*/
-      player.possibleDecision(state)
+      if player.decision == Decision.Initial
+      then
+        player.asControlDecisionPlayer.possiblePasses(state)
+      else
+        player.asControlDecisionPlayer.possibleDecision(state)
 
     type Rating = Double
     val decisionRatings: Map[Decision, Rating] = possibleActions

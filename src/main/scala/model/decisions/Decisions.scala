@@ -51,6 +51,12 @@ trait CanDecideToShoot:
 trait CanDecideToMoveToGoal:
   self: Player =>
   def decideMoveToGoal(direction: Direction): Decision = Decision.MoveToGoal(direction)
+  def possibleMovesToGoal(matchState: MatchState): List[Decision] =
+    val goalPosition: Position =
+      if matchState.teams.head.players.contains(this)
+      then Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)
+      else Position(0, UIConfig.fieldHeight / 2)
+    List(Decision.MoveToGoal(this.position.getDirection(goalPosition)))
 
 trait CanDecideToMark:
   self: Player =>

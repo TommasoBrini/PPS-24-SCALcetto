@@ -1,10 +1,5 @@
 package model
 
-import config.UIConfig
-
-import scala.annotation.targetName
-import scala.util.Random
-
 object Space:
 
   opaque type Position = (Int, Int)
@@ -33,56 +28,10 @@ object Space:
       else (dx / Math.hypot(dx, dy), dy / Math.hypot(dx, dy))
 
   case class Movement(direction: Direction, speed: Int)
+
+  // TODO move this in creational dsl
   object Movement:
     def still: Movement = Movement(Direction.none, 0)
 
-    extension (m: Movement)
-      @targetName("applyScale")
-      def *(factor: Int): Movement =
-        Movement(m.direction, m.speed * factor)
-
-  extension (p: Position)
-    @targetName("applyMovement")
-    def +(m: Movement): Position =
-      val dx = m.direction.x * m.speed
-      val dy = m.direction.y * m.speed
-      val x  = (p.x + dx).round.toInt
-      val y  = (p.y + dy).round.toInt
-      Position(x, y)
-
   enum Bounce:
-    case Vertical, Horizontal, Both
-
-  extension (i: Int)
-    def isOutOfBound(bound: Int): Boolean = i < 0 || i > bound
-
-  import Bounce.*
-  extension (p: Position)
-    def isOutOfBound(widthBound: Int, heightBound: Int): Boolean =
-      p.x.isOutOfBound(widthBound) || p.y.isOutOfBound(heightBound)
-    def getBounce(widthBound: Int, heightBound: Int): Bounce =
-      if p.x.isOutOfBound(widthBound) && p.y.isOutOfBound(heightBound) then Both
-      else if p.x.isOutOfBound(widthBound) then Horizontal
-      else Vertical
-    def isGoal: Boolean =
-      val firstGoalPost: Int  = (UIConfig.fieldHeight - (UIConfig.goalHeight)) / 2
-      val secondGoalPost: Int = firstGoalPost + UIConfig.goalHeight
-      (p.x <= 0 || p.x >= UIConfig.fieldWidth) && (p.y >= firstGoalPost && p.y <= secondGoalPost)
-
-  extension (d: Direction)
-    def bounce(bounce: Bounce): Direction = bounce match
-      case Both       => Direction(-d.x, -d.y)
-      case Horizontal => Direction(-d.x, d.y)
-      case Vertical   => Direction(d.x, -d.y)
-
-  extension (m: Movement)
-    def bounce(bounce: Bounce): Movement = m.copy(direction = m.direction.bounce(bounce))
-
-  extension (d: Direction)
-    def jitter: Direction = (d.x + Random.between(-0.2, 0.2), d.y + Random.between(-0.2, 0.2))
-
-  extension (p: Position)
-    def clampToField: Position =
-      val clampedX = Math.max(0, Math.min(p.x, UIConfig.fieldWidth))
-      val clampedY = Math.max(0, Math.min(p.y, UIConfig.fieldHeight))
-      Position(clampedX, clampedY)
+    case VerticalBounce, HorizontalBounce, ObliqueBounce
