@@ -1,6 +1,7 @@
 package init
 
-import config.FieldConfig.*
+import config.UIConfig.*
+import config.MatchConfig.*
 import model.Match.*
 import model.Match.Action.Initial
 import model.player.Player
@@ -9,8 +10,8 @@ import scala.util.Random
 
 object GameInitializer:
 
-  private val realFieldWidth: Int  = fieldWidth * scale
-  private val realFieldHeight: Int = fieldHeight * scale
+  private val realFieldWidth: Int  = fieldWidth
+  private val realFieldHeight: Int = fieldHeight
 
   def initialSimulationState(): MatchState =
     val ball: Ball   = Ball(Position(realFieldWidth / 2, realFieldHeight / 2), Movement(Direction(0, 0), 0))

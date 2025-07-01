@@ -1,6 +1,7 @@
 package init
 
-import config.FieldConfig.*
+import config.UIConfig.*
+import config.MatchConfig.*
 import model.Match.MatchState
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -24,16 +25,16 @@ class GameInitializerSpec extends AnyFlatSpec with Matchers:
     initialState.teams(1).players.exists(_.ball.isDefined) shouldEqual true
 
   it should "place the ball at the center of the field" in:
-    initialState.ball.position.x shouldEqual (fieldWidth * scale / 2)
-    initialState.ball.position.y shouldEqual (fieldHeight * scale / 2)
+    initialState.ball.position.x shouldEqual (fieldWidth / 2)
+    initialState.ball.position.y shouldEqual (fieldHeight / 2)
 
   it should "place players within the field boundaries" in:
     initialState.teams.foreach { team =>
       team.players.foreach { player =>
         player.position.x should be >= 1
-        player.position.x should be <= fieldWidth * scale - 2
+        player.position.x should be <= fieldWidth - 2
         player.position.y should be >= 1
-        player.position.y should be <= fieldHeight * scale - 2
+        player.position.y should be <= fieldHeight - 2
       }
     }
 
@@ -42,8 +43,8 @@ class GameInitializerSpec extends AnyFlatSpec with Matchers:
     val teamB = initialState.teams(1)
 
     teamA.players.foreach { player =>
-      player.position.x should be <= fieldWidth * scale / 2
+      player.position.x should be <= fieldWidth / 2
     }
     teamB.players.foreach { player =>
-      player.position.x should be >= fieldWidth * scale / 2
+      player.position.x should be >= fieldWidth / 2
     }

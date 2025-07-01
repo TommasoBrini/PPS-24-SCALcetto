@@ -1,6 +1,6 @@
 package model
 
-import config.FieldConfig
+import config.UIConfig
 
 import scala.annotation.targetName
 import scala.util.Random
@@ -65,9 +65,9 @@ object Space:
       else if p.x.isOutOfBound(widthBound) then Horizontal
       else Vertical
     def isGoal: Boolean =
-      val firstGoalPost: Int  = (FieldConfig.heightBound - (FieldConfig.goalHeight * FieldConfig.scale)) / 2
-      val secondGoalPost: Int = firstGoalPost + (FieldConfig.goalHeight * FieldConfig.scale)
-      (p.x <= 0 || p.x >= FieldConfig.widthBound) && (p.y >= firstGoalPost && p.y <= secondGoalPost)
+      val firstGoalPost: Int  = (UIConfig.fieldHeight - (UIConfig.goalHeight)) / 2
+      val secondGoalPost: Int = firstGoalPost + UIConfig.goalHeight
+      (p.x <= 0 || p.x >= UIConfig.fieldWidth) && (p.y >= firstGoalPost && p.y <= secondGoalPost)
 
   extension (d: Direction)
     def bounce(bounce: Bounce): Direction = bounce match
@@ -80,3 +80,9 @@ object Space:
 
   extension (d: Direction)
     def jitter: Direction = (d.x + Random.between(-0.2, 0.2), d.y + Random.between(-0.2, 0.2))
+
+  extension (p: Position)
+    def clampToField: Position =
+      val clampedX = Math.max(0, Math.min(p.x, UIConfig.fieldWidth))
+      val clampedY = Math.max(0, Math.min(p.y, UIConfig.fieldHeight))
+      Position(clampedX, clampedY)
