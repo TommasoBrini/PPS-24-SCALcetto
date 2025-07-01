@@ -6,7 +6,3 @@ import model.player.Player
 
 trait PlayerBehavior:
   def decide(player: Player, matchState: MatchState): Decision
-
-object DefaultBehavior extends PlayerBehavior:
-  def decide(player: Player, matchState: MatchState): Decision =
-    Initial

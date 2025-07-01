@@ -4,47 +4,29 @@ import config.MatchConfig
 import config.Util
 import model.Match.*
 import model.player.Player
-import model.player.possibleDecision
+import model.decisions.PlayerDecisionFactory.*
+import model.decisions.DecisorPlayer
+import model.decisions.Decisioner.possibleDecision
+import model.decisions.CommonPlayerDecisions.*
 
 object ControlPlayerBehavior extends PlayerBehavior:
   def decide(player: Player, matchState: MatchState): Decision = player match
-    case controlPlayer: Player.ControlPlayer =>
+    case controlPlayer: DecisorPlayer.ControlPlayer =>
       calculateBestAction(controlPlayer, matchState)
     case _ =>
       throw new IllegalArgumentException("ControlPlayerBehavior can only be used with ControlPlayer instances")
 
   private def calculateBestAction(player: Player, state: MatchState): Decision =
     val possibleActions =
-      if player.decision == Decision.Initial
-      then possiblePasses(player.asControlPlayer, state)
-      else
-        possiblePasses(player.asControlPlayer, state) ++
-          possibleMoves(player.asControlPlayer, state) ++ player.possibleDecision(state)
+      /*if player.decision == Decision.Initial
+      then player.asControlDecisionPlayer.possiblePasses(state)
+      else*/
+      player.possibleDecision(state)
 
     type Rating = Double
     val decisionRatings: Map[Decision, Rating] = possibleActions
       .map(decision => (decision, calculateActionRating(decision, player, state))).toMap
     decisionRatings.maxBy(_._2)._1
-
-  private def possiblePasses(player: Player.ControlPlayer, state: MatchState): List[Decision] =
-    for
-      team     <- state.teams.filter(_.players.contains(player))
-      teammate <- team.players.filter(!_.equals(player))
-    yield player.decidePass(teammate)
-
-  private[update] def possibleMoves(player: Player.ControlPlayer, matchState: MatchState): List[Decision] =
-    val goalPosition: Position =
-      if matchState.teams.head.players.contains(player)
-      then Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)
-      else Position(0, UIConfig.fieldHeight / 2)
-    val goalDirection = player.decideMoveToGoal(player.position.getDirection(goalPosition))
-    val runDirections =
-      for
-        dx <- -1 to 0
-        dy <- -1 to 1
-        if dx != 0 || dy != 0
-      yield player.decideRun(Direction(dx, dy))
-    goalDirection :: runDirections.toList
 
   private def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
     MatchConfig.tackleRange > Math.abs(start.getDistance(end) - start.getDistance(mid) + mid.getDistance(end))

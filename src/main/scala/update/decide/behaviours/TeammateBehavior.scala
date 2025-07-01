@@ -4,12 +4,14 @@ import model.Match.*
 import model.Match.Action.Stopped
 import model.player.Player
 import model.Match.Decision.MoveRandom
+import model.decisions.DecisorPlayer
+import model.decisions.CommonPlayerDecisions.*
 
 import scala.util.Random
 
 object TeammateBehavior extends PlayerBehavior:
   def decide(player: Player, state: MatchState): Decision = player match
-    case teammate: Player.TeammatePlayer =>
+    case teammate: DecisorPlayer.TeammatePlayer =>
       if state.ball.isHeadingToward(player, MatchConfig.passDirectionRange) then
         if teammate.position.getDistance(state.ball.position) < MatchConfig.interceptBallRange
         then teammate.decideReceivePass(state.ball)

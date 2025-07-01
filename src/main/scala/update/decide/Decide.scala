@@ -4,6 +4,8 @@ import config.Util
 import model.Match.*
 import model.player.Player
 import update.decide.behaviours.*
+import model.decisions.DecisorPlayer
+import model.decisions.CommonPlayerDecisions.*
 
 object Decide:
 
@@ -20,10 +22,10 @@ object Decide:
 
           val newPlayers = team.players.map { player =>
             val behavior: PlayerBehavior = player match
-              case _: Player.ControlPlayer  => ControlPlayerBehavior
-              case _: Player.OpponentPlayer => OpponentBehavior(markings.get(player))
-              case _: Player.TeammatePlayer => TeammateBehavior
-              case _                        => DefaultBehavior
+              case _: DecisorPlayer.ControlPlayer  => ControlPlayerBehavior
+              case _: DecisorPlayer.OpponentPlayer => OpponentBehavior(markings.get(player))
+              case _: DecisorPlayer.TeammatePlayer => TeammateBehavior
+              case _                               => throw new IllegalArgumentException("Unknown player type")
             player.copy(decision = behavior.decide(player, state))
           }
 

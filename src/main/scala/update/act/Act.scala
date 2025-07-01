@@ -5,6 +5,7 @@ import config.MatchConfig
 import model.Match.{Action, *}
 import model.Match.Action.*
 import model.player.Player
+import model.decisions.PlayerDecisionFactory.*
 
 object Act:
   def act(state: MatchState): MatchState =
@@ -74,11 +75,11 @@ object Act:
     val updateTeams: List[Team] = state.teams.map { team =>
       val updatePlayers: List[Player] = team.players.map { player =>
         if !team.hasBall then
-          player.copy().asOpponent
+          player.copy().asOpponentDecisionPlayer
         else if player.hasBall then
-          player.copy().asControlPlayer
+          player.copy().asControlDecisionPlayer
         else {
-          player.copy().asTeammate
+          player.copy().asTeammateDecisionPlayer
         }
       }
       team.copy(players = updatePlayers)

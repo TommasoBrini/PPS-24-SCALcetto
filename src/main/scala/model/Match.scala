@@ -2,7 +2,6 @@ package model
 
 import Space.*
 import model.player.Player
-import model.decisions.{CanDecideConfusion, CanDecideToRun}
 
 object Match:
 

@@ -2,11 +2,13 @@ package update.decide.behaviours
 import config.MatchConfig
 import model.Match.*
 import model.player.Player
+import model.decisions.DecisorPlayer
+import model.decisions.CommonPlayerDecisions.*
 
 class OpponentBehavior(target: Option[Player]) extends PlayerBehavior:
 
   def decide(player: Player, matchState: MatchState): Decision = player match
-    case opponent: Player.OpponentPlayer =>
+    case opponent: DecisorPlayer.OpponentPlayer =>
       val ballPlayerPosition: Option[Position] = matchState.teams.flatMap(_.players).find(_.hasBall) match
         case Some(ballPlayer) => Some(ballPlayer.position)
         case _                => None
