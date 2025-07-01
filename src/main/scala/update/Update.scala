@@ -6,8 +6,7 @@ import init.GameInitializer.initialSimulationState
 import decide.Decide.*
 import validate.Validate.*
 import act.Act.{act, isAGoal, isBallOut}
-import config.FieldConfig
-import config.FieldConfig.{heightBound, widthBound}
+import config.UIConfig.*
 
 import scala.annotation.tailrec
 
@@ -28,7 +27,7 @@ object Update:
       else if isBallOut(newState) then update(newState, BallOutEvent)
       else newState
     case BallOutEvent =>
-      val bounceType = state.ball.position.getBounce(widthBound, heightBound)
+      val bounceType = state.ball.position.getBounce(fieldWidth, fieldHeight)
       MatchState(state.teams, state.ball.copy(movement = state.ball.movement.bounce(bounceType)))
     case GoalEvent    => update(state, RestartEvent)
     case RestartEvent => initialSimulationState()

@@ -1,6 +1,6 @@
 package update.decide
 
-import config.FieldConfig
+import config.MatchConfig
 import init.GameInitializer
 import model.Match.*
 import model.Match.Action.*
