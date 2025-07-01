@@ -34,28 +34,13 @@ object Space:
       else (dx / Math.hypot(dx, dy), dy / Math.hypot(dx, dy))
 
   case class Movement(direction: Direction, speed: Int)
+
+  // TODO move this in creational dsl
   object Movement:
     def still: Movement = Movement(Direction.none, 0)
 
-    extension (m: Movement)
-      @targetName("applyScale")
-      def *(factor: Int): Movement =
-        Movement(m.direction, m.speed * factor)
-
-  extension (p: Position)
-    @targetName("applyMovement")
-    def +(m: Movement): Position =
-      val dx = m.direction.x * m.speed
-      val dy = m.direction.y * m.speed
-      val x  = (p.x + dx).round.toInt
-      val y  = (p.y + dy).round.toInt
-      Position(x, y)
-
   enum Bounce:
     case VerticalBounce, HorizontalBounce, ObliqueBounce
-
-  extension (d: Direction)
-    def jitter: Direction = (d.x + Random.between(-0.2, 0.2), d.y + Random.between(-0.2, 0.2))
 
   extension (p: Position)
     def clampToField: Position =

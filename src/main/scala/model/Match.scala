@@ -26,6 +26,7 @@ object Match:
     case MoveRandom(direction: Direction, steps: Int)
     case Mark(defender: Player, target: Player)
 
+  // TODO change this after making creational DSL
   case class Player(
       id: Int,
       position: Position,

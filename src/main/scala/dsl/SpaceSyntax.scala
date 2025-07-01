@@ -4,17 +4,30 @@ import config.UIConfig
 import model.Space.*
 import model.Space.Bounce.*
 
+import scala.annotation.targetName
+import scala.util.Random
+
 object SpaceSyntax {
   export DirectionSyntax.*
   export MovementSyntax.*
   export PositionSyntax.*
 
   object PositionSyntax:
-    def checkAxisOutOfBound(coordinate: Int, axisBound: Int): Boolean =
+    private def checkAxisOutOfBound(coordinate: Int, axisBound: Int): Boolean =
       coordinate < 0 || coordinate > axisBound
+
+    private def calculateMovedPosition(p: Position, m: Movement): Position =
+      val dx = m.direction.x * m.speed
+      val dy = m.direction.y * m.speed
+      val x  = (p.x + dx).round.toInt
+      val y  = (p.y + dy).round.toInt
+      Position(x, y)
+
     extension (p: Position)
       def isOutOfBound(widthBound: Int, heightBound: Int): Boolean =
         checkAxisOutOfBound(p.x, widthBound) || checkAxisOutOfBound(p.y, heightBound)
+      @targetName("applyMovement")
+      def +(m: Movement): Position = calculateMovedPosition(p, m)
 
       def getBounce(widthBound: Int, heightBound: Int): Bounce =
         if checkAxisOutOfBound(p.x, widthBound) && checkAxisOutOfBound(p.y, heightBound) then ObliqueBounce
@@ -33,10 +46,13 @@ object SpaceSyntax {
       case VerticalBounce   => Direction(x, -y)
     extension (d: Direction)
       def getDirectionFrom(bounce: Bounce): Direction = bounceCalculator(bounce, d.x, d.y)
+      def jitter: Direction = Direction(d.x + Random.between(-0.2, 0.2), d.y + Random.between(-0.2, 0.2))
 
   object MovementSyntax:
     extension (m: Movement)
       def bool: Int                                 = 4
-      def getMovementFrom(bounce: Bounce): Movement = m.copy(direction = m.direction.getDirectionFrom(bounce))
+      def getMovementFrom(bounce: Bounce): Movement = m.copy(direction = m.direction getDirectionFrom bounce)
+      @targetName("applyScale")
+      def *(factor: Int): Movement = Movement(m.direction, m.speed * factor)
 
 }

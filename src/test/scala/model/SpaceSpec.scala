@@ -47,10 +47,3 @@ class SpaceSpec extends AnyFlatSpec with Matchers:
     val m = Movement.still
     m.direction shouldBe Direction.none
     m.speed shouldBe 0
-
-  it should "be applied correctly to a position, returning the new position" in:
-    val p      = Position(0, 0)
-    val d      = Direction(1.0, 0.0)
-    val m      = Movement(d, 3)
-    val newPos = p + m
-    newPos shouldBe Position(3, 0)

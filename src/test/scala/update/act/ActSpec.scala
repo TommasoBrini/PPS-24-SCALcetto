@@ -8,6 +8,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import Act.*
 import init.GameInitializer
+import dsl.SpaceSyntax.*
 
 class ActSpec extends AnyFlatSpec with Matchers:
   val defaultSpeed                = 1

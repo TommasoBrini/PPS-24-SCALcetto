@@ -41,3 +41,10 @@ class TestSpaceSyntax extends AnyFlatSpec with Matchers:
     val bounced = m getMovementFrom ObliqueBounce
     bounced.direction shouldBe Direction(-1.0, 1.0)
     bounced.speed shouldBe 5
+
+  "A Movement" should "be applied correctly to a position, returning the new position" in:
+    val p      = Position(0, 0)
+    val d      = Direction(1.0, 0.0)
+    val m      = Movement(d, 3)
+    val newPos = p + m
+    newPos shouldBe Position(3, 0)
