@@ -56,7 +56,7 @@ object SpaceSyntax {
   object MovementSyntax:
     extension (m: Movement)
       def bool: Int                                 = 4
-      def getMovementFrom(bounce: Bounce): Movement = m.copy(direction = m.direction getDirectionFrom bounce)
+      def getMovementFrom(bounce: Bounce): Movement = Movement(m.direction getDirectionFrom bounce, m.speed)
       @targetName("applyScale")
       def *(factor: Int): Movement = Movement(m.direction, m.speed * factor)
 
