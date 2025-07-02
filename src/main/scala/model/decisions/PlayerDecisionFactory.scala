@@ -3,6 +3,8 @@ package model.decisions
 import model.decisions.DecisorPlayer.*
 import model.Match.*
 import config.UIConfig
+import model.decisions.CommonPlayerDecisions.*
+import scala.annotation.targetName
 
 object PlayerDecisionFactory:
   extension (p: Player)
@@ -22,3 +24,10 @@ object DecisorPlayer:
   type ControlPlayer  = Player & CanDecideToPass & CanDecideToShoot & CanDecideToMoveToGoal
   type OpponentPlayer = Player & CanDecideToMark & CanDecideToTackle & CanDecideToIntercept
   type TeammatePlayer = Player & CanDecideToMoveRandom & CanDecideToReceivePass
+
+object PossibleDecisionFactory:
+  extension (player: ControlPlayer)
+    def possibleDecisions(state: MatchState): List[Decision] =
+      player.possibleRuns(state) ++ player.possiblePasses(state) ++ player.possibleShots(
+        state
+      ) ++ player.possibleMovesToGoal(state)

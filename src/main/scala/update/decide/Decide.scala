@@ -2,9 +2,7 @@ package update.decide
 
 import config.Util
 import model.Match.*
-import model.decisions.DecisorPlayer
-import model.decisions.CommonPlayerDecisions.*
-import model.decisions.behaviors.Decisor.*
+import model.decisions.DecisionMaker.*
 
 object Decide:
 
@@ -15,17 +13,15 @@ object Decide:
           if teamA.hasBall then (teamB, teamA)
           else (teamA, teamB)
 
-        val markings: Map[Player, Player] = Util.assignMarkings(defenders.players, attackers.players)
+        val markings = Util.assignMarkings(defenders.players, attackers.players)
 
-        val updatedTeams: List[Team] = state.teams.map { team =>
-
-          val newPlayers = team.players.map { player =>
-            player.copy(decision = player.decide(state))
-          }
+        val newTeams = List(teamA, teamB).map { team =>
+          val newPlayers = team.players.map(player =>
+            player.copy(decision = player.decide(state, markings))
+          )
           team.copy(players = newPlayers)
         }
 
-        state.copy(teams = updatedTeams)
-
+        state.copy(teams = newTeams)
       case _ =>
         throw new IllegalArgumentException("MatchState must contain exactly two teams.")
