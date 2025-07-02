@@ -3,8 +3,6 @@ package init
 import config.UIConfig.*
 import config.MatchConfig.*
 import model.Match.*
-import model.Match.Action.Initial
-
 import scala.util.Random
 
 object GameInitializer:
@@ -30,7 +28,7 @@ object GameInitializer:
         position = Position(posX, posY)
       )
     }.toList
-    Team(id, players, false)
+    Team(players, false)
 
   private def createTeamWithBall(id: Int, isLeftSide: Boolean, b: Ball): Team =
     val minX: Int = if isLeftSide then 1 else realFieldWidth / 2 + 1
@@ -42,15 +40,12 @@ object GameInitializer:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY),
-        movement = Movement(Direction(0, 0), 0),
-        decision = Decision.Initial
+        movement = Movement(Direction(0, 0), 0)
       )
     }.toList
     val ballPlayer: Player = Player(
       id = id * 10 + 22,
       position = Position(realFieldWidth / 2, realFieldHeight / 2),
-      ball = Some(b),
-      movement = Movement(Direction(0, 0), 0),
-      decision = Decision.Initial
+      ball = Some(b)
     )
-    Team(id, ballPlayer :: players, true)
+    Team(ballPlayer :: players, true)

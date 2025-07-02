@@ -1,27 +1,48 @@
 package update.validate
 
-import model.Match.{Action, Decision, MatchState, Player, Team}
-import Decision.*
+import model.Match.*
 import config.MatchConfig
 import config.UIConfig
+import model.Match.Action.*
+import model.Match.Decision.*
 import model.Space.Position
 import dsl.SpaceSyntax.*
 
 import scala.util.Random
 
 object Validate {
-  def validate(state: MatchState): MatchState =
-    state.copy(teams = state.teams.map(validate))
+  extension (state: MatchState)
+    def validate(): MatchState =
+      val updated = state.copy(teams = state.teams.map(_.validate()))
+      val tackleWithSuccess = updated.players.exists {
+        case Player(_, _, _, _, Tackle(_), Take(_)) => true
+        case _                                      => false
+      }
+      if tackleWithSuccess then updated.confuseLastCarrier()
+      else updated
 
-  def validate(team: Team): Team =
-    Team(team.id, team.players.map(validate), team.hasBall)
+    def confuseLastCarrier(): MatchState =
+      state.copy(teams =
+        state.teams.map(t =>
+          t.copy(players = t.players.map({
+            case p if p.hasBall => p.copy(action = Stopped(MatchConfig.stoppedAfterTackle))
+            case p              => p
+          }))
+        )
+      )
 
-  def validate(player: Player): Player =
-    val accuracy = Random.nextDouble()
-    player.copy(nextAction =
-      if accuracy < getSuccessRate(player.decision) then getSuccessAction(player.decision)
-      else getFailureAction(player.decision, accuracy)
-    )
+  extension (team: Team)
+    def validate(): Team =
+      Team(team.players.map(p => p.validate()), team.hasBall)
+
+  extension (player: Player)
+    def validate(): Player =
+      val accuracy = Random.nextDouble()
+      player.copy(action =
+        if accuracy < getSuccessRate(player.decision)
+        then getSuccessAction(player.decision)
+        else getFailureAction(player.decision, accuracy)
+      )
 
   private def getSuccessRate(decision: Decision): Double =
     decision match

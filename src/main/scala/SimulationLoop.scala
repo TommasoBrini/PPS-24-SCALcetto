@@ -43,7 +43,7 @@ object SimulationLoop:
       delayMs,
       new ActionListener:
         override def actionPerformed(e: ActionEvent): Unit =
-          state = update(state, Event.StepEvent)
+          state = update(state, Event.Step)
           view.render(state)
     )
     timer = Some(newTimer)

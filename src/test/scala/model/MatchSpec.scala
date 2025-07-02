@@ -10,30 +10,29 @@ class MatchSpec extends AnyFlatSpec with Matchers:
   "A Player" should "store id, position, and movement correctly" in:
     val pos    = Position(1, 2)
     val mov    = Movement(Direction(1.0, 0.0), 3)
-    val player = Player(42, pos, mov)
+    val player = Player(1, pos, mov)
 
-    player.id shouldBe 42
+    player.id shouldBe 1
     player.position shouldBe pos
     player.movement shouldBe mov
     player.ball shouldBe None
-    player.nextAction shouldBe Action.Initial
+    player.action shouldBe Action.Initial
 
   it should "correctly report hasBall when carrying a ball" in:
     val ball              = Ball(Position(5, 5), Movement(Direction.none, 0))
     val playerWithBall    = Player(1, Position(0, 0), Movement.still, Some(ball))
-    val playerWithoutBall = Player(2, Position(0, 0), Movement.still)
+    val playerWithoutBall = Player(1, Position(0, 0), Movement.still)
 
     playerWithBall.hasBall shouldBe true
     playerWithoutBall.hasBall shouldBe false
 
-  "A Team" should "contain an id and a list of players" in:
+  "A Team" should "contain a list of players" in:
     val players = List(
       Player(1, Position(1, 1), Movement.still),
       Player(2, Position(2, 2), Movement.still)
     )
-    val team = Team(7, players, false)
+    val team = Team(players, false)
 
-    team.id shouldBe 7
     team.players should have size 2
 
   "A Ball" should "store its position and movement" in:
@@ -44,8 +43,8 @@ class MatchSpec extends AnyFlatSpec with Matchers:
     ball.movement.speed shouldBe 2
 
   "A MatchState" should "contain two teams and a ball" in:
-    val team1 = Team(1, List(Player(1, Position(1, 1), Movement.still)), false)
-    val team2 = Team(2, List(Player(2, Position(2, 2), Movement.still)), false)
+    val team1 = Team(List(Player(1, Position(1, 1), Movement.still)), false)
+    val team2 = Team(List(Player(2, Position(2, 2), Movement.still)), false)
     val ball  = Ball(Position(0, 0), Movement.still)
     val state = MatchState(List(team1, team2), ball)
 

@@ -22,7 +22,7 @@ object Decide:
           behavior.decide(player, state)
 
         val newTeams = List(teamA, teamB).map { team =>
-          val opponents  = if team.id == teamA.id then teamB else teamA
+          val opponents  = if team == teamA then teamB else teamA
           val newPlayers = team.players.map(p => p.copy(decision = decideFor(p, team, opponents)))
           team.copy(players = newPlayers)
         }
@@ -37,7 +37,7 @@ object Decide:
       case _                          => (None, attackers)
 
     var unassignedAttackers = others.toSet
-    var availableDefenders  = defenders.sortBy(_.id)
+    var availableDefenders  = defenders
     var markings            = Map.empty[Player, Player]
 
     withBallOpt.foreach { ballCarrier =>

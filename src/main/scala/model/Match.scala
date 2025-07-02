@@ -3,8 +3,8 @@ package model
 import Space.*
 
 object Match:
-
   export Space.*
+
   enum Action:
     case Initial
     case Stopped(remainingStep: Int)
@@ -26,18 +26,17 @@ object Match:
     case MoveRandom(direction: Direction, steps: Int)
     case Mark(defender: Player, target: Player)
 
-  // TODO change this after making creational DSL
+  case class Team(players: List[Player], hasBall: Boolean = false)
+
   case class Player(
       id: Int,
       position: Position,
       movement: Movement = Movement.still,
       ball: Option[Ball] = None,
-      nextAction: Action = Action.Initial,
-      decision: Decision = Decision.Initial
+      decision: Decision = Decision.Initial,
+      action: Action = Action.Initial
   ):
     def hasBall: Boolean = ball.isDefined
-
-  case class Team(id: Int, players: List[Player], hasBall: Boolean = false)
 
   case class Ball(position: Position, movement: Movement = Movement.still):
     def isHeadingToward(player: Player, tolerance: Double): Boolean =
@@ -45,13 +44,8 @@ object Match:
       val actual: Direction   = movement.direction
       Math.abs(actual.x - toPlayer.x) + Math.abs(actual.y - toPlayer.y) < tolerance
 
-  case class MatchState(teams: List[Team], ball: Ball)
+  case class MatchState(teams: List[Team], ball: Ball):
+    def players: List[Player] = teams.flatMap(_.players)
 
   enum Event:
-    case StepEvent
-    case DecideEvent
-    case ValidateEvent
-    case ActEvent
-    case BallOutEvent
-    case GoalEvent
-    case RestartEvent
+    case Step, Decide, Validate, Act, BallOut, Goal, Restart

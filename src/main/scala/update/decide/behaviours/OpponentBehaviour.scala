@@ -20,7 +20,7 @@ class OpponentBehaviour(target: Option[Player]) extends PlayerBehavior:
       case Some(pos) => Some(Math.abs(player.position.y - pos.y))
       case None      => None
 
-    val nextDecision: Decision = player.nextAction match
+    val nextDecision: Decision = player.action match
       case Action.Stopped(step) if step > 0 => Decision.Confusion(step - 1)
       case _ =>
         if dxPlayer.isDefined && dyPlayer.isDefined && dxPlayer.get < MatchConfig.tackleRange && dyPlayer.get < MatchConfig.tackleRange

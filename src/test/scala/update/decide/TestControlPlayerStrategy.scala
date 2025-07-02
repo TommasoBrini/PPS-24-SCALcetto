@@ -25,7 +25,7 @@ class TestControlPlayerStrategy extends AnyFunSpec with Matchers {
         decision = Decision.Initial
       )
     }.toList
-    Team(id, players)
+    Team(players)
 
   private def generateTeamRightTeamWithBall(id: Int): Team =
     val players: List[Player] = (0 until teamSize - 1).map { i =>
@@ -38,7 +38,7 @@ class TestControlPlayerStrategy extends AnyFunSpec with Matchers {
         decision = Decision.Initial
       )
     }.toList
-    Team(id, players)
+    Team(players)
 
 //  describe("A controlling player (has the ball)") {
 //

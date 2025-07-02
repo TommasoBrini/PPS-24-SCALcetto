@@ -14,7 +14,7 @@ object TeammateBehavior extends PlayerBehavior:
       then ReceivePass(state.ball)
       else MoveToBall(player.position.getDirection(state.ball.position))
     else
-      player.nextAction match
+      player.action match
         case Stopped(steps) if steps > 0 => Confusion(steps - 1)
         case _ =>
           player.decision match

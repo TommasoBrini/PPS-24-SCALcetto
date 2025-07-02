@@ -5,7 +5,7 @@ import Event.*
 import init.GameInitializer.initialSimulationState
 import decide.Decide.*
 import validate.Validate.*
-import act.Act.{act, isAGoal, isBallOut}
+import act.Act.{act, isBallOut, isGoal}
 import config.UIConfig.*
 import dsl.SpaceSyntax.*
 
@@ -14,21 +14,21 @@ import scala.annotation.tailrec
 object Update:
   @tailrec
   def update(state: MatchState, event: Event): MatchState = event match
-    case StepEvent =>
-      update(state, DecideEvent)
-    case DecideEvent =>
+    case Step =>
+      update(state, Decide)
+    case Decide =>
       val newState: MatchState = decide(state)
-      update(newState, ValidateEvent)
-    case ValidateEvent =>
-      val newState: MatchState = validate(state)
-      update(newState, ActEvent)
-    case ActEvent =>
-      val newState: MatchState = act(state)
-      if isAGoal(newState) then update(newState, GoalEvent)
-      else if isBallOut(newState) then update(newState, BallOutEvent)
+      update(newState, Validate)
+    case Validate =>
+      val newState: MatchState = state.validate()
+      update(newState, Act)
+    case Act =>
+      val newState: MatchState = state.act()
+      if newState.isGoal then update(newState, Goal)
+      else if newState.isBallOut then update(newState, BallOut)
       else newState
-    case BallOutEvent =>
+    case BallOut =>
       val bounceType = state.ball.position getBounce (fieldWidth, fieldHeight)
       MatchState(state.teams, state.ball.copy(movement = state.ball.movement getMovementFrom bounceType))
-    case GoalEvent    => update(state, RestartEvent)
-    case RestartEvent => initialSimulationState()
+    case Goal    => update(state, Restart)
+    case Restart => initialSimulationState()

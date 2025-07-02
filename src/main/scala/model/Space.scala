@@ -1,5 +1,10 @@
 package model
 
+import config.UIConfig
+
+import scala.annotation.targetName
+import scala.util.Random
+
 object Space:
 
   opaque type Position = (Int, Int)

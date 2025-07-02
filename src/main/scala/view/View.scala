@@ -56,8 +56,8 @@ object View:
       g.fillRect(-(goalWidth), (fieldHeight - goalHeight) / 2, goalWidth, goalHeight)
       g.fillRect(fieldWidth, (fieldHeight - goalHeight) / 2, goalWidth, goalHeight)
 
-      for team <- state.teams do
-        val color = if team.id == 1 then Colors.teamBlue else Colors.teamRed
+      for (team, index) <- state.teams.zipWithIndex do
+        val color = if index == 0 then Colors.teamBlue else Colors.teamRed
         team.players.foreach { player =>
           drawCenteredRect(g, player.position, playerSize, color, Drawing.playerBorderWidth)
         }
