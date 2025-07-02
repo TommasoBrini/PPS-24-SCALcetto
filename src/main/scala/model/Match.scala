@@ -14,17 +14,19 @@ object Match:
 
   enum Decision:
     case Initial
-    case Run(direction: Direction)
     case Confusion(remainingStep: Int)
+    case Run(direction: Direction)
     case Pass(from: Player, to: Player)
     case Shoot(striker: Player, goal: Position)
     case MoveToGoal(goalDirection: Direction)
+
     case Mark(defender: Player, target: Player)
     case Tackle(ball: Ball)
     case Intercept(ball: Ball)
+    case MoveToBall(directionToBall: Direction)
+
     case MoveRandom(direction: Direction, steps: Int)
     case ReceivePass(ball: Ball)
-    case MoveToBall(directionToBall: Direction)
 
   case class Player(
       id: Int,

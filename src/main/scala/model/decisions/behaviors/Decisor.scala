@@ -7,7 +7,7 @@ import config.UIConfig
 import model.decisions.CommonPlayerDecisions.*
 import config.Util
 import config.MatchConfig
-import model.decisions.behaviors.Rating.*
+import model.decisions.behaviors.Ratings.*
 
 object Decisor:
 
@@ -25,19 +25,23 @@ object Decisor:
 
     private def calculateBestAction(state: MatchState): Decision =
       val possibleActions = player.possibleDecision(state)
-      type Rating = Double
-      val decisionRatings: Map[Decision, Rating] = possibleActions
-        .map(decision => (decision, player.calculateActionRating(decision, state))).toMap
+      val decisionRatings: Map[Decision, Double] = possibleActions.map { decision =>
+        player match
+          case c: ControlPlayer  => decision -> c.calculateActionRating(decision, state)
+          case o: OpponentPlayer => decision -> o.calculateActionRating(decision, state)
+          case t: TeammatePlayer => decision -> t.calculateActionRating(decision, state)
+          case _                 => decision -> 0.0
+      }.toMap
       decisionRatings.maxBy(_._2)._1
 
     private def possibleDecision(state: MatchState): List[Decision] =
       player match
         case c: ControlPlayer =>
-          if c.decision == Decision.Initial
-          then
-            c.possiblePasses(state)
-          else
-            c.possibleShots(state) ++ c.possibleMoves(state) ++ c.possiblePasses(state) ++ c.possibleMovesToGoal(state)
-        case _: OpponentPlayer => List(Decision.Confusion(30))
-        case _: TeammatePlayer => List(Decision.Confusion(30))
-        case _                 => throw new IllegalArgumentException("Unknown player type")
+          c.possibleMoves(state) ++ c.possiblePasses(state) ++ c.possibleShots(state) ++ c.possibleMovesToGoal(state)
+        case o: OpponentPlayer =>
+          o.possibleMarks(state) ++ o.possibleTackles(state) ++ o.possibleIntercepts(state) ++ o.possibleMoveToBall(
+            state
+          )
+        case t: TeammatePlayer =>
+          t.possibleMovesRandom(state) ++ t.possibleReceives(state)
+        case _ => throw new IllegalArgumentException("Unknown player type")
