@@ -1,10 +1,9 @@
 package update.validate
 
-import model.Match.{Action, Decision, MatchState, Team}
+import model.Match.{Action, Decision, MatchState, Player, Team}
 import Decision.*
 import config.MatchConfig
 import config.UIConfig
-import model.player.Player
 import model.Space.Position
 import dsl.SpaceSyntax.*
 

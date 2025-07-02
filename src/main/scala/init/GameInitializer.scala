@@ -4,7 +4,6 @@ import config.UIConfig.*
 import config.MatchConfig.*
 import model.Match.*
 import model.Match.Action.Initial
-import model.player.Player
 import model.decisions.PlayerDecisionFactory.*
 
 import scala.util.Random

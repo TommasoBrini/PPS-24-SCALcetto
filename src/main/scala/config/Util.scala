@@ -2,7 +2,7 @@ package config
 
 import model.Match.MatchState
 import model.Space.{Direction, Position}
-import model.player.Player
+import model.Match.Player
 
 object Util:
 
@@ -42,3 +42,6 @@ object Util:
       val projectedSide    = math.abs(-dx * dir.y + dy * dir.x)
       !(projectedForward >= 0 && projectedForward <= verticalRange && projectedSide <= sideRange)
     }
+
+  def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
+    MatchConfig.tackleRange > Math.abs(start.getDistance(end) - start.getDistance(mid) + mid.getDistance(end))

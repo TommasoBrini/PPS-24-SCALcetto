@@ -1,7 +1,6 @@
 package model
 
 import model.Space.*
-import model.player.Player
 import model.Match.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

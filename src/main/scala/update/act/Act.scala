@@ -4,7 +4,7 @@ import config.UIConfig
 import config.MatchConfig
 import model.Match.{Action, Ball, MatchState, Movement, Team}
 import model.Match.Action.*
-import model.player.Player
+import model.Match.Player
 import model.decisions.PlayerDecisionFactory.*
 import dsl.SpaceSyntax.*
 

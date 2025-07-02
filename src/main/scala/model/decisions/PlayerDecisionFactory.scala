@@ -1,6 +1,5 @@
 package model.decisions
 
-import model.player.Player
 import model.decisions.DecisorPlayer.*
 import model.Match.*
 import config.UIConfig

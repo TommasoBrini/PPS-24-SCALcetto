@@ -1,7 +1,6 @@
 package model
 
 import Space.*
-import model.player.Player
 
 object Match:
 
@@ -26,6 +25,16 @@ object Match:
     case MoveRandom(direction: Direction, steps: Int)
     case ReceivePass(ball: Ball)
     case MoveToBall(directionToBall: Direction)
+
+  case class Player(
+      id: Int,
+      position: Position,
+      movement: Movement = Movement.still,
+      ball: Option[Ball] = None,
+      nextAction: Action = Action.Initial,
+      decision: Decision = Decision.Initial
+  ):
+    def hasBall: Boolean = ball.isDefined
 
   case class Team(id: Int, players: List[Player], hasBall: Boolean = false)
 

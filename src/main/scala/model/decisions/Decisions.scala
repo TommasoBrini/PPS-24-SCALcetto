@@ -1,7 +1,6 @@
 package model.decisions
 
 import model.Match.*
-import model.player.Player
 import config.UIConfig
 import model.decisions.PlayerDecisionFactory.*
 import model.Space.*

@@ -1,11 +1,10 @@
-package update.decide.behaviours
+package model.decisions.behaviors
 import config.MatchConfig
 import model.Match.*
-import model.player.Player
 import model.decisions.DecisorPlayer
 import model.decisions.CommonPlayerDecisions.*
 
-class OpponentBehavior(target: Option[Player]) extends PlayerBehavior:
+class OpponentBehavior(target: Option[Player]):
 
   def decide(player: Player, matchState: MatchState): Decision = player match
     case opponent: DecisorPlayer.OpponentPlayer =>

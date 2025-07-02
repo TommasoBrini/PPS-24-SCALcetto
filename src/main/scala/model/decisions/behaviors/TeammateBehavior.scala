@@ -1,15 +1,14 @@
-package update.decide.behaviours
+package model.decisions.behaviors
 import config.MatchConfig
 import model.Match.*
 import model.Match.Action.Stopped
-import model.player.Player
 import model.Match.Decision.MoveRandom
 import model.decisions.DecisorPlayer
 import model.decisions.CommonPlayerDecisions.*
 
 import scala.util.Random
 
-object TeammateBehavior extends PlayerBehavior:
+object TeammateBehavior:
   def decide(player: Player, state: MatchState): Decision = player match
     case teammate: DecisorPlayer.TeammatePlayer =>
       if state.ball.isHeadingToward(player, MatchConfig.passDirectionRange) then
