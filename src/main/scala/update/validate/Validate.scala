@@ -54,7 +54,6 @@ object Validate:
 
   private def shootSuccess(striker: Player, goal: Position): Double = striker.position.getDistance(goal) match
     case goalDistance if goalDistance <= MatchConfig.lowDistanceShoot  => 0.1
-    case goalDistance if goalDistance <= MatchConfig.midDistanceShoot  => 0.6
     case goalDistance if goalDistance <= MatchConfig.highDistanceShoot => 0.4
     case _                                                             => 0.0
 

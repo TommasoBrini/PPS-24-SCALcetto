@@ -29,19 +29,34 @@ object Util:
     }
     markings
 
-  def isPathClear(from: Position, dir: Direction, state: MatchState): Boolean =
-    val sideRange: Int     = 15
-    val verticalRange: Int = 15
+  def isPathClear(from: Position, to: Position, state: MatchState, teamId: Int): Boolean =
     val opponents = state.teams
+      .filterNot(_.id == teamId)
       .flatMap(_.players)
-      .filterNot(_.hasBall)
     opponents.forall { opponent =>
-      val dx               = opponent.position.x - from.x
-      val dy               = opponent.position.y - from.y
-      val projectedForward = dx * dir.x + dy * dir.y
-      val projectedSide    = math.abs(-dx * dir.y + dy * dir.x)
-      !(projectedForward >= 0 && projectedForward <= verticalRange && projectedSide <= sideRange)
+      !positionIsInBetween(from, to, opponent.position)
     }
 
   def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
-    MatchConfig.tackleRange > Math.abs(start.getDistance(end) - start.getDistance(mid) + mid.getDistance(end))
+    val dx1       = end.x - start.x
+    val dy1       = end.y - start.y
+    val dx2       = mid.x - start.x
+    val dy2       = mid.y - start.y
+    val cross     = dx1 * dy2 - dy1 * dx2
+    val collinear = cross == 0
+    val inSegment =
+      (mid.x >= Math.min(start.x, end.x) && mid.x <= Math.max(start.x, end.x)) &&
+        (mid.y >= Math.min(start.y, end.y) && mid.y <= Math.max(start.y, end.y))
+    collinear && inSegment
+
+  def isDirectionClear(from: Position, dir: Direction, state: MatchState): Boolean =
+    val opponents = state.teams
+      .flatMap(_.players)
+      .filterNot(_.hasBall)
+    !opponents.exists { opponent =>
+      val dx    = opponent.position.x - from.x
+      val dy    = opponent.position.y - from.y
+      val dot   = dx * dir.x + dy * dir.y
+      val cross = dx * dir.y - dy * dir.x
+      math.abs(cross) < 1e-6 && dot > 0
+    }
