@@ -32,15 +32,15 @@ object Validate:
 
   private def getSuccessAction(decision: Decision): Action =
     decision match
-      case Confusion(step)      => Action.Stopped(step)
-      case Pass(from, to)       => Action.Hit(from.position.getDirection(to.position), MatchConfig.ballSpeed)
-      case Shoot(striker, goal) => Action.Hit(striker.position.getDirection(goal), MatchConfig.ballSpeed + 1) // todo
-      case Run(direction, _)    => Action.Move(direction, MatchConfig.playerSpeed)
-      case MoveToGoal(goalDirection) => Action.Move(goalDirection, MatchConfig.playerSpeed)
+      case Confusion(step)           => Action.Stopped(step)
+      case Pass(from, to)            => Action.Hit(from.position.getDirection(to.position), MatchConfig.ballSpeed)
+      case Shoot(striker, goal)      => Action.Hit(striker.position.getDirection(goal), MatchConfig.ballSpeed + 1)
+      case Run(direction, _)         => Action.Move(direction, MatchConfig.playerWithBallSpeed)
+      case MoveToGoal(goalDirection) => Action.Move(goalDirection, MatchConfig.playerWithBallSpeed)
       case Tackle(ball)              => Action.Take(ball)
       case ReceivePass(ball)         => Action.Take(ball)
       case Intercept(ball)           => Action.Take(ball)
-      case MoveToBall(direction)     => Action.Move(direction, MatchConfig.playerSpeed)
+      case MoveToBall(direction)     => Action.Move(direction, MatchConfig.playerMaxSpeed)
       case MoveRandom(direction, _)  => Action.Move(direction, MatchConfig.playerSpeed)
       case Mark(player, target) => Action.Move(player.position.getDirection(target.position), MatchConfig.playerSpeed)
       case _                    => Action.Initial
