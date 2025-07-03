@@ -20,7 +20,7 @@ object Match:
     case Shoot(striker: Player, goal: Position)
     case MoveToGoal(goalDirection: Direction)
 
-    case Mark(defender: Player, target: Player)
+    case Mark(defender: Player, target: Player, teamId: Int)
     case Tackle(ball: Ball)
     case Intercept(ball: Ball)
     case MoveToBall(directionToBall: Direction)

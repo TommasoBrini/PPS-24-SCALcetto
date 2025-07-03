@@ -56,7 +56,7 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
       Movement(Direction(-1, -1), 1),
       ball = Some(ball),
       nextAction = Action.Stopped(2),
-      decision = Mark(Player(1, Position(5, 5), Movement.still), Player(1, Position(5, 5), Movement.still))
+      decision = Mark(Player(1, Position(5, 5), Movement.still), Player(1, Position(5, 5), Movement.still), 1)
     )
     val opponentPlayer = basePlayer.asOpponentDecisionPlayer
 

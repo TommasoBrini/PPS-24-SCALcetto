@@ -103,7 +103,7 @@ class DecideSpec extends AnyFlatSpec with Matchers:
       decision = Run(Direction(1, 0), MatchConfig.runSteps)
     ).asControlDecisionPlayer
     val player2 =
-      Player(2, Position(10, 10), Movement.still, decision = Mark(player1, player1)).asOpponentDecisionPlayer
+      Player(2, Position(10, 10), Movement.still, decision = Mark(player1, player1, 2)).asOpponentDecisionPlayer
     val team1 = Team(1, List(player1), hasBall = true)
     val team2 = Team(2, List(player2), hasBall = false)
     val ball  = Ball(Position(0, 0), Movement.still)
@@ -113,5 +113,5 @@ class DecideSpec extends AnyFlatSpec with Matchers:
 
     updatedState.teams.flatMap(_.players).foreach { player =>
       player.decision should not be Run(Direction(1, 0), MatchConfig.runSteps)
-      player.decision should not be Mark(player1, player1)
+      player.decision should not be Mark(player1, player1, 2)
     }

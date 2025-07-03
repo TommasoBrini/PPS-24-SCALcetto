@@ -228,7 +228,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
   "CanDecideToMark.decideMark" should "create Mark decision with correct players" in:
     val marker   = Player(1, Position(5, 5), Movement.still).asOpponentDecisionPlayer
     val target   = Player(2, Position(6, 6), Movement.still)
-    val decision = marker.decideMark(target)
+    val decision = marker.decideMark(target, 1)
 
     decision shouldBe a[Mark]
     decision.asInstanceOf[Mark].defender shouldBe marker

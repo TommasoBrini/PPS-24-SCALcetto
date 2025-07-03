@@ -58,7 +58,7 @@ trait CanDecideToMoveToGoal:
 
 trait CanDecideToMark:
   self: Player =>
-  def decideMark(target: Player): Decision = Decision.Mark(this, target)
+  def decideMark(target: Player, teamId: Int): Decision = Decision.Mark(this, target, teamId)
 
 trait CanDecideToTackle:
   self: Player =>

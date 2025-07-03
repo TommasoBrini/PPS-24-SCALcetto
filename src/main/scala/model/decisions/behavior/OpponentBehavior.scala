@@ -2,30 +2,29 @@ package model.decisions.behavior
 import config.MatchConfig
 import model.Match.*
 import model.decisions.DecisorPlayer.OpponentPlayer
+import model.decisions.CommonPlayerDecisions.*
 
 object OpponentBehavior:
   extension (player: OpponentPlayer)
     def calculateBestDecision(matchState: MatchState, target: Option[Player]): Decision =
-      val ballPlayerPosition: Option[Position] = matchState.teams.flatMap(_.players).find(_.hasBall) match
-        case Some(ballPlayer) => Some(ballPlayer.position)
-        case _                => None
+      val ballPlayer: Option[Player] = matchState.teams.flatMap(_.players).find(_.hasBall)
 
-      val ball: Ball            = matchState.ball
-      val dxBall: Int           = Math.abs(player.position.x - ball.position.x)
-      val dyBall: Int           = Math.abs(player.position.y - ball.position.y)
-      val dxPlayer: Option[Int] = ballPlayerPosition.map(pos => Math.abs(player.position.x - pos.x))
-      val dyPlayer: Option[Int] = ballPlayerPosition.map(pos => Math.abs(player.position.y - pos.y))
+      val ball: Ball                           = matchState.ball
+      val distanceToBall: Double               = player.position.getDistance(ball.position)
+      val distanceToBallPlayer: Option[Double] = ballPlayer.map(p => player.position.getDistance(p.position))
+      val teamId = matchState.teams.find(_.players.contains(player)).map(_.id).getOrElse(0)
 
       val nextDecision: Decision = player.nextAction match
-        case Action.Stopped(step) if step > 0 => Decision.Confusion(step - 1)
+        case Action.Stopped(step) if step > 0 => player.decideConfusion(step - 1)
         case _ =>
-          if dxPlayer.isDefined && dyPlayer.isDefined && dxPlayer.get < MatchConfig.tackleRange && dyPlayer.get < MatchConfig.tackleRange
+          if distanceToBallPlayer.isDefined && distanceToBallPlayer.get < MatchConfig.tackleRange
+          then player.decideTackle(ball)
+          else if distanceToBall < MatchConfig.proximityRange && distanceToBallPlayer.isEmpty
           then
-            Decision.Tackle(ball)
-          else if dxPlayer.isEmpty && dxBall < MatchConfig.interceptBallRange && dyBall < MatchConfig.interceptBallRange
-          then
-            Decision.Intercept(ball)
+            if distanceToBall < MatchConfig.interceptBallRange && distanceToBallPlayer.isEmpty
+            then player.decideIntercept(ball)
+            else player.decideMoveToBall(player.position.getDirection(ball.position))
           else
-            target.map(t => Decision.Mark(player, t))
-              .getOrElse(Decision.MoveToBall(player.position.getDirection(ball.position)))
+            target.map(t => player.decideMark(t, teamId))
+              .getOrElse(player.decideMoveToBall(player.position.getDirection(ball.position)))
       nextDecision

@@ -42,8 +42,13 @@ object Validate:
       case Intercept(ball)           => Action.Take(ball)
       case MoveToBall(direction)     => Action.Move(direction, MatchConfig.playerMaxSpeed)
       case MoveRandom(direction, _)  => Action.Move(direction, MatchConfig.playerSpeed)
-      case Mark(player, target) => Action.Move(player.position.getDirection(target.position), MatchConfig.playerSpeed)
-      case _                    => Action.Initial
+      case Mark(player, target, teamId) =>
+        if target.hasBall then
+          Action.Move(player.position.getDirection(target.position), MatchConfig.playerSpeed)
+        else
+          val strategicDirection = calculateMarkDirection(player, target, teamId)
+          Action.Move(strategicDirection, MatchConfig.playerSpeed)
+      case _ => Action.Initial
 
   private def getFailureAction(decision: Decision, accuracy: Double): Action =
     (decision, accuracy) match
@@ -64,3 +69,19 @@ object Validate:
       case rand if rand >= 0.5 => Position(goal.x, goal.y - targetOffset.toInt)
       case _                   => Position(goal.x, goal.y + targetOffset.toInt)
     Action.Hit(striker.position.getDirection(newShootingTarget), MatchConfig.ballSpeed + 1)
+
+  private def calculateMarkDirection(defender: Player, target: Player, teamId: Int): model.Space.Direction =
+    val ownGoalX = if teamId == 1 then UIConfig.goalWestX else UIConfig.goalEastX
+    val ownGoalY = UIConfig.midGoalY
+    val ownGoal  = Position(ownGoalX, ownGoalY)
+
+    val targetToGoalDirection = target.position.getDirection(ownGoal)
+
+    val strategicX = target.position.x + (targetToGoalDirection.x * MatchConfig.proximityRange).toInt
+    val strategicY = target.position.y + (targetToGoalDirection.y * MatchConfig.proximityRange).toInt
+
+    val clampedX          = Math.max(0, Math.min(UIConfig.fieldWidth, strategicX))
+    val clampedY          = Math.max(0, Math.min(UIConfig.fieldHeight, strategicY))
+    val strategicPosition = Position(clampedX, clampedY)
+
+    defender.position.getDirection(strategicPosition)
