@@ -12,11 +12,12 @@ import model.decisions.DecisorPlayer.*
 class DecisionMakerSpec extends AnyFlatSpec with Matchers:
 
   "DecisionMaker.decide" should "return a decision for ControlPlayer" in:
-    val controlPlayer = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
-    val team1         = Team(1, List(controlPlayer), hasBall = true)
-    val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
-    val markings      = Map[Player, Player]()
+    val controlPlayer  = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
+    val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
+    val team1          = Team(1, List(controlPlayer, teammatePlayer), hasBall = true)
+    val team2          = Team(2, List(), hasBall = false)
+    val state          = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val markings       = Map[Player, Player]()
 
     val decision = controlPlayer.decide(state, markings)
 
@@ -106,14 +107,14 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     teammateDecision should not be Decision.Initial
 
   it should "handle players with ball" in:
-    val ball          = Ball(Position(5, 5), Movement.still)
-    val controlPlayer = Player(1, Position(5, 5), Movement.still, ball = Some(ball)).asControlDecisionPlayer
-    val team1         = Team(1, List(controlPlayer), hasBall = true)
-    val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState(List(team1, team2), ball)
-    val markings      = Map[Player, Player]()
-
-    val decision = controlPlayer.decide(state, markings)
+    val ball           = Ball(Position(5, 5), Movement.still)
+    val controlPlayer  = Player(1, Position(5, 5), Movement.still, ball = Some(ball)).asControlDecisionPlayer
+    val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
+    val team1          = Team(1, List(controlPlayer, teammatePlayer), hasBall = true)
+    val team2          = Team(2, List(), hasBall = false)
+    val state          = MatchState(List(team1, team2), ball)
+    val markings       = Map[Player, Player]()
+    val decision       = controlPlayer.decide(state, markings)
 
     decision should not be Decision.Initial
     decision shouldBe a[Decision]

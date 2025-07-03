@@ -8,14 +8,14 @@ import config.MatchConfig
 
 object CommonPlayerDecisions:
   extension (player: Player)
-    def decideRun(direction: Direction): Decision = Decision.Run(direction)
-    def possibleRuns(matchState: MatchState): List[Decision] =
+    def decideRun(direction: Direction, steps: Int): Decision = Decision.Run(direction, steps)
+    def possibleRunDirections(matchState: MatchState): List[Decision] =
       val runDirections =
         for
-          dx <- -1 to 0
+          dx <- -1 to 1
           dy <- -1 to 1
-          if dx != 0 || dy != 0
-        yield player.decideRun(Direction(dx, dy))
+          if (dx == 0) != (dy == 0)
+        yield player.decideRun(Direction(dx, dy), MatchConfig.runSteps)
       runDirections.toList
 
     def decideConfusion(step: Int): Decision = Decision.Confusion(remainingStep = step)

@@ -15,7 +15,7 @@ object Match:
   enum Decision:
     case Initial
     case Confusion(remainingStep: Int)
-    case Run(direction: Direction)
+    case Run(direction: Direction, steps: Int)
     case Pass(from: Player, to: Player)
     case Shoot(striker: Player, goal: Position)
     case MoveToGoal(goalDirection: Direction)

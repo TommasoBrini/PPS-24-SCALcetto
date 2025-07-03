@@ -8,13 +8,15 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import Decide.*
 import model.decisions.PlayerDecisionFactory.*
+import config.MatchConfig
 
 class DecideSpec extends AnyFlatSpec with Matchers:
 
   "Decide.decide" should "update all players with new decisions" in:
     val player1 = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
     val player2 = Player(2, Position(10, 10), Movement.still).asOpponentDecisionPlayer
-    val team1   = Team(1, List(player1), hasBall = true)
+    val player3 = Player(3, Position(15, 15), Movement.still).asTeammateDecisionPlayer
+    val team1   = Team(1, List(player1, player3), hasBall = true)
     val team2   = Team(2, List(player2), hasBall = false)
     val ball    = Ball(Position(0, 0), Movement.still)
     val state   = MatchState(List(team1, team2), ball)
@@ -28,7 +30,8 @@ class DecideSpec extends AnyFlatSpec with Matchers:
   it should "assign markings between defenders and attackers" in:
     val attacker      = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
     val defender      = Player(2, Position(10, 10), Movement.still).asOpponentDecisionPlayer
-    val attackingTeam = Team(1, List(attacker), hasBall = true)
+    val teammate      = Player(3, Position(15, 15), Movement.still).asTeammateDecisionPlayer
+    val attackingTeam = Team(1, List(attacker, teammate), hasBall = true)
     val defendingTeam = Team(2, List(defender), hasBall = false)
     val ball          = Ball(Position(0, 0), Movement.still)
     val state         = MatchState(List(attackingTeam, defendingTeam), ball)
@@ -60,12 +63,13 @@ class DecideSpec extends AnyFlatSpec with Matchers:
     updatedState.teams.foreach(_.players should have size 0)
 
   it should "preserve team structure and ball state" in:
-    val player1 = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
-    val player2 = Player(2, Position(10, 10), Movement.still).asOpponentDecisionPlayer
-    val team1   = Team(1, List(player1), hasBall = true)
-    val team2   = Team(2, List(player2), hasBall = false)
-    val ball    = Ball(Position(15, 15), Movement(Direction(1, 1), 2))
-    val state   = MatchState(List(team1, team2), ball)
+    val player1  = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
+    val player2  = Player(2, Position(10, 10), Movement.still).asOpponentDecisionPlayer
+    val teammate = Player(3, Position(15, 15), Movement.still).asTeammateDecisionPlayer
+    val team1    = Team(1, List(player1, teammate), hasBall = true)
+    val team2    = Team(2, List(player2), hasBall = false)
+    val ball     = Ball(Position(15, 15), Movement(Direction(1, 1), 2))
+    val state    = MatchState(List(team1, team2), ball)
 
     val updatedState = decide(state)
 
@@ -92,7 +96,12 @@ class DecideSpec extends AnyFlatSpec with Matchers:
     }
 
   it should "handle players with existing decisions" in:
-    val player1 = Player(1, Position(5, 5), Movement.still, decision = Run(Direction(1, 0))).asControlDecisionPlayer
+    val player1 = Player(
+      1,
+      Position(5, 5),
+      Movement.still,
+      decision = Run(Direction(1, 0), MatchConfig.runSteps)
+    ).asControlDecisionPlayer
     val player2 =
       Player(2, Position(10, 10), Movement.still, decision = Mark(player1, player1)).asOpponentDecisionPlayer
     val team1 = Team(1, List(player1), hasBall = true)
@@ -103,6 +112,6 @@ class DecideSpec extends AnyFlatSpec with Matchers:
     val updatedState = decide(state)
 
     updatedState.teams.flatMap(_.players).foreach { player =>
-      player.decision should not be Run(Direction(1, 0))
+      player.decision should not be Run(Direction(1, 0), MatchConfig.runSteps)
       player.decision should not be Mark(player1, player1)
     }

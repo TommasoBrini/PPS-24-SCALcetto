@@ -10,10 +10,14 @@ import model.decisions.DecisorPlayer.ControlPlayer
 object ControlBehavior:
   extension (player: ControlPlayer)
     def calculateBestDecision(state: MatchState): Decision =
-      val possibleDecisions = player.possibleDecisions(state)
-      val decisionRatings: Map[Decision, Double] = possibleDecisions
-        .map(decision => (decision, calculateActionRating(decision, player, state))).toMap
-      decisionRatings.maxBy(_._2)._1
+      player.decision match
+        case Decision.Run(direction, steps) if steps > 0 => player.decideRun(direction, steps - 1)
+        case _ =>
+          val possibleDecisions = if player.decision == Decision.Initial then player.possiblePasses(state)
+          else player.possibleDecisions(state)
+          val decisionRatings: Map[Decision, Double] = possibleDecisions
+            .map(decision => (decision, calculateActionRating(decision, player, state))).toMap
+          decisionRatings.maxBy(_._2)._1
 
   private def calculateActionRating(playerDecision: Decision, player: Player, state: MatchState): Double =
     playerDecision match

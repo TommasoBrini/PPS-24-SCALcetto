@@ -35,7 +35,7 @@ object Validate:
       case Confusion(step)      => Action.Stopped(step)
       case Pass(from, to)       => Action.Hit(from.position.getDirection(to.position), MatchConfig.ballSpeed)
       case Shoot(striker, goal) => Action.Hit(striker.position.getDirection(goal), MatchConfig.ballSpeed + 1) // todo
-      case Run(direction)       => Action.Move(direction, MatchConfig.playerSpeed)
+      case Run(direction, _)    => Action.Move(direction, MatchConfig.playerSpeed)
       case MoveToGoal(goalDirection) => Action.Move(goalDirection, MatchConfig.playerSpeed)
       case Tackle(ball)              => Action.Take(ball)
       case ReceivePass(ball)         => Action.Take(ball)
@@ -53,9 +53,9 @@ object Validate:
       case _                                => Action.Initial
 
   private def shootSuccess(striker: Player, goal: Position): Double = striker.position.getDistance(goal) match
-    case goalDistance if goalDistance <= MatchConfig.lowDistanceShoot  => 0.1
-    case goalDistance if goalDistance <= MatchConfig.highDistanceShoot => 0.4
-    case _                                                             => 0.0
+    case goalDistance if goalDistance <= MatchConfig.lowDistanceToGoal  => 0.1
+    case goalDistance if goalDistance <= MatchConfig.highDistanceToGoal => 0.4
+    case _                                                              => 0.0
 
   private def failedShoot(striker: Player, goal: Position, accuracy: Double): Action =
     val targetOffset: Double =

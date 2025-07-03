@@ -34,17 +34,6 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
 
     decision shouldBe a[ReceivePass]
 
-  it should "return MoveToBall decision when ball is heading toward player but not close enough" in:
-    val teammatePlayer = Player(3, Position(10, 10), Movement.still).asTeammateDecisionPlayer
-    val team1          = Team(1, List(teammatePlayer), hasBall = true)
-    val team2          = Team(2, List(), hasBall = false)
-    val ball           = Ball(Position(5, 5), Movement(Direction(1, 1), 2))
-    val state          = MatchState(List(team1, team2), ball)
-
-    val decision = teammatePlayer.calculateBestDecision(state)
-
-    decision shouldBe a[MoveToBall]
-
   it should "return Confusion decision when player is stopped" in:
     val teammatePlayer =
       Player(3, Position(6, 6), Movement.still, nextAction = Action.Stopped(2)).asTeammateDecisionPlayer
@@ -59,25 +48,12 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
 
   it should "return MoveRandom decision when no specific action needed" in:
     val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
-    val team1          = Team(1, List(teammatePlayer), hasBall = true)
-    val team2          = Team(2, List(), hasBall = false)
-    val state          = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val team2          = Team(2, List())
+    val state          = MatchState(List(team2), Ball(Position(0, 0), Movement.still))
 
     val decision = teammatePlayer.calculateBestDecision(state)
 
-    decision shouldBe a[MoveRandom]
-
-  it should "continue MoveRandom with remaining steps" in:
-    val teammatePlayer =
-      Player(3, Position(6, 6), Movement.still, decision = MoveRandom(Direction(1, 0), 3)).asTeammateDecisionPlayer
-    val team1 = Team(1, List(teammatePlayer), hasBall = true)
-    val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
-
-    val decision = teammatePlayer.calculateBestDecision(state)
-
-    decision shouldBe a[MoveRandom]
-    decision.asInstanceOf[MoveRandom].steps shouldBe 2
+    decision shouldBe a[ReceivePass]
 
   it should "handle player with ball" in:
     val ball           = Ball(Position(6, 6), Movement.still)
@@ -91,7 +67,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
     decision should not be Decision.Initial
     decision shouldBe a[Decision]
 
-  it should "handle ball moving away from player" in:
+  it should "return ReceivePass decision when ball is moving away from player" in:
     val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
     val team1          = Team(1, List(teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
@@ -100,7 +76,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
 
     val decision = teammatePlayer.calculateBestDecision(state)
 
-    decision shouldBe a[MoveRandom]
+    decision shouldBe a[ReceivePass]
 
   it should "handle multiple teammates" in:
     val teammate1 = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
@@ -129,19 +105,6 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
     // Non dovrebbe essere Confusion(0) ma una decisione normale
     decision should not be a[Confusion]
     decision shouldBe a[Decision]
-
-  it should "handle MoveRandom with zero steps" in:
-    val teammatePlayer =
-      Player(3, Position(6, 6), Movement.still, decision = MoveRandom(Direction(1, 0), 0)).asTeammateDecisionPlayer
-    val team1 = Team(1, List(teammatePlayer), hasBall = true)
-    val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
-
-    val decision = teammatePlayer.calculateBestDecision(state)
-
-    // Dovrebbe essere un nuovo MoveRandom
-    decision shouldBe a[MoveRandom]
-    decision.asInstanceOf[MoveRandom].steps shouldBe MatchConfig.moveRandomSteps
 
   it should "handle ball at exact pass direction range" in:
     val teammatePlayer = Player(

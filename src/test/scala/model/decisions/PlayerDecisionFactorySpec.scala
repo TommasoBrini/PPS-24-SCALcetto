@@ -9,6 +9,7 @@ import model.decisions.PlayerDecisionFactory.*
 import model.decisions.DecisorPlayer.*
 import model.decisions.PossibleDecisionFactory.*
 import model.decisions.CommonPlayerDecisions.*
+import config.MatchConfig
 
 class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
 
@@ -28,7 +29,7 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
       Movement(Direction(1, 1), 2),
       ball = Some(ball),
       nextAction = Action.Move(Direction(1, 0), 1),
-      decision = Run(Direction(1, 0))
+      decision = Run(Direction(1, 0), MatchConfig.runSteps)
     )
     val controlPlayer = basePlayer.asControlDecisionPlayer
 
@@ -115,7 +116,7 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
 
     val possibleDecisions = controlPlayer.possibleDecisions(state)
 
-    possibleDecisions should contain atLeastOneElementOf (controlPlayer.possibleRuns(state))
+    possibleDecisions should contain atLeastOneElementOf (controlPlayer.possibleRunDirections(state))
 
   it should "include Pass decisions when teammates are available" in:
     val controlPlayer = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
@@ -164,7 +165,12 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
 
   it should "handle player with existing decision" in:
     val controlPlayer =
-      Player(1, Position(5, 5), Movement.still, decision = Run(Direction(1, 0))).asControlDecisionPlayer
+      Player(
+        1,
+        Position(5, 5),
+        Movement.still,
+        decision = Run(Direction(1, 0), MatchConfig.runSteps)
+      ).asControlDecisionPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))

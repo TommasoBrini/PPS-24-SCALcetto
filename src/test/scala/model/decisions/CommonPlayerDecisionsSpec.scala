@@ -8,13 +8,14 @@ import org.scalatest.matchers.should.Matchers
 import model.decisions.CommonPlayerDecisions.*
 import config.UIConfig
 import model.decisions.PlayerDecisionFactory.*
+import config.MatchConfig
 
 class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
 
   "CommonPlayerDecisions.decideRun" should "create Run decision with correct direction" in:
     val player    = Player(1, Position(5, 5), Movement.still)
     val direction = Direction(1, 0)
-    val decision  = player.decideRun(direction)
+    val decision  = player.decideRun(direction, MatchConfig.runSteps)
 
     decision shouldBe a[Run]
     decision.asInstanceOf[Run].direction shouldBe direction
@@ -31,7 +32,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     )
 
     directions.foreach { direction =>
-      val decision = player.decideRun(direction)
+      val decision = player.decideRun(direction, MatchConfig.runSteps)
       decision shouldBe a[Run]
       decision.asInstanceOf[Run].direction shouldBe direction
     }
@@ -42,7 +43,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2  = Team(2, List(), hasBall = false)
     val state  = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleRuns = player.possibleRuns(state)
+    val possibleRuns = player.possibleRunDirections(state)
 
     possibleRuns should not be empty
     possibleRuns.foreach { decision =>
@@ -55,9 +56,9 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2  = Team(2, List(), hasBall = false)
     val state  = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleRuns = player.possibleRuns(state)
+    val possibleRuns = player.possibleRunDirections(state)
 
-    possibleRuns should not contain (Run(Direction(0, 0)))
+    possibleRuns should not contain (Run(Direction(0, 0), MatchConfig.runSteps))
 
   it should "include all valid movement directions" in:
     val player = Player(1, Position(5, 5), Movement.still)
@@ -65,9 +66,9 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2  = Team(2, List(), hasBall = false)
     val state  = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleRuns = player.possibleRuns(state)
+    val possibleRuns = player.possibleRunDirections(state)
 
-    possibleRuns should have size 5
+    possibleRuns should have size 4
 
   "CommonPlayerDecisions.decideConfusion" should "create Confusion decision with correct steps" in:
     val player   = Player(1, Position(5, 5), Movement.still)
@@ -190,10 +191,15 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     decision.asInstanceOf[MoveToGoal].goalDirection shouldBe direction
 
   it should "return MoveToGoal decision for non-Initial decision" in:
-    val player = Player(1, Position(5, 5), Movement.still, decision = Run(Direction(1, 0))).asControlDecisionPlayer
-    val team1  = Team(1, List(player), hasBall = true)
-    val team2  = Team(2, List(), hasBall = false)
-    val state  = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val player = Player(
+      1,
+      Position(5, 5),
+      Movement.still,
+      decision = Run(Direction(1, 0), MatchConfig.runSteps)
+    ).asControlDecisionPlayer
+    val team1 = Team(1, List(player), hasBall = true)
+    val team2 = Team(2, List(), hasBall = false)
+    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleMoves = player.possibleMovesToGoal(state)
 
@@ -201,10 +207,15 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     possibleMoves.head shouldBe a[MoveToGoal]
 
   it should "calculate correct direction to goal for team 1" in:
-    val player = Player(1, Position(5, 5), Movement.still, decision = Run(Direction(1, 0))).asControlDecisionPlayer
-    val team1  = Team(1, List(player), hasBall = true)
-    val team2  = Team(2, List(), hasBall = false)
-    val state  = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val player = Player(
+      1,
+      Position(5, 5),
+      Movement.still,
+      decision = Run(Direction(1, 0), MatchConfig.runSteps)
+    ).asControlDecisionPlayer
+    val team1 = Team(1, List(player), hasBall = true)
+    val team2 = Team(2, List(), hasBall = false)
+    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleMoves = player.possibleMovesToGoal(state)
 

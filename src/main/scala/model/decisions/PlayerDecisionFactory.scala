@@ -28,6 +28,6 @@ object DecisorPlayer:
 object PossibleDecisionFactory:
   extension (player: ControlPlayer)
     def possibleDecisions(state: MatchState): List[Decision] =
-      player.possibleRuns(state) ++ player.possiblePasses(state) ++ player.possibleShots(
+      player.possibleRunDirections(state) ++ player.possiblePasses(state) ++ player.possibleShots(
         state
       ) ++ player.possibleMovesToGoal(state)

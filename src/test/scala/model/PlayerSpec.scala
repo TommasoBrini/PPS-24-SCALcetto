@@ -6,6 +6,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import model.decisions.PlayerDecisionFactory.*
 import model.decisions.CommonPlayerDecisions.*
+import config.MatchConfig
 
 class PlayerSpec extends AnyFlatSpec with Matchers:
   "A Player" should "store id, position, and movement correctly" in:
@@ -28,10 +29,14 @@ class PlayerSpec extends AnyFlatSpec with Matchers:
     playerWithoutBall.hasBall shouldBe false
 
   it should "can decide to run" in:
-    val player = Player(1, Position(0, 0))
-    player.decideRun(player.position.getDirection(Position(1, 0))) shouldBe Decision.Run(
-      player.position.getDirection(Position(1, 0))
-    )
+    val player    = Player(1, Position(0, 0))
+    val direction = player.position.getDirection(Position(1, 0))
+    val steps     = config.MatchConfig.runSteps
+    val decision  = player.decideRun(direction, steps)
+    decision shouldBe a[Decision.Run]
+    val run = decision.asInstanceOf[Decision.Run]
+    run.direction shouldBe direction
+    run.steps shouldBe steps
 
   it should "can decide to stop" in:
     val player = Player(1, Position(0, 0))
