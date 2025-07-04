@@ -15,18 +15,19 @@ object Match:
   enum Decision:
     case Initial
     case Confusion(remainingStep: Int)
+    case Run(direction: Direction, steps: Int)
     case Pass(from: Player, to: Player)
     case Shoot(striker: Player, goal: Position)
-    case Run(direction: Direction)
     case MoveToGoal(goalDirection: Direction)
+
+    case Mark(defender: Player, target: Player, teamId: Int)
     case Tackle(ball: Ball)
-    case ReceivePass(ball: Ball)
     case Intercept(ball: Ball)
     case MoveToBall(directionToBall: Direction)
-    case MoveRandom(direction: Direction, steps: Int)
-    case Mark(defender: Player, target: Player)
 
-  // TODO change this after making creational DSL
+    case MoveRandom(direction: Direction, steps: Int)
+    case ReceivePass(ball: Ball)
+
   case class Player(
       id: Int,
       position: Position,

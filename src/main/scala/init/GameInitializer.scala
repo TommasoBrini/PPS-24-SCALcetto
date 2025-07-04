@@ -4,6 +4,7 @@ import config.UIConfig.*
 import config.MatchConfig.*
 import model.Match.*
 import model.Match.Action.Initial
+import model.decisions.PlayerDecisionFactory.*
 
 import scala.util.Random
 
@@ -28,7 +29,7 @@ object GameInitializer:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY)
-      )
+      ).asOpponentDecisionPlayer
     }.toList
     Team(id, players, false)
 
@@ -44,7 +45,7 @@ object GameInitializer:
         position = Position(posX, posY),
         movement = Movement(Direction(0, 0), 0),
         decision = Decision.Initial
-      )
+      ).asTeammateDecisionPlayer
     }.toList
     val ballPlayer: Player = Player(
       id = id * 10 + 22,
@@ -52,5 +53,5 @@ object GameInitializer:
       ball = Some(b),
       movement = Movement(Direction(0, 0), 0),
       decision = Decision.Initial
-    )
+    ).asControlDecisionPlayer
     Team(id, ballPlayer :: players, true)
