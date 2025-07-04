@@ -6,6 +6,7 @@ object Match:
   opaque type ID = Int
 
   export Space.*
+
   enum Action:
     case Initial
     case Stopped(remainingStep: Int)
@@ -27,7 +28,6 @@ object Match:
     case MoveRandom(direction: Direction, steps: Int)
     case Mark(defender: Player, target: Player)
 
-  // opaque type Player = (ID, Position, Movement, )
   case class Player(
       id: Int,
       position: Position,

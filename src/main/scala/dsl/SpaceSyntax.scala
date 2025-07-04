@@ -1,6 +1,7 @@
 package dsl
 
 import config.UIConfig
+import model.Match.Team
 import model.Space.*
 import model.Space.Bounce.*
 
@@ -59,5 +60,11 @@ object SpaceSyntax {
       def getMovementFrom(bounce: Bounce): Movement = Movement(m.direction getDirectionFrom bounce, m.speed)
       @targetName("applyScale")
       def *(factor: Int): Movement = Movement(m.direction, m.speed * factor)
+
+  // TODO fix logix of teams from list to tuple
+  object TeamsSyntax:
+    extension (teams: (Team, Team))
+      def teamA: Team = teams._1
+      def teamB: Team = teams._2
 
 }

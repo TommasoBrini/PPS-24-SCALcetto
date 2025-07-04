@@ -28,7 +28,7 @@ object Space:
       if dx == 0 && dy == 0 then Direction.none
       else (dx / Math.hypot(dx, dy), dy / Math.hypot(dx, dy))
 
-  opaque type Movement = (Direction, Int)
+  opaque type Movement = (Direction, Speed)
   extension (m: Movement)
     def direction: Direction = m._1
     def speed: Int           = m._2
