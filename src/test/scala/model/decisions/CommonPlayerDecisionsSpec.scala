@@ -41,7 +41,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val player = Player(1, Position(5, 5), Movement.still)
     val team1  = Team(1, List(player), hasBall = true)
     val team2  = Team(2, List(), hasBall = false)
-    val state  = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state  = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleRuns = player.possibleRunDirections(state)
 
@@ -54,7 +54,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val player = Player(1, Position(5, 5), Movement.still)
     val team1  = Team(1, List(player), hasBall = true)
     val team2  = Team(2, List(), hasBall = false)
-    val state  = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state  = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleRuns = player.possibleRunDirections(state)
 
@@ -64,7 +64,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val player = Player(1, Position(5, 5), Movement.still)
     val team1  = Team(1, List(player), hasBall = true)
     val team2  = Team(2, List(), hasBall = false)
-    val state  = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state  = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleRuns = player.possibleRunDirections(state)
 
@@ -109,7 +109,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val opponent  = Player(4, Position(10, 10), Movement.still)
     val team1     = Team(1, List(passer, teammate1, teammate2), hasBall = true)
     val team2     = Team(2, List(opponent), hasBall = false)
-    val state     = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state     = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possiblePasses = passer.possiblePasses(state)
 
@@ -126,7 +126,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val opponent = Player(3, Position(10, 10), Movement.still)
     val team1    = Team(1, List(passer, teammate), hasBall = true)
     val team2    = Team(2, List(opponent), hasBall = false)
-    val state    = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state    = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possiblePasses = passer.possiblePasses(state)
 
@@ -137,7 +137,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val passer = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
     val team1  = Team(1, List(passer), hasBall = true)
     val team2  = Team(2, List(), hasBall = false)
-    val state  = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state  = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possiblePasses = passer.possiblePasses(state)
 
@@ -156,7 +156,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val striker = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
     val team1   = Team(1, List(striker), hasBall = true)
     val team2   = Team(2, List(), hasBall = false)
-    val state   = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state   = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleShots = striker.possibleShots(state)
 
@@ -170,7 +170,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val striker = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
     val team1   = Team(1, List(striker), hasBall = true)
     val team2   = Team(2, List(), hasBall = false)
-    val state   = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state   = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleShots = striker.possibleShots(state)
 
@@ -199,7 +199,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     ).asControlDecisionPlayer
     val team1 = Team(1, List(player), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleMoves = player.possibleMovesToGoal(state)
 
@@ -215,7 +215,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     ).asControlDecisionPlayer
     val team1 = Team(1, List(player), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleMoves = player.possibleMovesToGoal(state)
 

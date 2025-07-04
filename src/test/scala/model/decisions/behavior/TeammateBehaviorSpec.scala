@@ -16,7 +16,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
     val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
     val team1          = Team(1, List(teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
-    val state          = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = teammatePlayer.calculateBestDecision(state)
 
@@ -28,7 +28,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
     val team1          = Team(1, List(teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
     val ball           = Ball(Position(5, 5), Movement(Direction(1, 1), 2))
-    val state          = MatchState(List(team1, team2), ball)
+    val state          = MatchState((team1, team2), ball)
 
     val decision = teammatePlayer.calculateBestDecision(state)
 
@@ -39,7 +39,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
       Player(3, Position(6, 6), Movement.still, nextAction = Action.Stopped(2)).asTeammateDecisionPlayer
     val team1 = Team(1, List(teammatePlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = teammatePlayer.calculateBestDecision(state)
 
@@ -48,8 +48,9 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
 
   it should "return MoveRandom decision when no specific action needed" in:
     val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
+    val team1          = Team(1, List(teammatePlayer), hasBall = true)
     val team2          = Team(2, List())
-    val state          = MatchState(List(team2), Ball(Position(0, 0), Movement.still))
+    val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = teammatePlayer.calculateBestDecision(state)
 
@@ -60,7 +61,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
     val teammatePlayer = Player(3, Position(6, 6), Movement.still, ball = Some(ball)).asTeammateDecisionPlayer
     val team1          = Team(1, List(teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
-    val state          = MatchState(List(team1, team2), ball)
+    val state          = MatchState((team1, team2), ball)
 
     val decision = teammatePlayer.calculateBestDecision(state)
 
@@ -72,7 +73,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
     val team1          = Team(1, List(teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
     val ball           = Ball(Position(5, 5), Movement(Direction(-1, -1), 2))
-    val state          = MatchState(List(team1, team2), ball)
+    val state          = MatchState((team1, team2), ball)
 
     val decision = teammatePlayer.calculateBestDecision(state)
 
@@ -83,7 +84,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
     val teammate2 = Player(4, Position(7, 7), Movement.still).asTeammateDecisionPlayer
     val team1     = Team(1, List(teammate1, teammate2), hasBall = true)
     val team2     = Team(2, List(), hasBall = false)
-    val state     = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state     = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision1 = teammate1.calculateBestDecision(state)
     val decision2 = teammate2.calculateBestDecision(state)
@@ -98,7 +99,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
       Player(3, Position(6, 6), Movement.still, nextAction = Action.Stopped(0)).asTeammateDecisionPlayer
     val team1 = Team(1, List(teammatePlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = teammatePlayer.calculateBestDecision(state)
 
@@ -115,7 +116,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
     val team1 = Team(1, List(teammatePlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val ball  = Ball(Position(0, 0), Movement(Direction(1, 1), 2))
-    val state = MatchState(List(team1, team2), ball)
+    val state = MatchState((team1, team2), ball)
 
     val decision = teammatePlayer.calculateBestDecision(state)
 

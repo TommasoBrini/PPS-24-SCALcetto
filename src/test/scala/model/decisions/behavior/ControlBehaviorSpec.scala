@@ -23,7 +23,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
     val teammate = Player(2, Position(6, 6), Movement.still).asTeammateDecisionPlayer
     val team1    = Team(1, List(controlPlayer, teammate), hasBall = true)
     val team2    = Team(2, List(), hasBall = false)
-    val state    = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state    = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -35,7 +35,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
     val teammate      = Player(2, Position(6, 6), Movement.still).asTeammateDecisionPlayer
     val team1         = Team(1, List(controlPlayer, teammate), hasBall = true)
     val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -53,7 +53,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       ).asControlDecisionPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List())
-    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -70,7 +70,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
     ).asControlDecisionPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -89,7 +89,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
     ).asControlDecisionPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState(List(team1, team2), ball)
+    val state = MatchState((team1, team2), ball)
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -107,7 +107,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
     ).asControlDecisionPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -126,7 +126,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       ).asControlDecisionPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -138,7 +138,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
     val teammate      = Player(2, Position(6, 6), Movement.still).asTeammateDecisionPlayer
     val team1         = Team(1, List(controlPlayer, teammate), hasBall = true)
     val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -156,7 +156,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
     ).asControlDecisionPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision1 = controlPlayer.calculateBestDecision(state)
     val decision2 = controlPlayer.calculateBestDecision(state)
@@ -174,7 +174,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
     ).asControlDecisionPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 

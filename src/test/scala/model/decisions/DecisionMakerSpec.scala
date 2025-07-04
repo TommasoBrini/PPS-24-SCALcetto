@@ -16,7 +16,7 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
     val team1          = Team(1, List(controlPlayer, teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
-    val state          = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
     val markings       = Map[Player, Player]()
 
     val decision = controlPlayer.decide(state, markings)
@@ -28,7 +28,7 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     val opponentPlayer = Player(2, Position(10, 10), Movement.still).asOpponentDecisionPlayer
     val team1          = Team(1, List(), hasBall = true)
     val team2          = Team(2, List(opponentPlayer), hasBall = false)
-    val state          = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
     val markings       = Map[Player, Player]()
 
     val decision = opponentPlayer.decide(state, markings)
@@ -40,7 +40,7 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
     val team1          = Team(1, List(teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
-    val state          = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
     val markings       = Map[Player, Player]()
 
     val decision = teammatePlayer.decide(state, markings)
@@ -52,7 +52,7 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     val unknownPlayer = Player(4, Position(7, 7), Movement.still) // Player base senza trait
     val team1         = Team(1, List(unknownPlayer), hasBall = true)
     val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
     val markings      = Map[Player, Player]()
 
     an[IllegalArgumentException] should be thrownBy unknownPlayer.decide(state, markings)
@@ -64,7 +64,7 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     val targetPlayer   = player2.asControlDecisionPlayer
     val team1          = Team(1, List(targetPlayer), hasBall = true)
     val team2          = Team(2, List(opponentPlayer), hasBall = false)
-    val state          = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
     val markings       = Map(player1 -> player2)
 
     val decision = opponentPlayer.decide(state, markings)
@@ -76,7 +76,7 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     val opponentPlayer = Player(2, Position(10, 10), Movement.still).asOpponentDecisionPlayer
     val team1          = Team(1, List(), hasBall = true)
     val team2          = Team(2, List(opponentPlayer), hasBall = false)
-    val state          = MatchState(List(team1, team2), Ball(Position(0, 0), Movement.still))
+    val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
     val markings       = Map[Player, Player]()
 
     val decision = opponentPlayer.decide(state, markings)
@@ -95,7 +95,7 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     val team1    = Team(1, List(controlPlayer, teammatePlayer), hasBall = true)
     val team2    = Team(2, List(opponentPlayer), hasBall = false)
     val ball     = Ball(Position(15, 15), Movement(Direction(1, 1), 2))
-    val state    = MatchState(List(team1, team2), ball)
+    val state    = MatchState((team1, team2), ball)
     val markings = Map(player2 -> player1)
 
     val controlDecision  = controlPlayer.decide(state, markings)
@@ -112,7 +112,7 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
     val team1          = Team(1, List(controlPlayer, teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
-    val state          = MatchState(List(team1, team2), ball)
+    val state          = MatchState((team1, team2), ball)
     val markings       = Map[Player, Player]()
     val decision       = controlPlayer.decide(state, markings)
 
@@ -124,7 +124,7 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     val opponentPlayer = Player(2, Position(5, 5), Movement.still).asOpponentDecisionPlayer
     val team1          = Team(1, List(), hasBall = true)
     val team2          = Team(2, List(opponentPlayer), hasBall = false)
-    val state          = MatchState(List(team1, team2), ball)
+    val state          = MatchState((team1, team2), ball)
     val markings       = Map[Player, Player]()
 
     val decision = opponentPlayer.decide(state, markings)

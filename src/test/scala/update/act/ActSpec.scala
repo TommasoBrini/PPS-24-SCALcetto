@@ -18,19 +18,21 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val initialPosition = Position(0, 0)
     val player =
       Player(0, initialPosition, movement = Movement.still, nextAction = Move(defaultDirection, defaultSpeed))
-    val team                = Team(0, List(player))
-    val state               = MatchState(List(team), Ball(Position(0, 0)))
+    val team1               = Team(0, List(player))
+    val team2               = Team(2, List())
+    val state               = MatchState((team1, team2), Ball(Position(0, 0)))
     val updated: MatchState = act(state)
-    updated.teams.flatMap(_.players)
+    updated.teams.players
       .forall(_.movement == Movement(defaultDirection, defaultSpeed)) should be(true)
-    updated.teams.flatMap(_.players)
+    updated.teams.players
       .forall(_.position == initialPosition + Movement(defaultDirection, defaultSpeed)) should be(true)
 
   it should "update ball movement if someone hits it" in:
     val ball   = Ball(Position(0, 0), movement = Movement.still)
     val player = Player(0, Position(0, 0), ball = Some(ball), nextAction = Hit(defaultDirection, defaultSpeed))
-    val team   = Team(0, List(player))
-    val state  = MatchState(List(team), ball)
+    val team1  = Team(0, List(player))
+    val team2  = Team(2, List())
+    val state  = MatchState((team1, team2), ball)
     act(state).ball.movement should be(Movement(defaultDirection, defaultSpeed))
 
   "A team" should "move when he has to" in:

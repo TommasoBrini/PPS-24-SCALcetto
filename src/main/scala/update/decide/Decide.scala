@@ -27,5 +27,3 @@ object Decide:
         val newTeamB: Team = teamB.copy(players = playersBDecided)
 
         state.copy(teams = (newTeamA, newTeamB))
-      case _ =>
-        throw new IllegalArgumentException("MatchState must contain exactly two teams.")

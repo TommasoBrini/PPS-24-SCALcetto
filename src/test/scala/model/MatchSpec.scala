@@ -27,7 +27,7 @@ class MatchSpec extends AnyFlatSpec with Matchers:
     val team1 = Team(1, List(Player(1, Position(1, 1), Movement.still)), false)
     val team2 = Team(2, List(Player(2, Position(2, 2), Movement.still)), false)
     val ball  = Ball(Position(0, 0), Movement.still)
-    val state = MatchState(List(team1, team2), ball)
+    val state = MatchState((team1, team2), ball)
 
-    state.teams should have size 2
+    state.teams should matchPattern { case (_: Team, _: Team) => }
     state.ball shouldBe ball

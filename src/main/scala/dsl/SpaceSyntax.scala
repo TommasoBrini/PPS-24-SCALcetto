@@ -76,6 +76,11 @@ object SpaceSyntax {
       if teams.teamA.players.contains(player) then teams.teamA
       else teams.teamB
 
+    private def getTeamWithBall(teams: (Team, Team)): Option[Team] =
+      if teams.teamA.hasBall then Option(teams.teamA)
+      else if teams.teamB.hasBall then Option(teams.teamB)
+      else Option.empty
+
     extension (teams: (Team, Team))
       def teamA: Team                   = teams._1
       def teamB: Team                   = teams._2
@@ -83,4 +88,5 @@ object SpaceSyntax {
       def opponentOf(teamId: Int): Team = getOpponent(teams, teamId)
       def players: List[Player]         = teamA.players ::: teamB.players
       def teamOf(player: Player): Team  = getTeamOf(teams, player)
+      def withBall: Option[Team]        = getTeamWithBall(teams)
 }
