@@ -17,7 +17,7 @@ object GameInitializer:
     val ball: Ball   = Ball(Position(realFieldWidth / 2, realFieldHeight / 2), Movement(Direction(0, 0), 0))
     val teamsA: Team = createTeam(1, true)
     val teamsB: Team = createTeamWithBall(2, false, ball)
-    MatchState(List(teamsA, teamsB), ball)
+    MatchState((teamsA, teamsB), ball)
 
   private def createTeam(id: Int, isLeftSide: Boolean): Team =
     val minX: Int = if isLeftSide then 1 else realFieldWidth / 2 + 1

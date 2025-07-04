@@ -48,7 +48,7 @@ object Match:
       val actual: Direction   = movement.direction
       Math.abs(actual.x - toPlayer.x) + Math.abs(actual.y - toPlayer.y) < tolerance
 
-  case class MatchState(teams: List[Team], ball: Ball)
+  case class MatchState(teams: (Team, Team), ball: Ball)
 
   enum Event:
     case StepEvent

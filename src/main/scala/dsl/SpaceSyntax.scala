@@ -1,7 +1,7 @@
 package dsl
 
 import config.UIConfig
-import model.Match.Team
+import model.Match.{Player, Team}
 import model.Space.*
 import model.Space.Bounce.*
 
@@ -12,6 +12,7 @@ object SpaceSyntax {
   export DirectionSyntax.*
   export MovementSyntax.*
   export PositionSyntax.*
+  export TeamsSyntax.*
 
   object PositionSyntax:
     private def checkAxisOutOfBound(coordinate: Int, axisBound: Int): Boolean =
@@ -62,9 +63,24 @@ object SpaceSyntax {
       def *(factor: Int): Movement = Movement(m.direction, m.speed * factor)
 
   // TODO fix logix of teams from list to tuple
-  object TeamsSyntax:
-    extension (teams: (Team, Team))
-      def teamA: Team = teams._1
-      def teamB: Team = teams._2
 
+  object TeamsSyntax:
+    private def getOpponent(teams: (Team, Team), myTeam: Team): Team =
+      if teams.teamA.id != myTeam.id then teams.teamA
+      else teams.teamB
+    private def getOpponent(teams: (Team, Team), myTeamId: Int): Team =
+      if teams.teamA.id != myTeamId then teams.teamA
+      else teams.teamB
+
+    private def getTeamOf(teams: (Team, Team), player: Player): Team =
+      if teams.teamA.players.contains(player) then teams.teamA
+      else teams.teamB
+
+    extension (teams: (Team, Team))
+      def teamA: Team                   = teams._1
+      def teamB: Team                   = teams._2
+      def opponentOf(team: Team): Team  = getOpponent(teams, team)
+      def opponentOf(teamId: Int): Team = getOpponent(teams, teamId)
+      def players: List[Player]         = teamA.players ::: teamB.players
+      def teamOf(player: Player): Team  = getTeamOf(teams, player)
 }

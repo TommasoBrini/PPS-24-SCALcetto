@@ -11,7 +11,10 @@ import scala.util.Random
 
 object Validate:
   def validate(state: MatchState): MatchState =
-    state.copy(teams = state.teams.map(validate))
+    val teamA: Team              = state.teams.teamA
+    val teamB: Team              = state.teams.teamB
+    val validTeams: (Team, Team) = (validate(teamA), validate(teamB))
+    state.copy(teams = validTeams)
 
   def validate(team: Team): Team =
     Team(team.id, team.players.map(validate), team.hasBall)

@@ -5,6 +5,7 @@ import config.UIConfig
 import model.decisions.PlayerDecisionFactory.*
 import model.Space.*
 import config.MatchConfig
+import dsl.SpaceSyntax.*
 
 object CommonPlayerDecisions:
   extension (player: Player)
@@ -25,10 +26,10 @@ object CommonPlayerDecisions:
 trait CanDecideToPass:
   self: Player =>
   def decidePass(to: Player): Decision = Decision.Pass(this, to)
+  // TODO maybe this will not work
   def possiblePasses(state: MatchState): List[Decision] =
     for
-      team     <- state.teams.filter(_.players.contains(this))
-      teammate <- team.players.filter(!_.equals(this))
+      teammate <- state.teams.teamOf(this).players.filter(!_.equals(this))
     yield this.decidePass(teammate)
 
 trait CanDecideToShoot:
