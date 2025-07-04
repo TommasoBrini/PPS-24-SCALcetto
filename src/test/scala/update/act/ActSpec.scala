@@ -35,11 +35,21 @@ class ActSpec extends AnyFlatSpec with Matchers:
 
   "A team" should "move when he has to" in:
     val initial = Position(0, 0)
-    val p1 = Player(0, initial, movement = Movement.still, nextAction = Move(defaultDirection, MatchConfig.playerSpeed))
-    val p2 = Player(1, initial, movement = Movement.still, nextAction = Move(defaultDirection, MatchConfig.playerSpeed))
+    val p1 = Player(
+      0,
+      initial,
+      movement = Movement.still,
+      nextAction = Move(defaultDirection, MatchConfig.playerWithBallSpeed)
+    )
+    val p2 = Player(
+      1,
+      initial,
+      movement = Movement.still,
+      nextAction = Move(defaultDirection, MatchConfig.playerWithBallSpeed)
+    )
     val team = Team(0, List(p1, p2))
     updateMovement(team, None).players
-      .forall(_.movement == Movement(defaultDirection, MatchConfig.playerSpeed)) should be(true)
+      .forall(_.movement == Movement(defaultDirection, MatchConfig.playerWithBallSpeed)) should be(true)
 
   it should "move correctly" in:
     val initial  = Position(0, 0)
@@ -59,8 +69,8 @@ class ActSpec extends AnyFlatSpec with Matchers:
     updateMovement(player, None).movement should be(Movement.still)
 
   it should "move when he has to" in:
-    val player = Player(0, Position(0, 0), nextAction = Move(defaultDirection, MatchConfig.playerSpeed))
-    updateMovement(player, None).movement should be(Movement(defaultDirection, MatchConfig.playerSpeed))
+    val player = Player(0, Position(0, 0), nextAction = Move(defaultDirection, MatchConfig.playerWithBallSpeed))
+    updateMovement(player, None).movement should be(Movement(defaultDirection, MatchConfig.playerWithBallSpeed))
 
   it should "stand still when hitting the ball" in:
     val direction = Direction(2, 2)
@@ -88,10 +98,11 @@ class ActSpec extends AnyFlatSpec with Matchers:
     updateMovement(ball, Some(player)).movement should be(initial)
 
   it should "move with the player that controls it" in:
-    val ball    = Ball(Position(0, 0))
-    val player  = Player(0, Position(0, 0), Movement.still, Some(ball), Move(defaultDirection, MatchConfig.playerSpeed))
+    val ball = Ball(Position(0, 0))
+    val player =
+      Player(0, Position(0, 0), Movement.still, Some(ball), Move(defaultDirection, MatchConfig.playerWithBallSpeed))
     val updated = updateMovement(player, Some(player))
-    updateMovement(ball, Some(updated)).movement should be(Movement(defaultDirection, MatchConfig.playerSpeed))
+    updateMovement(ball, Some(updated)).movement should be(Movement(defaultDirection, MatchConfig.playerWithBallSpeed))
 
   it should "be hit by player correctly" in:
     val ball      = Ball(Position(0, 0), Movement.still)

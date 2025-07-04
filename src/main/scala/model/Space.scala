@@ -24,7 +24,6 @@ object Space:
     def getDirection(to: Position): Direction =
       val dx = to.x - p.x
       val dy = to.y - p.y
-      // Hypot with both argument zero returns zero, implying a division by zero returning Double.NaN
       if dx == 0 && dy == 0 then Direction.none
       else (dx / Math.hypot(dx, dy), dy / Math.hypot(dx, dy))
 

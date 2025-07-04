@@ -2,13 +2,16 @@ package update.act
 
 import config.UIConfig
 import config.MatchConfig
-import model.Match.{Action, *}
+import model.Match.{Action, Ball, MatchState, Movement, Team}
 import model.Match.Action.*
+import model.Match.Player
+import model.decisions.PlayerDecisionFactory.*
 import dsl.SpaceSyntax.*
 
 object Act:
   def act(state: MatchState): MatchState =
-    move(updateMovements(state))
+    val updateState: MatchState = move(updateMovements(state))
+    updatePlayers(updateState)
 
   private[update] def updateMovements(state: MatchState): MatchState =
     val newOwnerOpt = state.teams.flatMap(_.players).find(_.nextAction match
@@ -67,4 +70,19 @@ object Act:
     state.ball.position.isGoal
 
   def isBallOut(state: MatchState): Boolean =
-    state.ball.position isOutOfBound (UIConfig.fieldWidth, UIConfig.fieldHeight)
+    state.ball.position.isOutOfBound(UIConfig.fieldWidth, UIConfig.fieldHeight)
+
+  private def updatePlayers(state: MatchState): MatchState =
+    val updateTeams: List[Team] = state.teams.map { team =>
+      val updatePlayers: List[Player] = team.players.map { player =>
+        if !team.hasBall then
+          player.asOpponentDecisionPlayer
+        else if player.hasBall then
+          player.asControlDecisionPlayer
+        else {
+          player.asTeammateDecisionPlayer
+        }
+      }
+      team.copy(players = updatePlayers)
+    }
+    state.copy(teams = updateTeams)
