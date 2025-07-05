@@ -7,6 +7,7 @@ import model.decisions.DecisorPlayer.TeammatePlayer
 import model.decisions.PossibleDecisionFactory.*
 import model.decisions.CommonPlayerDecisions.*
 import scala.util.Random
+import dsl.SpaceSyntax.*
 
 object TeammateBehavior:
   extension (player: TeammatePlayer)
@@ -16,9 +17,9 @@ object TeammateBehavior:
         case _ =>
           if player.position.getDistance(state.ball.position) < MatchConfig.interceptBallRange
           then player.decideReceivePass(state.ball)
-          else if player.position.getDistance(state.ball.position) < MatchConfig.proximityRange && !state.teams.flatMap(
-              _.players
-            ).exists(_.hasBall)
+          else if player.position.getDistance(
+              state.ball.position
+            ) < MatchConfig.proximityRange && !state.teams.players.exists(_.hasBall)
           then player.decideMoveToBall(player.position.getDirection(state.ball.position))
           else
             player.decision match

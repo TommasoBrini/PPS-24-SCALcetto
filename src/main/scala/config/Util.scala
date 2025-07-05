@@ -1,8 +1,10 @@
 package config
 
+import dsl.SpaceSyntax.*
 import model.Match.MatchState
 import model.Space.{Direction, Position}
 import model.Match.Player
+import scala.collection.IterableOnce.*
 
 object Util:
 
@@ -30,9 +32,7 @@ object Util:
     markings
 
   def isPathClear(from: Position, to: Position, state: MatchState, teamId: Int): Boolean =
-    val opponents = state.teams
-      .filterNot(_.id == teamId)
-      .flatMap(_.players)
+    val opponents: List[Player] = (state.teams opponentOf teamId).players
     opponents.forall { opponent =>
       !positionIsInBetween(from, to, opponent.position)
     }
@@ -50,9 +50,7 @@ object Util:
     collinear && inSegment
 
   def isDirectionClear(from: Position, dir: Direction, state: MatchState): Boolean =
-    val opponents = state.teams
-      .flatMap(_.players)
-      .filterNot(_.hasBall)
+    val opponents = state.teams.players.filterNot(_.hasBall)
     !opponents.exists { opponent =>
       val dx    = opponent.position.x - from.x
       val dy    = opponent.position.y - from.y

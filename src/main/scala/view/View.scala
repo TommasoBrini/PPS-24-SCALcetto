@@ -8,6 +8,7 @@ import model.Match.*
 import model.Match.Position
 import view.RenderUtils.*
 import java.awt.BasicStroke
+import dsl.SpaceSyntax.*
 
 object View:
   class MatchPanel(var state: MatchState) extends Panel:
@@ -56,11 +57,17 @@ object View:
       g.fillRect(-(goalWidth), (fieldHeight - goalHeight) / 2, goalWidth, goalHeight)
       g.fillRect(fieldWidth, (fieldHeight - goalHeight) / 2, goalWidth, goalHeight)
 
-      for team <- state.teams do
-        val color = if team.id == 1 then Colors.teamBlue else Colors.teamRed
-        team.players.foreach { player =>
-          drawCenteredRect(g, player.position, playerSize, color, Drawing.playerBorderWidth)
-        }
+      val teamA  = state.teams.teamA
+      val colorA = Colors.teamBlue
+      teamA.players.foreach { player =>
+        drawCenteredRect(g, player.position, playerSize, colorA, Drawing.playerBorderWidth)
+      }
+
+      val teamB  = state.teams.teamB
+      val colorB = Colors.teamRed
+      teamB.players.foreach { player =>
+        drawCenteredRect(g, player.position, playerSize, colorB, Drawing.playerBorderWidth)
+      }
 
       g.translate(-fieldOffsetX, -fieldOffsetY)
 

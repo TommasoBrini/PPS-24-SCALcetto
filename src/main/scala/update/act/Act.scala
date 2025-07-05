@@ -14,18 +14,24 @@ object Act:
     updatePlayers(updateState)
 
   private[update] def updateMovements(state: MatchState): MatchState =
-    val newOwnerOpt = state.teams.flatMap(_.players).find(_.nextAction match
+    val newOwnerOpt = state.teams.players.find(_.nextAction match
       case Take(_) => true
       case _       => false
     )
-    val updateTeams = state.teams.map { team =>
-      team.copy(hasBall = if newOwnerOpt.isDefined then team.players.contains(newOwnerOpt.get) else team.hasBall)
-    }
+    val teamA = state.teams.teamA.copy(hasBall =
+      if newOwnerOpt.isDefined then state.teams.teamA.players.contains(newOwnerOpt.get) else state.teams.teamA.hasBall
+    )
+    val teamB = state.teams.teamB.copy(hasBall =
+      if newOwnerOpt.isDefined then state.teams.teamB.players.contains(newOwnerOpt.get) else state.teams.teamB.hasBall
+    )
 
     val ballOwner: Option[Player] =
-      if newOwnerOpt.isDefined then newOwnerOpt else state.teams.flatMap(_.players).find(_.hasBall)
+      if newOwnerOpt.isDefined then newOwnerOpt else state.teams.players.find(_.hasBall)
+
+    val updateTeams: (Team, Team) = (updateMovement(teamA, ballOwner), updateMovement(teamB, ballOwner))
+
     MatchState(
-      updateTeams.map(updateMovement(_, ballOwner)),
+      updateTeams,
       updateMovement(state.ball, ballOwner)
     )
 
@@ -55,7 +61,7 @@ object Act:
     ball.copy(position = newPosition, movement = movement)
 
   private[update] def move(state: MatchState): MatchState =
-    MatchState(state.teams.map(move), move(state.ball))
+    MatchState((move(state.teams.teamA), move(state.teams.teamB)), move(state.ball))
 
   private[update] def move(team: Team): Team =
     team.copy(players = team.players.map(move))
@@ -73,8 +79,8 @@ object Act:
     state.ball.position.isOutOfBound(UIConfig.fieldWidth, UIConfig.fieldHeight)
 
   private def updatePlayers(state: MatchState): MatchState =
-    val updateTeams: List[Team] = state.teams.map { team =>
-      val updatePlayers: List[Player] = team.players.map { player =>
+    def updatedTeam(team: Team): Team =
+      val newPlayers: List[Player] = team.players.map { player =>
         if !team.hasBall then
           player.asOpponentDecisionPlayer
         else if player.hasBall then
@@ -83,6 +89,6 @@ object Act:
           player.asTeammateDecisionPlayer
         }
       }
-      team.copy(players = updatePlayers)
-    }
-    state.copy(teams = updateTeams)
+      team.copy(players = newPlayers)
+    val newTeams: (Team, Team) = (updatedTeam(state.teams.teamA), updatedTeam(state.teams.teamB))
+    state.copy(teams = newTeams)

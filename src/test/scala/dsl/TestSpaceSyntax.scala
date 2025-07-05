@@ -5,6 +5,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.shouldBe
 import SpaceSyntax.*
+import model.Match.Team
 import model.Space.Bounce.*
 
 import scala.util.Random
@@ -33,9 +34,8 @@ class TestSpaceSyntax extends AnyFlatSpec with Matchers:
 
   "A Direction" should "reflect correctly when bounced" in:
     val d = Direction(1.0, -1.0)
-    d getDirectionFrom ObliqueBounce shouldBe Direction(-1.0, 1.0)
-    d getDirectionFrom HorizontalBounce shouldBe Direction(-1.0, -1.0)
-    d getDirectionFrom VerticalBounce shouldBe Direction(1.0, 1.0)
+    (d getDirectionFrom ObliqueBounce, d getDirectionFrom HorizontalBounce, d getDirectionFrom VerticalBounce) shouldBe
+      (Direction(-1.0, 1.0), Direction(-1.0, -1.0), Direction(1.0, 1.0))
 
   "A Movement" should "bounce its direction correctly and keep speed" in:
     val m       = Movement(Direction(1.0, -1.0), 5)
@@ -61,3 +61,9 @@ class TestSpaceSyntax extends AnyFlatSpec with Matchers:
     assert(first == second)
     assert(math.abs(first.x - direction.x) <= 0.2)
     assert(math.abs(first.y - direction.y) <= 0.2)
+
+  "A Team " should " return the opponents if asked for it" in:
+    val teamA: Team         = Team(1, List(), true)
+    val teamB: Team         = Team(2, List())
+    val teams: (Team, Team) = (teamA, teamB)
+    (teams opponentOf teamB, teams opponentOf teamB.id) shouldBe (teamA, teamA)
