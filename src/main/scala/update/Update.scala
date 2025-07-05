@@ -7,7 +7,8 @@ import decide.Decide.*
 import validate.Validate.*
 import act.Act.{act, isAGoal, isBallOut}
 import config.UIConfig.*
-import dsl.SpaceSyntax.*
+import dsl.space.PositionSyntax.*
+import dsl.space.MovementSyntax.*
 
 import scala.annotation.tailrec
 

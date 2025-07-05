@@ -1,6 +1,6 @@
 package config
 
-import java.awt.{Color, Dimension, Font}
+import java.awt.{Color, Font}
 
 object UIConfig:
 

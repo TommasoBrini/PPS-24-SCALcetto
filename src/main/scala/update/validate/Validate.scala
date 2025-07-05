@@ -5,7 +5,10 @@ import Decision.*
 import config.MatchConfig
 import config.UIConfig
 import model.Space.Position
-import dsl.SpaceSyntax.*
+import dsl.game.TeamsSyntax.*
+import dsl.game.PlayerSyntax.*
+import dsl.space.PositionSyntax.*
+import dsl.space.DirectionSyntax.*
 
 import scala.util.Random
 
@@ -60,7 +63,7 @@ object Validate:
       case (Shoot(striker, goal), accuracy) => failedShoot(striker, goal, accuracy)
       case _                                => Action.Initial
 
-  private def shootSuccess(striker: Player, goal: Position): Double = striker.position.getDistance(goal) match
+  private def shootSuccess(striker: Player, goal: Position): Double = striker.position distanceFrom goal match
     case goalDistance if goalDistance <= MatchConfig.lowDistanceToGoal  => 0.1
     case goalDistance if goalDistance <= MatchConfig.highDistanceToGoal => 0.4
     case _                                                              => 0.0
