@@ -6,7 +6,10 @@ import model.Match.{Action, Ball, MatchState, Movement, Team}
 import model.Match.Action.*
 import model.Match.Player
 import model.decisions.PlayerRoleFactory.*
-import dsl.SpaceSyntax.*
+import dsl.game.TeamsSyntax.*
+import dsl.game.PlayerSyntax.*
+import dsl.space.PositionSyntax.*
+import dsl.space.MovementSyntax.*
 
 object Act:
   def act(state: MatchState): MatchState =

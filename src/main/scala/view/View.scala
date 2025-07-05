@@ -8,7 +8,7 @@ import model.Match.*
 import model.Match.Position
 import view.RenderUtils.*
 import java.awt.BasicStroke
-import dsl.SpaceSyntax.*
+import dsl.game.TeamsSyntax.*
 
 object View:
   class MatchPanel(var state: MatchState) extends Panel:

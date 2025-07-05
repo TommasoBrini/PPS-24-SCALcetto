@@ -9,7 +9,8 @@ import org.scalatest.matchers.should.Matchers
 import Decide.*
 import model.decisions.PlayerRoleFactory.*
 import config.MatchConfig
-import dsl.SpaceSyntax.*
+
+import dsl.game.TeamsSyntax.*
 
 class DecideSpec extends AnyFlatSpec with Matchers:
 

@@ -4,6 +4,7 @@ import model.Match.*
 import config.MatchConfig
 import config.Util
 import config.UIConfig
+import dsl.space.PositionSyntax.*
 
 /** Rating system for attacking player decisions Provides evaluation methods for run, pass, shoot, and move-to-goal
   * decisions
@@ -102,7 +103,7 @@ private def calculatePassDetails(pass: Decision.Pass, state: MatchState): PassEv
   val teamId       = determineTeamId(pass.from, state)
   val pathClear    = Util.isPathClear(fromPosition, toPosition, state, teamId)
   val advancement  = calculateAdvancement(pass.from, fromPosition, toPosition, state)
-  val distance     = fromPosition.getDistance(toPosition)
+  val distance     = fromPosition distanceFrom toPosition
 
   PassEvaluationDetails(pathClear, advancement, distance)
 
@@ -127,7 +128,7 @@ private def evaluatePassDecision(details: PassEvaluationDetails): Double =
 /** Calculates shoot evaluation details
   */
 private def calculateShootDetails(shoot: Decision.Shoot, state: MatchState): ShootEvaluationDetails =
-  val distance  = shoot.striker.position.getDistance(shoot.goal)
+  val distance  = shoot.striker.position distanceFrom shoot.goal
   val teamId    = determineTeamId(shoot.striker, state)
   val pathClear = Util.isPathClear(shoot.striker.position, shoot.goal, state, teamId)
 

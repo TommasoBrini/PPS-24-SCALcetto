@@ -4,7 +4,7 @@ import model.Match.*
 import config.UIConfig
 import model.Space.*
 import config.MatchConfig
-import dsl.SpaceSyntax.*
+import dsl.game.TeamsSyntax.*
 import config.Util
 
 /** Common decision-making capabilities for all players Provides basic movement and action decisions

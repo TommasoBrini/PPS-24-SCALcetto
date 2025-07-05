@@ -8,7 +8,9 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import Act.*
 import init.GameInitializer
-import dsl.SpaceSyntax.*
+
+import dsl.game.TeamsSyntax.*
+import dsl.space.PositionSyntax.*
 
 class ActSpec extends AnyFlatSpec with Matchers:
   val defaultSpeed                = 1
