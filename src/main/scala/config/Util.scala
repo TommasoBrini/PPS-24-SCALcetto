@@ -16,14 +16,14 @@ object Util:
     var availableDefenders  = defenders.sortBy(_.id)
     var markings            = Map.empty[Player, Player]
     withBallOpt.foreach { ballCarrier =>
-      val maybeDefender = availableDefenders.minByOption(_.position.getDistance(ballCarrier.position))
+      val maybeDefender = availableDefenders.minByOption(_.position distanceFrom ballCarrier.position)
       maybeDefender.foreach { defender =>
         markings += (defender -> ballCarrier)
         availableDefenders = availableDefenders.filterNot(_ == defender)
       }
     }
     availableDefenders.foreach { defender =>
-      val maybeTarget = unassignedAttackers.minByOption(_.position.getDistance(defender.position))
+      val maybeTarget = unassignedAttackers.minByOption(_.position distanceFrom defender.position)
       maybeTarget.foreach { target =>
         markings += (defender -> target)
         unassignedAttackers -= target

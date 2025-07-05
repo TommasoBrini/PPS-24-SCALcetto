@@ -1,7 +1,7 @@
 package dsl
 
 import config.UIConfig
-import model.Match.{Player, Team}
+import model.Match.{Ball, Player, Team}
 import model.Space.*
 import model.Space.Bounce.*
 
@@ -13,6 +13,7 @@ object SpaceSyntax {
   export MovementSyntax.*
   export PositionSyntax.*
   export TeamsSyntax.*
+  export BallSyntax.*
 
   object PositionSyntax:
     private def checkAxisOutOfBound(coordinate: Int, axisBound: Int): Boolean =
@@ -30,21 +31,19 @@ object SpaceSyntax {
         checkAxisOutOfBound(p.x, widthBound) || checkAxisOutOfBound(p.y, heightBound)
       @targetName("applyMovement")
       def +(m: Movement): Position = calculateMovedPosition(p, m)
-
       def getBounce(widthBound: Int, heightBound: Int): Bounce =
         if checkAxisOutOfBound(p.x, widthBound) && checkAxisOutOfBound(p.y, heightBound) then ObliqueBounce
         else if checkAxisOutOfBound(p.x, widthBound) then HorizontalBounce
         else VerticalBounce
-
       def isGoal: Boolean =
         val firstGoalPost: Int  = (UIConfig.fieldHeight - UIConfig.goalHeight) / 2
         val secondGoalPost: Int = firstGoalPost + UIConfig.goalHeight
         (p.x <= 0 || p.x >= UIConfig.fieldWidth) && (p.y >= firstGoalPost && p.y <= secondGoalPost)
-
       def clampToField: Position =
         val clampedX = Math.max(0, Math.min(p.x, UIConfig.fieldWidth))
         val clampedY = Math.max(0, Math.min(p.y, UIConfig.fieldHeight))
         Position(clampedX, clampedY)
+      def distanceFrom(p2: Position): Double = Math.hypot(p2.x - p.x, p2.y - p.y)
 
   object DirectionSyntax:
     private def bounceCalculator(bounce: Bounce, x: Double, y: Double): Direction = bounce match
@@ -61,8 +60,6 @@ object SpaceSyntax {
       def getMovementFrom(bounce: Bounce): Movement = Movement(m.direction getDirectionFrom bounce, m.speed)
       @targetName("applyScale")
       def *(factor: Int): Movement = Movement(m.direction, m.speed * factor)
-
-  // TODO fix logix of teams from list to tuple
 
   object TeamsSyntax:
     private def getOpponent(teams: (Team, Team), myTeam: Team): Team =
@@ -89,4 +86,13 @@ object SpaceSyntax {
       def players: List[Player]         = teamA.players ::: teamB.players
       def teamOf(player: Player): Team  = getTeamOf(teams, player)
       def withBall: Option[Team]        = getTeamWithBall(teams)
+
+  object BallSyntax:
+    private def isHeadingToward(player: Player, tolerance: Double, ball: Ball): Boolean =
+      val toPlayer: Direction = ball.position.getDirection(player.position)
+      val actual: Direction   = ball.movement.direction
+      Math.abs(actual.x - toPlayer.x) + Math.abs(actual.y - toPlayer.y) < tolerance
+    extension (ball: Ball)
+      def headingToward(player: Player, tolerance: Double): Boolean = isHeadingToward(player, tolerance, ball)
+
 }

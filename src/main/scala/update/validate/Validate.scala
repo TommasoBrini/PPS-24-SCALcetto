@@ -60,7 +60,7 @@ object Validate:
       case (Shoot(striker, goal), accuracy) => failedShoot(striker, goal, accuracy)
       case _                                => Action.Initial
 
-  private def shootSuccess(striker: Player, goal: Position): Double = striker.position.getDistance(goal) match
+  private def shootSuccess(striker: Player, goal: Position): Double = striker.position distanceFrom goal match
     case goalDistance if goalDistance <= MatchConfig.lowDistanceToGoal  => 0.1
     case goalDistance if goalDistance <= MatchConfig.highDistanceToGoal => 0.4
     case _                                                              => 0.0

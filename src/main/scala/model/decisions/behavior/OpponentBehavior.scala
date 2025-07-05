@@ -11,8 +11,8 @@ object OpponentBehavior:
       val ballPlayer: Option[Player] = matchState.teams.players.find(_.hasBall)
 
       val ball: Ball                           = matchState.ball
-      val distanceToBall: Double               = player.position.getDistance(ball.position)
-      val distanceToBallPlayer: Option[Double] = ballPlayer.map(p => player.position.getDistance(p.position))
+      val distanceToBall: Double               = player.position distanceFrom ball.position
+      val distanceToBallPlayer: Option[Double] = ballPlayer.map(p => player.position distanceFrom p.position)
       val teamId                               = matchState.teams.teamOf(player).id
 
       val nextDecision: Decision = player.nextAction match

@@ -42,11 +42,7 @@ object Match:
 
   case class Team(id: Int, players: List[Player], hasBall: Boolean = false)
 
-  case class Ball(position: Position, movement: Movement = Movement.still):
-    def isHeadingToward(player: Player, tolerance: Double): Boolean =
-      val toPlayer: Direction = position.getDirection(player.position)
-      val actual: Direction   = movement.direction
-      Math.abs(actual.x - toPlayer.x) + Math.abs(actual.y - toPlayer.y) < tolerance
+  case class Ball(position: Position, movement: Movement = Movement.still)
 
   case class MatchState(teams: (Team, Team), ball: Ball)
 

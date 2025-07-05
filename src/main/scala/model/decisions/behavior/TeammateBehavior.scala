@@ -15,11 +15,10 @@ object TeammateBehavior:
       player.nextAction match
         case Stopped(steps) if steps > 0 => player.decideConfusion(steps - 1)
         case _ =>
-          if player.position.getDistance(state.ball.position) < MatchConfig.interceptBallRange
+          if (player.position distanceFrom state.ball.position) < MatchConfig.interceptBallRange
           then player.decideReceivePass(state.ball)
-          else if player.position.getDistance(
-              state.ball.position
-            ) < MatchConfig.proximityRange && !state.teams.players.exists(_.hasBall)
+          else if (player.position distanceFrom
+              state.ball.position) < MatchConfig.proximityRange && !state.teams.players.exists(_.hasBall)
           then player.decideMoveToBall(player.position.getDirection(state.ball.position))
           else
             player.decision match
