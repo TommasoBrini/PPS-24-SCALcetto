@@ -20,13 +20,13 @@ class PlayerSpec extends AnyFlatSpec with Matchers:
     player.ball shouldBe None
     player.nextAction shouldBe Action.Initial
 
-  it should "correctly report hasBall when carrying a ball" in:
+  it should "correctly report it when carrying a ball" in:
     val ball: Ball        = Ball(Position(5, 5), Movement(Direction.none, 0))
     val playerWithBall    = Player(1, Position(0, 0), Movement.still, Some(ball)).asControlDecisionPlayer
     val playerWithoutBall = Player(2, Position(0, 0), Movement.still)
 
-    playerWithBall.hasBall shouldBe true
-    playerWithoutBall.hasBall shouldBe false
+    playerWithBall.ball.isDefined shouldBe true
+    playerWithoutBall.ball.isDefined shouldBe false
 
   it should "can decide to run" in:
     val player    = Player(1, Position(0, 0))

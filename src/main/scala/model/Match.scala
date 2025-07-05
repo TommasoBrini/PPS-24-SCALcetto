@@ -37,8 +37,7 @@ object Match:
       ball: Option[Ball] = None,
       nextAction: Action = Action.Initial,
       decision: Decision = Decision.Initial
-  ):
-    def hasBall: Boolean = ball.isDefined
+  )
 
   case class Team(id: Int, players: List[Player], hasBall: Boolean = false)
 

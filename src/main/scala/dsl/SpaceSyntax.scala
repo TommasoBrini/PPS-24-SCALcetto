@@ -14,6 +14,7 @@ object SpaceSyntax {
   export PositionSyntax.*
   export TeamsSyntax.*
   export BallSyntax.*
+  export PlayerSyntax.*
 
   object PositionSyntax:
     private def checkAxisOutOfBound(coordinate: Int, axisBound: Int): Boolean =
@@ -95,4 +96,7 @@ object SpaceSyntax {
     extension (ball: Ball)
       def headingToward(player: Player, tolerance: Double): Boolean = isHeadingToward(player, tolerance, ball)
 
+  object PlayerSyntax:
+    extension (p: Player)
+      def hasBall: Boolean = p.ball.isDefined
 }
