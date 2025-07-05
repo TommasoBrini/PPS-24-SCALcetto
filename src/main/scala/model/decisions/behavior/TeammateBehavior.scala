@@ -13,17 +13,18 @@ object TeammateBehavior:
   extension (player: TeammatePlayer)
     def calculateBestDecision(state: MatchState): Decision =
       player.nextAction match
-        case Stopped(steps) if steps > 0 => player.decideConfusion(steps - 1)
+        case Stopped(steps) if steps > 0 => player.createConfusionDecision(steps - 1)
         case _ =>
           if player.position.getDistance(state.ball.position) < MatchConfig.interceptBallRange
-          then player.decideReceivePass(state.ball)
+          then player.createReceivePassDecision(state.ball)
           else if player.position.getDistance(
               state.ball.position
             ) < MatchConfig.proximityRange && !state.teams.players.exists(_.hasBall)
-          then player.decideMoveToBall(player.position.getDirection(state.ball.position))
+          then player.createMoveToBallDecision(player.position.getDirection(state.ball.position))
           else
             player.decision match
-              case MoveRandom(direction, steps) if steps > 0 => player.decideMoveRandom(direction, steps - 1)
+              case MoveRandom(direction, steps) if steps > 0 =>
+                player.createRandomMovementDecision(direction, steps - 1)
               case _ =>
                 val direction = Direction(Random.between(-1.toDouble, 1), Random.between(-1.toDouble, 1))
-                player.decideMoveRandom(direction, MatchConfig.moveRandomSteps)
+                player.createRandomMovementDecision(direction, MatchConfig.moveRandomSteps)

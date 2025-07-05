@@ -9,13 +9,14 @@ import model.decisions.CommonPlayerDecisions.*
 import config.UIConfig
 import model.decisions.PlayerRoleFactory.*
 import config.MatchConfig
+import model.decisions.DecisionGenerator.*
 
 class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
 
   "CommonPlayerDecisions.decideRun" should "create Run decision with correct direction" in:
     val player    = Player(1, Position(5, 5), Movement.still)
     val direction = Direction(1, 0)
-    val decision  = player.decideRun(direction, MatchConfig.runSteps)
+    val decision  = player.createRunDecision(direction, MatchConfig.runSteps)
 
     decision shouldBe a[Run]
     decision.asInstanceOf[Run].direction shouldBe direction
@@ -32,7 +33,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     )
 
     directions.foreach { direction =>
-      val decision = player.decideRun(direction, MatchConfig.runSteps)
+      val decision = player.createRunDecision(direction, MatchConfig.runSteps)
       decision shouldBe a[Run]
       decision.asInstanceOf[Run].direction shouldBe direction
     }
@@ -43,7 +44,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2  = Team(2, List(), hasBall = false)
     val state  = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleRuns = player.possibleRunDirections(state)
+    val possibleRuns = player.generatePossibleRunDirections(state)
 
     possibleRuns should not be empty
     possibleRuns.foreach { decision =>
@@ -56,7 +57,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2  = Team(2, List(), hasBall = false)
     val state  = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleRuns = player.possibleRunDirections(state)
+    val possibleRuns = player.generatePossibleRunDirections(state)
 
     possibleRuns should not contain (Run(Direction(0, 0), MatchConfig.runSteps))
 
@@ -66,21 +67,21 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2  = Team(2, List(), hasBall = false)
     val state  = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleRuns = player.possibleRunDirections(state)
+    val possibleRuns = player.generatePossibleRunDirections(state)
 
     possibleRuns should have size 4
 
   "CommonPlayerDecisions.decideConfusion" should "create Confusion decision with correct steps" in:
     val player   = Player(1, Position(5, 5), Movement.still)
     val steps    = 3
-    val decision = player.decideConfusion(steps)
+    val decision = player.createConfusionDecision(steps)
 
     decision shouldBe a[Confusion]
     decision.asInstanceOf[Confusion].remainingStep shouldBe steps
 
   it should "work with zero steps" in:
     val player   = Player(1, Position(5, 5), Movement.still)
-    val decision = player.decideConfusion(0)
+    val decision = player.createConfusionDecision(0)
 
     decision shouldBe a[Confusion]
     decision.asInstanceOf[Confusion].remainingStep shouldBe 0
@@ -88,7 +89,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
   "CommonPlayerDecisions.decideMoveToBall" should "create MoveToBall decision with correct direction" in:
     val player    = Player(1, Position(5, 5), Movement.still)
     val direction = Direction(1, 1)
-    val decision  = player.decideMoveToBall(direction)
+    val decision  = player.createMoveToBallDecision(direction)
 
     decision shouldBe a[MoveToBall]
     decision.asInstanceOf[MoveToBall].directionToBall shouldBe direction
@@ -96,7 +97,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
   "CanDecideToPass.decidePass" should "create Pass decision with correct players" in:
     val passer   = Player(1, Position(5, 5), Movement.still).asAttackingPlayer
     val receiver = Player(2, Position(6, 6), Movement.still)
-    val decision = passer.decidePass(receiver)
+    val decision = passer.createPassDecision(receiver)
 
     decision shouldBe a[Pass]
     decision.asInstanceOf[Pass].from shouldBe passer
@@ -111,7 +112,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2     = Team(2, List(opponent), hasBall = false)
     val state     = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possiblePasses = passer.possiblePasses(state)
+    val possiblePasses = passer.generatePossiblePasses(state)
 
     possiblePasses should have size 2
     possiblePasses.foreach { decision =>
@@ -128,7 +129,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2    = Team(2, List(opponent), hasBall = false)
     val state    = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possiblePasses = passer.possiblePasses(state)
+    val possiblePasses = passer.generatePossiblePasses(state)
 
     possiblePasses should have size 1
     possiblePasses.head.asInstanceOf[Pass].to shouldBe teammate
@@ -139,14 +140,14 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2  = Team(2, List(), hasBall = false)
     val state  = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possiblePasses = passer.possiblePasses(state)
+    val possiblePasses = passer.generatePossiblePasses(state)
 
     possiblePasses should be(empty)
 
   "CanDecideToShoot.decideShoot" should "create Shoot decision with correct parameters" in:
     val striker  = Player(1, Position(5, 5), Movement.still).asAttackingPlayer
     val goal     = Position(10, 5)
-    val decision = striker.decideShoot(goal)
+    val decision = striker.createShootDecision(goal)
 
     decision shouldBe a[Shoot]
     decision.asInstanceOf[Shoot].striker shouldBe striker
@@ -158,7 +159,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2   = Team(2, List(), hasBall = false)
     val state   = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleShots = striker.possibleShots(state)
+    val possibleShots = striker.generatePossibleShots(state)
 
     possibleShots should have size 3
     possibleShots.foreach { decision =>
@@ -172,7 +173,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2   = Team(2, List(), hasBall = false)
     val state   = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleShots = striker.possibleShots(state)
+    val possibleShots = striker.generatePossibleShots(state)
 
     val expectedGoals = List(
       Position(UIConfig.goalEastX, UIConfig.firstPoleY),
@@ -185,7 +186,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
   "CanDecideToMoveToGoal.decideMoveToGoal" should "create MoveToGoal decision with correct direction" in:
     val player    = Player(1, Position(5, 5), Movement.still).asAttackingPlayer
     val direction = Direction(1, 0)
-    val decision  = player.decideMoveToGoal(direction)
+    val decision  = player.createMoveToGoalDecision(direction)
 
     decision shouldBe a[MoveToGoal]
     decision.asInstanceOf[MoveToGoal].goalDirection shouldBe direction
@@ -201,7 +202,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleMoves = player.possibleMovesToGoal(state)
+    val possibleMoves = player.generatePossibleMovesToGoal(state)
 
     possibleMoves should have size 1
     possibleMoves.head shouldBe a[MoveToGoal]
@@ -217,7 +218,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleMoves = player.possibleMovesToGoal(state)
+    val possibleMoves = player.generatePossibleMovesToGoal(state)
 
     val moveToGoal        = possibleMoves.head.asInstanceOf[MoveToGoal]
     val expectedGoal      = Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)
@@ -228,7 +229,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
   "CanDecideToMark.decideMark" should "create Mark decision with correct players" in:
     val marker   = Player(1, Position(5, 5), Movement.still).asDefendingPlayer
     val target   = Player(2, Position(6, 6), Movement.still)
-    val decision = marker.decideMark(target, 1)
+    val decision = marker.createMarkDecision(target, 1)
 
     decision shouldBe a[Mark]
     decision.asInstanceOf[Mark].defender shouldBe marker
@@ -237,7 +238,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
   "CanDecideToTackle.decideTackle" should "create Tackle decision with correct ball" in:
     val tackler  = Player(1, Position(5, 5), Movement.still).asDefendingPlayer
     val ball     = Ball(Position(6, 6), Movement.still)
-    val decision = tackler.decideTackle(ball)
+    val decision = tackler.createTackleDecision(ball)
 
     decision shouldBe a[Tackle]
     decision.asInstanceOf[Tackle].ball shouldBe ball
@@ -245,7 +246,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
   "CanDecideToIntercept.decideIntercept" should "create Intercept decision with correct ball" in:
     val interceptor = Player(1, Position(5, 5), Movement.still).asDefendingPlayer
     val ball        = Ball(Position(6, 6), Movement.still)
-    val decision    = interceptor.decideIntercept(ball)
+    val decision    = interceptor.createInterceptDecision(ball)
 
     decision shouldBe a[Intercept]
     decision.asInstanceOf[Intercept].ball shouldBe ball
@@ -254,7 +255,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val player    = Player(1, Position(5, 5), Movement.still).asTeammatePlayer
     val direction = Direction(1, 1)
     val steps     = 3
-    val decision  = player.decideMoveRandom(direction, steps)
+    val decision  = player.createRandomMovementDecision(direction, steps)
 
     decision shouldBe a[MoveRandom]
     decision.asInstanceOf[MoveRandom].direction shouldBe direction
@@ -263,7 +264,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
   "CanDecideToReceivePass.decideReceivePass" should "create ReceivePass decision with correct ball" in:
     val receiver = Player(1, Position(5, 5), Movement.still).asTeammatePlayer
     val ball     = Ball(Position(6, 6), Movement.still)
-    val decision = receiver.decideReceivePass(ball)
+    val decision = receiver.createReceivePassDecision(ball)
 
     decision shouldBe a[ReceivePass]
     decision.asInstanceOf[ReceivePass].ball shouldBe ball

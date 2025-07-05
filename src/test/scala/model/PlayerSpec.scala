@@ -33,7 +33,7 @@ class PlayerSpec extends AnyFlatSpec with Matchers:
     val player    = Player(1, Position(0, 0))
     val direction = player.position.getDirection(Position(1, 0))
     val steps     = config.MatchConfig.runSteps
-    val decision  = player.decideRun(direction, steps)
+    val decision  = player.createRunDecision(direction, steps)
     decision shouldBe a[Decision.Run]
     val run = decision.asInstanceOf[Decision.Run]
     run.direction shouldBe direction
@@ -41,12 +41,12 @@ class PlayerSpec extends AnyFlatSpec with Matchers:
 
   it should "can decide to stop" in:
     val player = Player(1, Position(0, 0))
-    player.decideConfusion(10) shouldBe Decision.Confusion(10)
+    player.createConfusionDecision(10) shouldBe Decision.Confusion(10)
 
   it should "can decide to run to ball" in:
     val ball: Ball = Ball(Position(5, 5), Movement(Direction.none, 0))
     val player     = Player(1, Position(0, 0), Movement.still, Some(ball)).asAttackingPlayer
-    player.decideMoveToBall(player.position.getDirection(ball.position)) shouldBe Decision.MoveToBall(
+    player.createMoveToBallDecision(player.position.getDirection(ball.position)) shouldBe Decision.MoveToBall(
       player.position.getDirection(ball.position)
     )
 
@@ -54,46 +54,46 @@ class PlayerSpec extends AnyFlatSpec with Matchers:
     val ball: Ball        = Ball(Position(5, 5), Movement(Direction.none, 0))
     val playerWithBall    = Player(1, Position(0, 0), Movement.still, Some(ball)).asAttackingPlayer
     val playerWithoutBall = Player(2, Position(0, 0), Movement.still)
-    playerWithBall.decidePass(playerWithoutBall) shouldBe Decision.Pass(playerWithBall, playerWithoutBall)
+    playerWithBall.createPassDecision(playerWithoutBall) shouldBe Decision.Pass(playerWithBall, playerWithoutBall)
 
   it should "be able to shoot" in:
     val ball: Ball     = Ball(Position(5, 5), Movement(Direction.none, 0))
     val playerWithBall = Player(1, Position(0, 0), Movement.still, Some(ball)).asAttackingPlayer
-    playerWithBall.decideShoot(Position(10, 10)) shouldBe Decision.Shoot(playerWithBall, Position(10, 10))
+    playerWithBall.createShootDecision(Position(10, 10)) shouldBe Decision.Shoot(playerWithBall, Position(10, 10))
 
   it should "be able to move to goal" in:
     val player = Player(1, Position(0, 0)).asAttackingPlayer
-    player.decideMoveToGoal(player.position.getDirection(Position(10, 0))) shouldBe Decision.MoveToGoal(
+    player.createMoveToGoalDecision(player.position.getDirection(Position(10, 0))) shouldBe Decision.MoveToGoal(
       player.position.getDirection(Position(10, 0))
     )
 
   "A opponent" should "be able to mark an opponent" in:
     val defender = Player(1, Position(0, 0)).asDefendingPlayer
     val target   = Player(2, Position(1, 1))
-    defender.decideMark(target, 1) shouldBe Decision.Mark(defender, target, 1)
+    defender.createMarkDecision(target, 1) shouldBe Decision.Mark(defender, target, 1)
 
   it should "be able to tackle a ball" in:
     val ball: Ball = Ball(Position(5, 5), Movement(Direction.none, 0))
     val player     = Player(1, Position(0, 0)).asDefendingPlayer
-    player.decideTackle(ball) shouldBe Decision.Tackle(ball)
+    player.createTackleDecision(ball) shouldBe Decision.Tackle(ball)
 
   it should "be able to intercept a ball" in:
     val ball: Ball = Ball(Position(5, 5), Movement(Direction.none, 0))
     val player     = Player(1, Position(0, 0)).asDefendingPlayer
-    player.decideIntercept(ball) shouldBe Decision.Intercept(ball)
+    player.createInterceptDecision(ball) shouldBe Decision.Intercept(ball)
 
   "A teammate" should "be able to receive a pass" in:
     val ball: Ball = Ball(Position(5, 5), Movement(Direction.none, 0))
     val player     = Player(1, Position(0, 0), Movement.still, Some(ball)).asTeammatePlayer
-    player.decideReceivePass(ball) shouldBe Decision.ReceivePass(ball)
+    player.createReceivePassDecision(ball) shouldBe Decision.ReceivePass(ball)
 
   it should "be able to move randomly" in:
     val player = Player(1, Position(0, 0)).asTeammatePlayer
-    player.decideMoveRandom(Direction(1.0, 0.0), 5) shouldBe Decision.MoveRandom(Direction(1.0, 0.0), 5)
+    player.createRandomMovementDecision(Direction(1.0, 0.0), 5) shouldBe Decision.MoveRandom(Direction(1.0, 0.0), 5)
 
   it should "be able to move to ball" in:
     val ball: Ball = Ball(Position(5, 5), Movement(Direction.none, 0))
     val player     = Player(1, Position(0, 0), Movement.still, Some(ball)).asTeammatePlayer
-    player.decideMoveToBall(player.position.getDirection(ball.position)) shouldBe Decision.MoveToBall(
+    player.createMoveToBallDecision(player.position.getDirection(ball.position)) shouldBe Decision.MoveToBall(
       player.position.getDirection(ball.position)
     )

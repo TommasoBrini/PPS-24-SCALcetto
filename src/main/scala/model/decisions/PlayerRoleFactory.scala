@@ -54,7 +54,9 @@ object DecisionGenerator:
   extension (player: PlayerTypes.AttackingPlayer)
     def generateAllPossibleDecisions(state: MatchState): List[Decision] =
       player.decision match
-        case Decision.Initial => player.possiblePasses(state)
-        case _ => player.possibleRunDirections(state) ++ player.possiblePasses(state) ++ player.possibleShots(
-            state
-          ) ++ player.possibleMovesToGoal(state)
+        case Decision.Initial => player.generatePossiblePasses(state)
+        case _ =>
+          player.generatePossibleRunDirections(state) ++
+            player.generatePossiblePasses(state) ++
+            player.generatePossibleShots(state) ++
+            player.generatePossibleMovesToGoal(state)

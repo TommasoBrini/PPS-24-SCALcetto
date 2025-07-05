@@ -117,9 +117,7 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
 
     val possibleDecisions = controlPlayer.generateAllPossibleDecisions(state)
 
-    possibleDecisions should contain atLeastOneElementOf (controlPlayer.asInstanceOf[Player].possibleRunDirections(
-      state
-    ))
+    possibleDecisions should contain atLeastOneElementOf (controlPlayer.generatePossibleRunDirections(state))
 
   it should "include Pass decisions when teammates are available" in:
     val controlPlayer = Player(1, Position(5, 5), Movement.still).asAttackingPlayer
@@ -130,7 +128,7 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
 
     val possibleDecisions = controlPlayer.generateAllPossibleDecisions(state)
 
-    possibleDecisions should contain atLeastOneElementOf (controlPlayer.possiblePasses(state))
+    possibleDecisions should contain atLeastOneElementOf (controlPlayer.generatePossiblePasses(state))
 
   it should "include Shoot decisions" in:
     val controlPlayer =
@@ -141,7 +139,7 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
 
     val possibleDecisions = controlPlayer.generateAllPossibleDecisions(state)
 
-    possibleDecisions should contain atLeastOneElementOf (controlPlayer.possibleShots(state))
+    possibleDecisions should contain atLeastOneElementOf (controlPlayer.generatePossibleShots(state))
 
   it should "include MoveToGoal decisions" in:
     val controlPlayer =
@@ -152,7 +150,7 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
 
     val possibleDecisions = controlPlayer.generateAllPossibleDecisions(state)
 
-    possibleDecisions should contain atLeastOneElementOf (controlPlayer.possibleMovesToGoal(state))
+    possibleDecisions should contain atLeastOneElementOf (controlPlayer.generatePossibleMovesToGoal(state))
 
   it should "handle player with Initial decision" in:
     val controlPlayer =

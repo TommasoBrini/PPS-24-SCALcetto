@@ -58,3 +58,6 @@ object Util:
       val cross = dx * dir.y - dy * dir.x
       math.abs(cross) < 1e-6 && dot > 0
     }
+
+  def isPlayerInFirstTeam(player: Player, matchState: MatchState): Boolean =
+    matchState.teams.head.players.contains(player)

@@ -16,16 +16,16 @@ object OpponentBehavior:
       val teamId                               = matchState.teams.teamOf(player).id
 
       val nextDecision: Decision = player.nextAction match
-        case Action.Stopped(step) if step > 0 => player.decideConfusion(step - 1)
+        case Action.Stopped(step) if step > 0 => player.createConfusionDecision(step - 1)
         case _ =>
           if distanceToBallPlayer.isDefined && distanceToBallPlayer.get < MatchConfig.tackleRange
-          then player.decideTackle(ball)
+          then player.createTackleDecision(ball)
           else if distanceToBall < MatchConfig.proximityRange && distanceToBallPlayer.isEmpty
           then
             if distanceToBall < MatchConfig.interceptBallRange && distanceToBallPlayer.isEmpty
-            then player.decideIntercept(ball)
-            else player.decideMoveToBall(player.position.getDirection(ball.position))
+            then player.createInterceptDecision(ball)
+            else player.createMoveToBallDecision(player.position.getDirection(ball.position))
           else
-            target.map(t => player.decideMark(t, teamId))
-              .getOrElse(player.decideMoveToBall(player.position.getDirection(ball.position)))
+            target.map(t => player.createMarkDecision(t, teamId))
+              .getOrElse(player.createMoveToBallDecision(player.position.getDirection(ball.position)))
       nextDecision

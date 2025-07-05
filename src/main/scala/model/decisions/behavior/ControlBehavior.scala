@@ -11,7 +11,7 @@ object ControlBehavior:
   extension (player: AttackingPlayer)
     def calculateBestDecision(state: MatchState): Decision =
       player.decision match
-        case Decision.Run(direction, steps) if steps > 0 => player.decideRun(direction, steps - 1)
+        case Decision.Run(direction, steps) if steps > 0 => player.createRunDecision(direction, steps - 1)
         case _ =>
           val possibleDecisions = player.generateAllPossibleDecisions(state)
           val decisionRatings: Map[Decision, Double] = possibleDecisions
