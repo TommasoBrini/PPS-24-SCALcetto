@@ -3,7 +3,7 @@ import model.Match.*
 import config.MatchConfig
 import config.Util
 import config.UIConfig
-import dsl.SpaceSyntax.*
+import dsl.space.PositionSyntax.*
 
 object ControlDecisionRating:
   extension (run: Decision.Run)

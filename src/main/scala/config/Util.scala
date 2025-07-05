@@ -1,10 +1,11 @@
 package config
 
-import dsl.SpaceSyntax.*
 import model.Match.MatchState
 import model.Space.{Direction, Position}
 import model.Match.Player
-import scala.collection.IterableOnce.*
+import dsl.game.PlayerSyntax.*
+import dsl.space.PositionSyntax.*
+import dsl.game.TeamsSyntax.*
 
 object Util:
 
@@ -37,7 +38,7 @@ object Util:
       !positionIsInBetween(from, to, opponent.position)
     }
 
-  def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
+  private def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
     val dx1       = end.x - start.x
     val dy1       = end.y - start.y
     val dx2       = mid.x - start.x

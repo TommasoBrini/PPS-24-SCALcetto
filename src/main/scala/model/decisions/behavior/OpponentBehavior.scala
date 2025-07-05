@@ -3,7 +3,9 @@ import config.MatchConfig
 import model.Match.*
 import model.decisions.DecisorPlayer.OpponentPlayer
 import model.decisions.CommonPlayerDecisions.*
-import dsl.SpaceSyntax.*
+import dsl.game.TeamsSyntax.*
+import dsl.game.PlayerSyntax.*
+import dsl.space.PositionSyntax.*
 
 object OpponentBehavior:
   extension (player: OpponentPlayer)

@@ -5,7 +5,10 @@ import Decision.*
 import config.MatchConfig
 import config.UIConfig
 import model.Space.Position
-import dsl.SpaceSyntax.*
+import dsl.game.TeamsSyntax.*
+import dsl.game.PlayerSyntax.*
+import dsl.space.PositionSyntax.*
+import dsl.space.DirectionSyntax.*
 
 import scala.util.Random
 

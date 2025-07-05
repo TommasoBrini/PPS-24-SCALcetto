@@ -7,7 +7,9 @@ import model.decisions.DecisorPlayer.TeammatePlayer
 import model.decisions.PossibleDecisionFactory.*
 import model.decisions.CommonPlayerDecisions.*
 import scala.util.Random
-import dsl.SpaceSyntax.*
+import dsl.space.PositionSyntax.*
+import dsl.game.TeamsSyntax.*
+import dsl.game.PlayerSyntax.*
 
 object TeammateBehavior:
   extension (player: TeammatePlayer)
