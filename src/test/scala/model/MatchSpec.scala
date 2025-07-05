@@ -31,7 +31,7 @@ class MatchSpec extends AnyFlatSpec with Matchers:
       Player(1, Position(1, 1), Movement.still),
       Player(2, Position(2, 2), Movement.still)
     )
-    val team = Team(players, false)
+    val team = Team(players)
 
     team.players should have size 2
 
@@ -43,10 +43,10 @@ class MatchSpec extends AnyFlatSpec with Matchers:
     ball.movement.speed shouldBe 2
 
   "A MatchState" should "contain two teams and a ball" in:
-    val team1 = Team(List(Player(1, Position(1, 1), Movement.still)), false)
-    val team2 = Team(List(Player(2, Position(2, 2), Movement.still)), false)
+    val team1 = Team(List(Player(1, Position(1, 1), Movement.still)))
+    val team2 = Team(List(Player(2, Position(2, 2), Movement.still)))
     val ball  = Ball(Position(0, 0), Movement.still)
-    val state = MatchState(List(team1, team2), ball)
+    val state = Match(List(team1, team2), ball)
 
     state.teams should have size 2
     state.ball shouldBe ball

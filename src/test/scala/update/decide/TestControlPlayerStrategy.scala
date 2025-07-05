@@ -7,7 +7,6 @@ import config.UIConfig.*
 import config.MatchConfig.*
 import init.GameInitializer.{realFieldHeight, realFieldWidth}
 import junit.runner.Version.id
-import update.Update.update
 
 import scala.::
 import scala.util.Random

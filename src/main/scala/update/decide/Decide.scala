@@ -1,10 +1,14 @@
 package update.decide
 
 import model.Match.*
+import monads.States.*
 import update.decide.behaviours.{ControlPlayerBehavior, OpponentBehaviour, TeammateBehavior}
 object Decide:
 
-  def decide(state: MatchState): MatchState =
+  def decideStep: State[Match, Unit] =
+    State(s => (decide(s), ()))
+
+  def decide(state: Match): Match =
     state.teams match
       case List(teamA, teamB) =>
         val (defenders, attackers) =
@@ -16,7 +20,7 @@ object Decide:
         def decideFor(player: Player, team: Team, opponents: Team): Decision =
           val behavior =
             if player.hasBall then ControlPlayerBehavior
-            else if team.players.exists(_.hasBall) then TeammateBehavior
+            else if team.hasBall then TeammateBehavior
             else new OpponentBehaviour(markings.get(player))
 
           behavior.decide(player, state)

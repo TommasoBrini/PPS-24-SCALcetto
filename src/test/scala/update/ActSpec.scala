@@ -17,9 +17,9 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val initialPosition = Position(0, 0)
     val player =
       Player(0, initialPosition, movement = Movement.still, action = Move(defaultDirection, defaultSpeed))
-    val team                = Team(List(player))
-    val state               = MatchState(List(team), Ball(Position(0, 0)))
-    val updated: MatchState = state.act()
+    val team           = Team(List(player))
+    val state          = Match(List(team), Ball(Position(0, 0)))
+    val updated: Match = state.act()
     updated.teams.flatMap(_.players)
       .forall(_.movement == Movement(defaultDirection, defaultSpeed)) should be(true)
     updated.teams.flatMap(_.players)
@@ -29,7 +29,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val ball   = Ball(Position(0, 0), movement = Movement.still)
     val player = Player(0, Position(0, 0), ball = Some(ball), action = Hit(defaultDirection, defaultSpeed))
     val team   = Team(List(player))
-    val state  = MatchState(List(team), ball)
+    val state  = Match(List(team), ball)
     state.act().ball.movement should be(Movement(defaultDirection, defaultSpeed))
 
   "A team" should "move when he has to" in:
@@ -45,7 +45,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val movement = Movement(defaultDirection, defaultSpeed)
     val p1       = Player(0, initial, movement)
     val p2       = Player(1, initial, movement)
-    val team     = Team(List(p1, p2), false)
+    val team     = Team(List(p1, p2))
     team.move().players.forall(_.position == initial + movement) should be(true)
 
   "A player" should "keep last movement if he has no new action" in:
@@ -111,17 +111,17 @@ class ActSpec extends AnyFlatSpec with Matchers:
     ball.move().position should be(initial + movement)
 
   "isGoal" should "be true when you hit the first door" in:
-    val state = MatchState(Nil, Ball(Position(0, UIConfig.fieldHeight / 2)))
+    val state = Match(Nil, Ball(Position(0, UIConfig.fieldHeight / 2)))
     state.isGoal should be(true)
 
   it should "be true when you hit the second door" in:
-    val state = MatchState(Nil, Ball(Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)))
+    val state = Match(Nil, Ball(Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)))
     state.isGoal should be(true)
 
   "isBallOut" should "be true if the ball is out" in:
-    val state = MatchState(Nil, Ball(Position(UIConfig.fieldWidth + 1, UIConfig.fieldHeight + 1)))
+    val state = Match(Nil, Ball(Position(UIConfig.fieldWidth + 1, UIConfig.fieldHeight + 1)))
     state.isBallOut should be(true)
 
   it should "be false when ball is in game" in:
-    val state = MatchState(Nil, Ball(Position(UIConfig.fieldWidth / 2, UIConfig.fieldHeight / 2)))
-    state.isBallOut should be(true)
+    val state = Match(Nil, Ball(Position(UIConfig.fieldWidth / 2, UIConfig.fieldHeight / 2)))
+    state.isBallOut should be(false)

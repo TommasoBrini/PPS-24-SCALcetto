@@ -7,33 +7,20 @@ import model.Match.Action.*
 import model.Match.Decision.*
 import model.Space.Position
 import dsl.SpaceSyntax.*
+import monads.States.*
 
 import scala.util.Random
 
 object Validate {
-  extension (state: MatchState)
-    def validate(): MatchState =
-      val updated = state.copy(teams = state.teams.map(_.validate()))
-      val tackleWithSuccess = updated.players.exists {
-        case Player(_, _, _, _, Tackle(_), Take(_)) => true
-        case _                                      => false
-      }
-      if tackleWithSuccess then updated.confuseLastCarrier()
-      else updated
+  def validateStep: State[Match, Unit] =
+    State(s => (validate(s), ()))
 
-    def confuseLastCarrier(): MatchState =
-      state.copy(teams =
-        state.teams.map(t =>
-          t.copy(players = t.players.map({
-            case p if p.hasBall => p.copy(action = Stopped(MatchConfig.stoppedAfterTackle))
-            case p              => p
-          }))
-        )
-      )
+  def validate(state: Match): Match =
+    state.copy(teams = state.teams.map(_.validate()))
 
   extension (team: Team)
     def validate(): Team =
-      Team(team.players.map(p => p.validate()), team.hasBall)
+      Team(team.players.map(_.validate()), team.hasBall)
 
   extension (player: Player)
     def validate(): Player =

@@ -2,13 +2,13 @@ package init
 
 import config.UIConfig.*
 import config.MatchConfig.*
-import model.Match.MatchState
+import model.Match.Match
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class GameInitializerSpec extends AnyFlatSpec with Matchers:
 
-  val initialState: MatchState = GameInitializer.initialSimulationState()
+  val initialState: Match = GameInitializer.initialSimulationState()
 
   "Game Initializer" should "create initial simulation state with two teams and a ball" in:
     initialState.teams should have size 2

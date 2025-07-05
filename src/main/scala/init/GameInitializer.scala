@@ -10,11 +10,11 @@ object GameInitializer:
   private val realFieldWidth: Int  = fieldWidth
   private val realFieldHeight: Int = fieldHeight
 
-  def initialSimulationState(): MatchState =
+  def initialSimulationState(): Match =
     val ball: Ball   = Ball(Position(realFieldWidth / 2, realFieldHeight / 2), Movement(Direction(0, 0), 0))
     val teamsA: Team = createTeam(1, true)
     val teamsB: Team = createTeamWithBall(2, false, ball)
-    MatchState(List(teamsA, teamsB), ball)
+    Match(List(teamsA, teamsB), ball)
 
   private def createTeam(id: Int, isLeftSide: Boolean): Team =
     val minX: Int = if isLeftSide then 1 else realFieldWidth / 2 + 1
@@ -28,7 +28,7 @@ object GameInitializer:
         position = Position(posX, posY)
       )
     }.toList
-    Team(players, false)
+    Team(players)
 
   private def createTeamWithBall(id: Int, isLeftSide: Boolean, b: Ball): Team =
     val minX: Int = if isLeftSide then 1 else realFieldWidth / 2 + 1

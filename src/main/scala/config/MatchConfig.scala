@@ -11,7 +11,7 @@ object MatchConfig:
   val stoppedAfterHit: Int       = 10
   val stoppedAfterTackle: Int    = 15
   val moveRandomSteps: Int       = 40
-  val passDirectionRange: Double = 0.6
+  val passDirectionRange: Double = 0.8
   val lowDistanceShoot: Int      = UIConfig.goalAreaWidth
   val midDistanceShoot: Int      = UIConfig.fieldWidth / 3
   val highDistanceShoot: Int     = UIConfig.fieldWidth / 2

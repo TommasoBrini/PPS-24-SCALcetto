@@ -44,8 +44,8 @@ object Match:
       val actual: Direction   = movement.direction
       Math.abs(actual.x - toPlayer.x) + Math.abs(actual.y - toPlayer.y) < tolerance
 
-  case class MatchState(teams: List[Team], ball: Ball):
+  case class Match(teams: List[Team], ball: Ball):
+    def map(mapper: Match => Match): Match = mapper.apply(this)
+    def mapIf(condition: Match => Boolean, mapper: Match => Match): Match =
+      if condition.apply(this) then map(mapper) else this
     def players: List[Player] = teams.flatMap(_.players)
-
-  enum Event:
-    case Step, Decide, Validate, Act, BallOut, Goal, Restart

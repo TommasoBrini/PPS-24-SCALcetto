@@ -4,7 +4,7 @@ import model.Match.*
 
 class OpponentBehaviour(target: Option[Player]) extends PlayerBehavior:
 
-  def decide(player: Player, matchState: MatchState): Decision =
+  def decide(player: Player, matchState: Match): Decision =
 
     val ballPlayerPosition: Option[Position] = matchState.teams.flatMap(_.players).find(_.hasBall) match
       case Some(ballPlayer) => Some(ballPlayer.position)

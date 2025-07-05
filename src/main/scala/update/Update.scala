@@ -1,34 +1,45 @@
 package update
 
 import model.Match.*
-import Event.*
 import init.GameInitializer.initialSimulationState
 import decide.Decide.*
 import validate.Validate.*
-import act.Act.{act, isBallOut, isGoal}
+import act.Act.{act, actStep, isBallOut, isGoal}
 import config.UIConfig.*
 import dsl.SpaceSyntax.*
+import monads.States.*
 
 import scala.annotation.tailrec
 
 object Update:
-  @tailrec
-  def update(state: MatchState, event: Event): MatchState = event match
-    case Step =>
-      update(state, Decide)
-    case Decide =>
-      val newState: MatchState = decide(state)
-      update(newState, Validate)
-    case Validate =>
-      val newState: MatchState = state.validate()
-      update(newState, Act)
-    case Act =>
-      val newState: MatchState = state.act()
-      if newState.isGoal then update(newState, Goal)
-      else if newState.isBallOut then update(newState, BallOut)
-      else newState
-    case BallOut =>
-      val bounceType = state.ball.position getBounce (fieldWidth, fieldHeight)
-      MatchState(state.teams, state.ball.copy(movement = state.ball.movement getMovementFrom bounceType))
-    case Goal    => update(state, Restart)
-    case Restart => initialSimulationState()
+  enum Event:
+    case BallOut, Goal, Restart
+
+  def update(state: Match): Match =
+    val updateFlow: State[Match, Unit] =
+      for
+        _     <- decideStep
+        _     <- validateStep
+        event <- actStep
+        end   <- handleEvent(event)
+      yield end
+    val (updated, _) = updateFlow.run(state)
+    updated
+
+  import Event.*
+  private def handleEvent(event: Option[Event]): State[Match, Unit] =
+    State(state => {
+      (
+        event match
+          case Some(BallOut) =>
+            val bounceType = state.ball.position getBounce (fieldWidth, fieldHeight)
+            state.copy(ball = state.ball.copy(movement = state.ball.movement getMovementFrom bounceType))
+          case Some(Goal) =>
+            println("Goal!!!")
+            initialSimulationState()
+          case Some(Restart) => initialSimulationState()
+          case _             => state
+        ,
+        ()
+      )
+    })
