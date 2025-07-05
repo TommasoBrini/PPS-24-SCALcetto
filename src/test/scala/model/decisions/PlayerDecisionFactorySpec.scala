@@ -5,19 +5,19 @@ import model.Match.Decision.*
 import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import model.decisions.PlayerDecisionFactory.*
-import model.decisions.DecisorPlayer.*
-import model.decisions.PossibleDecisionFactory.*
-import model.decisions.CommonPlayerDecisions.*
+import model.decisions.PlayerRoleFactory.*
+import model.decisions.PlayerTypes.*
+import model.decisions.DecisionGenerator.*
 import config.MatchConfig
+import model.decisions.CommonPlayerDecisions.*
 
 class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
 
   "PlayerDecisionFactory.asControlDecisionPlayer" should "convert player to ControlPlayer" in:
     val basePlayer    = Player(1, Position(5, 5), Movement.still)
-    val controlPlayer = basePlayer.asControlDecisionPlayer
+    val controlPlayer = basePlayer.asAttackingPlayer
 
-    controlPlayer shouldBe a[ControlPlayer]
+    controlPlayer shouldBe a[AttackingPlayer]
     controlPlayer.id shouldBe 1
     controlPlayer.position shouldBe Position(5, 5)
 
@@ -31,7 +31,7 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
       nextAction = Action.Move(Direction(1, 0), 1),
       decision = Run(Direction(1, 0), MatchConfig.runSteps)
     )
-    val controlPlayer = basePlayer.asControlDecisionPlayer
+    val controlPlayer = basePlayer.asAttackingPlayer
 
     controlPlayer.id shouldBe basePlayer.id
     controlPlayer.position shouldBe basePlayer.position
@@ -42,9 +42,9 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
 
   "PlayerDecisionFactory.asOpponentDecisionPlayer" should "convert player to OpponentPlayer" in:
     val basePlayer     = Player(2, Position(10, 10), Movement.still)
-    val opponentPlayer = basePlayer.asOpponentDecisionPlayer
+    val opponentPlayer = basePlayer.asDefendingPlayer
 
-    opponentPlayer shouldBe a[OpponentPlayer]
+    opponentPlayer shouldBe a[DefendingPlayer]
     opponentPlayer.id shouldBe 2
     opponentPlayer.position shouldBe Position(10, 10)
 
@@ -58,7 +58,7 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
       nextAction = Action.Stopped(2),
       decision = Mark(Player(1, Position(5, 5), Movement.still), Player(1, Position(5, 5), Movement.still), 1)
     )
-    val opponentPlayer = basePlayer.asOpponentDecisionPlayer
+    val opponentPlayer = basePlayer.asDefendingPlayer
 
     opponentPlayer.id shouldBe basePlayer.id
     opponentPlayer.position shouldBe basePlayer.position
@@ -69,7 +69,7 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
 
   "PlayerDecisionFactory.asTeammateDecisionPlayer" should "convert player to TeammatePlayer" in:
     val basePlayer     = Player(3, Position(6, 6), Movement.still)
-    val teammatePlayer = basePlayer.asTeammateDecisionPlayer
+    val teammatePlayer = basePlayer.asTeammatePlayer
 
     teammatePlayer shouldBe a[TeammatePlayer]
     teammatePlayer.id shouldBe 3
@@ -85,7 +85,7 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
       nextAction = Action.Initial,
       decision = MoveRandom(Direction(1, 0), 3)
     )
-    val teammatePlayer = basePlayer.asTeammateDecisionPlayer
+    val teammatePlayer = basePlayer.asTeammatePlayer
 
     teammatePlayer.id shouldBe basePlayer.id
     teammatePlayer.position shouldBe basePlayer.position
@@ -95,13 +95,13 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
     teammatePlayer.decision shouldBe basePlayer.decision
 
   "PossibleDecisionFactory.possibleDecisions" should "return list of possible decisions for ControlPlayer" in:
-    val controlPlayer = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
-    val teammate      = Player(2, Position(6, 6), Movement.still).asTeammateDecisionPlayer
+    val controlPlayer = Player(1, Position(5, 5), Movement.still).asAttackingPlayer
+    val teammate      = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
     val team1         = Team(1, List(controlPlayer, teammate), hasBall = true)
     val team2         = Team(2, List(), hasBall = false)
     val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleDecisions = controlPlayer.possibleDecisions(state)
+    val possibleDecisions = controlPlayer.generateAllPossibleDecisions(state)
 
     possibleDecisions should not be empty
     possibleDecisions.foreach { decision =>
@@ -109,54 +109,59 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
     }
 
   it should "include Run decisions" in:
-    val controlPlayer = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
-    val team1         = Team(1, List(controlPlayer), hasBall = true)
-    val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val controlPlayer =
+      Player(1, Position(5, 5), Movement.still, decision = Decision.MoveToBall(Direction(1, 0))).asAttackingPlayer
+    val team1 = Team(1, List(controlPlayer), hasBall = true)
+    val team2 = Team(2, List(), hasBall = false)
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleDecisions = controlPlayer.possibleDecisions(state)
+    val possibleDecisions = controlPlayer.generateAllPossibleDecisions(state)
 
-    possibleDecisions should contain atLeastOneElementOf (controlPlayer.possibleRunDirections(state))
+    possibleDecisions should contain atLeastOneElementOf (controlPlayer.asInstanceOf[Player].possibleRunDirections(
+      state
+    ))
 
   it should "include Pass decisions when teammates are available" in:
-    val controlPlayer = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
-    val teammate      = Player(2, Position(6, 6), Movement.still).asTeammateDecisionPlayer
+    val controlPlayer = Player(1, Position(5, 5), Movement.still).asAttackingPlayer
+    val teammate      = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
     val team1         = Team(1, List(controlPlayer, teammate), hasBall = true)
     val team2         = Team(2, List(), hasBall = false)
     val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleDecisions = controlPlayer.possibleDecisions(state)
+    val possibleDecisions = controlPlayer.generateAllPossibleDecisions(state)
 
     possibleDecisions should contain atLeastOneElementOf (controlPlayer.possiblePasses(state))
 
   it should "include Shoot decisions" in:
-    val controlPlayer = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
-    val team1         = Team(1, List(controlPlayer), hasBall = true)
-    val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val controlPlayer =
+      Player(1, Position(5, 5), Movement.still, decision = Decision.MoveToBall(Direction(1, 0))).asAttackingPlayer
+    val team1 = Team(1, List(controlPlayer), hasBall = true)
+    val team2 = Team(2, List(), hasBall = false)
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleDecisions = controlPlayer.possibleDecisions(state)
+    val possibleDecisions = controlPlayer.generateAllPossibleDecisions(state)
 
     possibleDecisions should contain atLeastOneElementOf (controlPlayer.possibleShots(state))
 
   it should "include MoveToGoal decisions" in:
     val controlPlayer =
-      Player(1, Position(5, 5), Movement.still, decision = Decision.MoveToGoal(Direction(1, 0))).asControlDecisionPlayer
+      Player(1, Position(5, 5), Movement.still, decision = Decision.MoveToGoal(Direction(1, 0))).asAttackingPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleDecisions = controlPlayer.possibleDecisions(state)
+    val possibleDecisions = controlPlayer.generateAllPossibleDecisions(state)
 
     possibleDecisions should contain atLeastOneElementOf (controlPlayer.possibleMovesToGoal(state))
 
   it should "handle player with Initial decision" in:
-    val controlPlayer = Player(1, Position(5, 5), Movement.still, decision = Decision.Initial).asControlDecisionPlayer
-    val team1         = Team(1, List(controlPlayer), hasBall = true)
-    val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val controlPlayer =
+      Player(1, Position(5, 5), Movement.still, decision = Decision.MoveToBall(Direction(1, 0))).asAttackingPlayer
+    val team1 = Team(1, List(controlPlayer), hasBall = true)
+    val team2 = Team(2, List(), hasBall = false)
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleDecisions = controlPlayer.possibleDecisions(state)
+    val possibleDecisions = controlPlayer.generateAllPossibleDecisions(state)
 
     possibleDecisions should not be empty
     possibleDecisions.foreach { decision =>
@@ -170,12 +175,12 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
         Position(5, 5),
         Movement.still,
         decision = Run(Direction(1, 0), MatchConfig.runSteps)
-      ).asControlDecisionPlayer
+      ).asAttackingPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleDecisions = controlPlayer.possibleDecisions(state)
+    val possibleDecisions = controlPlayer.generateAllPossibleDecisions(state)
 
     possibleDecisions should not be empty
     possibleDecisions.foreach { decision =>
@@ -183,23 +188,24 @@ class PlayerDecisionFactorySpec extends AnyFlatSpec with Matchers:
     }
 
   it should "return consistent decisions for same state" in:
-    val controlPlayer = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
+    val controlPlayer = Player(1, Position(5, 5), Movement.still).asAttackingPlayer
     val team1         = Team(1, List(controlPlayer), hasBall = true)
     val team2         = Team(2, List(), hasBall = false)
     val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val decisions1 = controlPlayer.possibleDecisions(state)
-    val decisions2 = controlPlayer.possibleDecisions(state)
+    val decisions1 = controlPlayer.generateAllPossibleDecisions(state)
+    val decisions2 = controlPlayer.generateAllPossibleDecisions(state)
 
     decisions1 shouldBe decisions2
 
   it should "handle edge case positions" in:
-    val controlPlayer = Player(1, Position(0, 0), Movement.still).asControlDecisionPlayer
-    val team1         = Team(1, List(controlPlayer), hasBall = true)
-    val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val controlPlayer =
+      Player(1, Position(0, 0), Movement.still, decision = Decision.MoveToBall(Direction(1, 0))).asAttackingPlayer
+    val team1 = Team(1, List(controlPlayer), hasBall = true)
+    val team2 = Team(2, List(), hasBall = false)
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val possibleDecisions = controlPlayer.possibleDecisions(state)
+    val possibleDecisions = controlPlayer.generateAllPossibleDecisions(state)
 
     possibleDecisions should not be empty
     possibleDecisions.foreach { decision =>

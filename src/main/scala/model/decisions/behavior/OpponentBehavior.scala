@@ -1,12 +1,12 @@
 package model.decisions.behavior
 import config.MatchConfig
 import model.Match.*
-import model.decisions.DecisorPlayer.OpponentPlayer
+import model.decisions.PlayerTypes.*
 import model.decisions.CommonPlayerDecisions.*
 import dsl.SpaceSyntax.*
 
 object OpponentBehavior:
-  extension (player: OpponentPlayer)
+  extension (player: DefendingPlayer)
     def calculateBestDecision(matchState: MatchState, target: Option[Player]): Decision =
       val ballPlayer: Option[Player] = matchState.teams.players.find(_.hasBall)
 

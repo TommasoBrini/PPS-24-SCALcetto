@@ -5,7 +5,7 @@ import config.MatchConfig
 import model.Match.{Action, Ball, MatchState, Movement, Team}
 import model.Match.Action.*
 import model.Match.Player
-import model.decisions.PlayerDecisionFactory.*
+import model.decisions.PlayerRoleFactory.*
 import dsl.SpaceSyntax.*
 
 object Act:
@@ -82,11 +82,11 @@ object Act:
     def updatedTeam(team: Team): Team =
       val newPlayers: List[Player] = team.players.map { player =>
         if !team.hasBall then
-          player.asOpponentDecisionPlayer
+          player.asDefendingPlayer
         else if player.hasBall then
-          player.asControlDecisionPlayer
+          player.asAttackingPlayer
         else {
-          player.asTeammateDecisionPlayer
+          player.asTeammatePlayer
         }
       }
       team.copy(players = newPlayers)

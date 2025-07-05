@@ -3,8 +3,8 @@ import config.MatchConfig
 import model.Match.*
 import model.Match.Action.Stopped
 import model.Match.Decision.MoveRandom
-import model.decisions.DecisorPlayer.TeammatePlayer
-import model.decisions.PossibleDecisionFactory.*
+import model.decisions.PlayerTypes.*
+import model.decisions.DecisionGenerator.*
 import model.decisions.CommonPlayerDecisions.*
 import scala.util.Random
 import dsl.SpaceSyntax.*

@@ -2,7 +2,6 @@ package model.decisions
 
 import model.Match.*
 import config.UIConfig
-import model.decisions.PlayerDecisionFactory.*
 import model.Space.*
 import config.MatchConfig
 import dsl.SpaceSyntax.*

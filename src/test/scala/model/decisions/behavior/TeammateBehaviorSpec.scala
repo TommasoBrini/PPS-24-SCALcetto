@@ -6,14 +6,14 @@ import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import model.decisions.behavior.TeammateBehavior.*
-import model.decisions.PlayerDecisionFactory.*
-import model.decisions.DecisorPlayer.*
+import model.decisions.PlayerRoleFactory.*
+import model.decisions.PlayerTypes.*
 import config.MatchConfig
 
 class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
 
   "TeammateBehavior.calculateBestDecision" should "return a valid decision for teammate player" in:
-    val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
+    val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammatePlayer
     val team1          = Team(1, List(teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
     val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -24,7 +24,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
     decision shouldBe a[Decision]
 
   it should "return ReceivePass decision when ball is heading toward player" in:
-    val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
+    val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammatePlayer
     val team1          = Team(1, List(teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
     val ball           = Ball(Position(5, 5), Movement(Direction(1, 1), 2))
@@ -36,7 +36,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
 
   it should "return Confusion decision when player is stopped" in:
     val teammatePlayer =
-      Player(3, Position(6, 6), Movement.still, nextAction = Action.Stopped(2)).asTeammateDecisionPlayer
+      Player(3, Position(6, 6), Movement.still, nextAction = Action.Stopped(2)).asTeammatePlayer
     val team1 = Team(1, List(teammatePlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -47,7 +47,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
     decision.asInstanceOf[Confusion].remainingStep shouldBe 1
 
   it should "return MoveRandom decision when no specific action needed" in:
-    val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
+    val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammatePlayer
     val team1          = Team(1, List(teammatePlayer), hasBall = true)
     val team2          = Team(2, List())
     val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -58,7 +58,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
 
   it should "handle player with ball" in:
     val ball           = Ball(Position(6, 6), Movement.still)
-    val teammatePlayer = Player(3, Position(6, 6), Movement.still, ball = Some(ball)).asTeammateDecisionPlayer
+    val teammatePlayer = Player(3, Position(6, 6), Movement.still, ball = Some(ball)).asTeammatePlayer
     val team1          = Team(1, List(teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
     val state          = MatchState((team1, team2), ball)
@@ -69,7 +69,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
     decision shouldBe a[Decision]
 
   it should "return ReceivePass decision when ball is moving away from player" in:
-    val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
+    val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammatePlayer
     val team1          = Team(1, List(teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
     val ball           = Ball(Position(5, 5), Movement(Direction(-1, -1), 2))
@@ -80,8 +80,8 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
     decision shouldBe a[ReceivePass]
 
   it should "handle multiple teammates" in:
-    val teammate1 = Player(3, Position(6, 6), Movement.still).asTeammateDecisionPlayer
-    val teammate2 = Player(4, Position(7, 7), Movement.still).asTeammateDecisionPlayer
+    val teammate1 = Player(3, Position(6, 6), Movement.still).asTeammatePlayer
+    val teammate2 = Player(4, Position(7, 7), Movement.still).asTeammatePlayer
     val team1     = Team(1, List(teammate1, teammate2), hasBall = true)
     val team2     = Team(2, List(), hasBall = false)
     val state     = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -96,7 +96,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
 
   it should "handle stopped action with zero steps" in:
     val teammatePlayer =
-      Player(3, Position(6, 6), Movement.still, nextAction = Action.Stopped(0)).asTeammateDecisionPlayer
+      Player(3, Position(6, 6), Movement.still, nextAction = Action.Stopped(0)).asTeammatePlayer
     val team1 = Team(1, List(teammatePlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -112,7 +112,7 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
       3,
       Position(MatchConfig.passDirectionRange.toInt, MatchConfig.passDirectionRange.toInt),
       Movement.still
-    ).asTeammateDecisionPlayer
+    ).asTeammatePlayer
     val team1 = Team(1, List(teammatePlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val ball  = Ball(Position(0, 0), Movement(Direction(1, 1), 2))

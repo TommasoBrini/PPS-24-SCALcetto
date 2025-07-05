@@ -1,8 +1,8 @@
 package model.decisions
 
 import model.Match.*
-import model.decisions.DecisorPlayer.*
-import model.decisions.PlayerDecisionFactory.*
+import model.decisions.PlayerTypes.*
+import model.decisions.PlayerRoleFactory.*
 import config.UIConfig
 import model.decisions.CommonPlayerDecisions.*
 import config.Util
@@ -20,7 +20,7 @@ object DecisionMaker:
       *   the best action for the player
       */
     def decide(matchState: MatchState, markings: Map[Player, Player]): Decision = player match
-      case c: ControlPlayer  => ControlBehavior.calculateBestDecision(c)(matchState)
-      case o: OpponentPlayer => OpponentBehavior.calculateBestDecision(o)(matchState, markings.get(player))
-      case t: TeammatePlayer => TeammateBehavior.calculateBestDecision(t)(matchState)
-      case _                 => throw new IllegalArgumentException("Unknown player type")
+      case c: AttackingPlayer => ControlBehavior.calculateBestDecision(c)(matchState)
+      case o: DefendingPlayer => OpponentBehavior.calculateBestDecision(o)(matchState, markings.get(player))
+      case t: TeammatePlayer  => TeammateBehavior.calculateBestDecision(t)(matchState)
+      case _                  => throw new IllegalArgumentException("Unknown player type")

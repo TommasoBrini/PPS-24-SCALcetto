@@ -6,8 +6,8 @@ import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import model.decisions.behavior.ControlBehavior.*
-import model.decisions.PlayerDecisionFactory.*
-import model.decisions.DecisorPlayer.*
+import model.decisions.PlayerRoleFactory.*
+import model.decisions.PlayerTypes.*
 import config.UIConfig
 import model.Match.Action
 
@@ -19,8 +19,8 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       Position(5, 5),
       Movement.still,
       ball = Some(Ball(Position(5, 5), Movement.still))
-    ).asControlDecisionPlayer
-    val teammate = Player(2, Position(6, 6), Movement.still).asTeammateDecisionPlayer
+    ).asAttackingPlayer
+    val teammate = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
     val team1    = Team(1, List(controlPlayer, teammate), hasBall = true)
     val team2    = Team(2, List(), hasBall = false)
     val state    = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -31,8 +31,8 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
     decision shouldBe a[Decision]
 
   it should "return Pass decision when teammate is available" in:
-    val controlPlayer = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
-    val teammate      = Player(2, Position(6, 6), Movement.still).asTeammateDecisionPlayer
+    val controlPlayer = Player(1, Position(5, 5), Movement.still).asAttackingPlayer
+    val teammate      = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
     val team1         = Team(1, List(controlPlayer, teammate), hasBall = true)
     val team2         = Team(2, List(), hasBall = false)
     val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -50,7 +50,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
         Some(Ball(Position(0, 0), Movement.still)),
         Action.Initial,
         Decision.Tackle(Ball(Position(0, 0), Movement.still))
-      ).asControlDecisionPlayer
+      ).asAttackingPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List())
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -67,7 +67,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       Some(Ball(Position(0, 0), Movement.still)),
       Action.Initial,
       Decision.Tackle(Ball(Position(0, 0), Movement.still))
-    ).asControlDecisionPlayer
+    ).asAttackingPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -86,7 +86,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       Some(Ball(Position(0, 0), Movement.still)),
       Action.Initial,
       Decision.Tackle(Ball(Position(0, 0), Movement.still))
-    ).asControlDecisionPlayer
+    ).asAttackingPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), ball)
@@ -104,7 +104,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       Some(Ball(Position(0, 0), Movement.still)),
       Action.Initial,
       Decision.Tackle(Ball(Position(0, 0), Movement.still))
-    ).asControlDecisionPlayer
+    ).asAttackingPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -123,7 +123,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
         Some(Ball(Position(0, 0), Movement.still)),
         Action.Initial,
         Decision.Tackle(Ball(Position(0, 0), Movement.still))
-      ).asControlDecisionPlayer
+      ).asAttackingPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -134,8 +134,8 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
     decision shouldBe a[Decision]
 
   it should "handle multiple possible decisions" in:
-    val controlPlayer = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
-    val teammate      = Player(2, Position(6, 6), Movement.still).asTeammateDecisionPlayer
+    val controlPlayer = Player(1, Position(5, 5), Movement.still).asAttackingPlayer
+    val teammate      = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
     val team1         = Team(1, List(controlPlayer, teammate), hasBall = true)
     val team2         = Team(2, List(), hasBall = false)
     val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -153,7 +153,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       Some(Ball(Position(0, 0), Movement.still)),
       Action.Initial,
       Decision.Tackle(Ball(Position(0, 0), Movement.still))
-    ).asControlDecisionPlayer
+    ).asAttackingPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -171,7 +171,7 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       Some(Ball(Position(0, 0), Movement.still)),
       Action.Initial,
       Decision.Tackle(Ball(Position(0, 0), Movement.still))
-    ).asControlDecisionPlayer
+    ).asAttackingPlayer
     val team1 = Team(1, List(controlPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
