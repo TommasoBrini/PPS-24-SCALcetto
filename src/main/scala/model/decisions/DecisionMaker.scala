@@ -7,7 +7,7 @@ import config.UIConfig
 import model.decisions.CommonPlayerDecisions.*
 import config.Util
 import config.MatchConfig
-import model.decisions.behavior.{ControlBehavior, OpponentBehavior, TeammateBehavior}
+import model.decisions.behavior.{BallCarrierBehavior, OpponentBehavior, TeammateBehavior}
 
 object DecisionMaker:
 
@@ -20,7 +20,7 @@ object DecisionMaker:
       *   the best action for the player
       */
     def decide(matchState: MatchState, markings: Map[Player, Player]): Decision = player match
-      case c: AttackingPlayer => ControlBehavior.calculateBestDecision(c)(matchState)
-      case o: DefendingPlayer => OpponentBehavior.calculateBestDecision(o)(matchState, markings.get(player))
-      case t: TeammatePlayer  => TeammateBehavior.calculateBestDecision(t)(matchState)
-      case _                  => throw new IllegalArgumentException("Unknown player type")
+      case c: BallCarrierPlayer => BallCarrierBehavior.calculateBestDecision(c)(matchState)
+      case o: OpponentPlayer    => OpponentBehavior.calculateBestDecision(o)(matchState, markings.get(player))
+      case t: TeammatePlayer    => TeammateBehavior.calculateBestDecision(t)(matchState)
+      case _                    => throw new IllegalArgumentException("Unknown player type")

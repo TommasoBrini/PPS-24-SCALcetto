@@ -5,44 +5,43 @@ import model.Match.Decision.*
 import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import model.decisions.behavior.ControlBehavior.*
+import model.decisions.behavior.BallCarrierBehavior.*
 import model.decisions.PlayerRoleFactory.*
-import model.decisions.PlayerTypes.*
 import config.UIConfig
 import model.Match.Action
 
-class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
+class BallCarrierBehaviorSpec extends AnyFlatSpec with Matchers:
 
-  "ControlBehavior.calculateBestDecision" should "return a valid decision for control player" in:
-    val controlPlayer = Player(
+  "BallCarrierBehavior.calculateBestDecision" should "return a valid decision for ball carrier player" in:
+    val ballCarrierPlayer = Player(
       1,
       Position(5, 5),
       Movement.still,
       ball = Some(Ball(Position(5, 5), Movement.still))
-    ).asAttackingPlayer
+    ).asBallCarrierPlayer
     val teammate = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
-    val team1    = Team(1, List(controlPlayer, teammate), hasBall = true)
+    val team1    = Team(1, List(ballCarrierPlayer, teammate), hasBall = true)
     val team2    = Team(2, List(), hasBall = false)
     val state    = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val decision = controlPlayer.calculateBestDecision(state)
+    val decision = ballCarrierPlayer.calculateBestDecision(state)
 
     decision should not be Decision.Initial
     decision shouldBe a[Decision]
 
   it should "return Pass decision when teammate is available" in:
-    val controlPlayer = Player(1, Position(5, 5), Movement.still).asAttackingPlayer
-    val teammate      = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
-    val team1         = Team(1, List(controlPlayer, teammate), hasBall = true)
-    val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val ballCarrierPlayer = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
+    val teammate          = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
+    val team1             = Team(1, List(ballCarrierPlayer, teammate), hasBall = true)
+    val team2             = Team(2, List(), hasBall = false)
+    val state             = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val decision = controlPlayer.calculateBestDecision(state)
+    val decision = ballCarrierPlayer.calculateBestDecision(state)
 
     decision shouldBe a[Decision]
 
   it should "return Shoot decision when near goal" in:
-    val controlPlayer =
+    val ballCarrierPlayer =
       Player(
         1,
         Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
@@ -50,72 +49,72 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
         Some(Ball(Position(0, 0), Movement.still)),
         Action.Initial,
         Decision.Tackle(Ball(Position(0, 0), Movement.still))
-      ).asAttackingPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
+      ).asBallCarrierPlayer
+    val team1 = Team(1, List(ballCarrierPlayer), hasBall = true)
     val team2 = Team(2, List())
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val decision = controlPlayer.calculateBestDecision(state)
+    val decision = ballCarrierPlayer.calculateBestDecision(state)
 
     decision shouldBe a[Decision]
 
   it should "return MoveToGoal decision when appropriate" in:
-    val controlPlayer = Player(
+    val ballCarrierPlayer = Player(
       1,
       Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
       Movement.still,
       Some(Ball(Position(0, 0), Movement.still)),
       Action.Initial,
       Decision.Tackle(Ball(Position(0, 0), Movement.still))
-    ).asAttackingPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
+    ).asBallCarrierPlayer
+    val team1 = Team(1, List(ballCarrierPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val decision = controlPlayer.calculateBestDecision(state)
+    val decision = ballCarrierPlayer.calculateBestDecision(state)
 
     decision should not be Decision.Initial
     decision shouldBe a[Decision]
 
   it should "handle player with ball" in:
     val ball = Ball(Position(5, 5), Movement.still)
-    val controlPlayer = Player(
+    val ballCarrierPlayer = Player(
       1,
       Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
       Movement.still,
       Some(Ball(Position(0, 0), Movement.still)),
       Action.Initial,
       Decision.Tackle(Ball(Position(0, 0), Movement.still))
-    ).asAttackingPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
+    ).asBallCarrierPlayer
+    val team1 = Team(1, List(ballCarrierPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), ball)
 
-    val decision = controlPlayer.calculateBestDecision(state)
+    val decision = ballCarrierPlayer.calculateBestDecision(state)
 
     decision should not be Decision.Initial
     decision shouldBe a[Decision]
 
   it should "handle player far from goal" in:
-    val controlPlayer = Player(
+    val ballCarrierPlayer = Player(
       1,
       Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
       Movement.still,
       Some(Ball(Position(0, 0), Movement.still)),
       Action.Initial,
       Decision.Tackle(Ball(Position(0, 0), Movement.still))
-    ).asAttackingPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
+    ).asBallCarrierPlayer
+    val team1 = Team(1, List(ballCarrierPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val decision = controlPlayer.calculateBestDecision(state)
+    val decision = ballCarrierPlayer.calculateBestDecision(state)
 
     decision should not be Decision.Initial
     decision shouldBe a[Decision]
 
   it should "handle player near goal" in:
-    val controlPlayer =
+    val ballCarrierPlayer =
       Player(
         1,
         Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
@@ -123,60 +122,60 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
         Some(Ball(Position(0, 0), Movement.still)),
         Action.Initial,
         Decision.Tackle(Ball(Position(0, 0), Movement.still))
-      ).asAttackingPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
+      ).asBallCarrierPlayer
+    val team1 = Team(1, List(ballCarrierPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val decision = controlPlayer.calculateBestDecision(state)
+    val decision = ballCarrierPlayer.calculateBestDecision(state)
 
     decision should not be Decision.Initial
     decision shouldBe a[Decision]
 
   it should "handle multiple possible decisions" in:
-    val controlPlayer = Player(1, Position(5, 5), Movement.still).asAttackingPlayer
-    val teammate      = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
-    val team1         = Team(1, List(controlPlayer, teammate), hasBall = true)
-    val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val ballCarrierPlayer = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
+    val teammate          = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
+    val team1             = Team(1, List(ballCarrierPlayer, teammate), hasBall = true)
+    val team2             = Team(2, List(), hasBall = false)
+    val state             = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val decision = controlPlayer.calculateBestDecision(state)
+    val decision = ballCarrierPlayer.calculateBestDecision(state)
 
     decision should not be Decision.Initial
     decision shouldBe a[Decision]
 
   it should "always return the highest rated decision" in:
-    val controlPlayer = Player(
+    val ballCarrierPlayer = Player(
       1,
       Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
       Movement.still,
       Some(Ball(Position(0, 0), Movement.still)),
       Action.Initial,
       Decision.Tackle(Ball(Position(0, 0), Movement.still))
-    ).asAttackingPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
+    ).asBallCarrierPlayer
+    val team1 = Team(1, List(ballCarrierPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val decision1 = controlPlayer.calculateBestDecision(state)
-    val decision2 = controlPlayer.calculateBestDecision(state)
+    val decision1 = ballCarrierPlayer.calculateBestDecision(state)
+    val decision2 = ballCarrierPlayer.calculateBestDecision(state)
 
     decision1 shouldBe decision2
 
   it should "handle edge case positions" in:
-    val controlPlayer = Player(
+    val ballCarrierPlayer = Player(
       1,
       Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
       Movement.still,
       Some(Ball(Position(0, 0), Movement.still)),
       Action.Initial,
       Decision.Tackle(Ball(Position(0, 0), Movement.still))
-    ).asAttackingPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
+    ).asBallCarrierPlayer
+    val team1 = Team(1, List(ballCarrierPlayer), hasBall = true)
     val team2 = Team(2, List(), hasBall = false)
     val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
-    val decision = controlPlayer.calculateBestDecision(state)
+    val decision = ballCarrierPlayer.calculateBestDecision(state)
 
     decision should not be Decision.Initial
     decision shouldBe a[Decision]

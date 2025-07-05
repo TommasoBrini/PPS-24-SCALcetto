@@ -6,6 +6,6 @@ import model.decisions.CommonPlayerDecisions.*
 /** Type aliases for player roles
   */
 object PlayerTypes:
-  type AttackingPlayer = Player & CanDecideToPass & CanDecideToShoot & CanDecideToMoveToGoal
-  type DefendingPlayer = Player & CanDecideToMark & CanDecideToTackle & CanDecideToIntercept
-  type TeammatePlayer  = Player & CanDecideToMoveRandom & CanDecideToReceivePass
+  type BallCarrierPlayer = Player & CanDecideToPass & CanDecideToShoot & CanDecideToMoveToGoal
+  type OpponentPlayer    = Player & CanDecideToMark & CanDecideToTackle & CanDecideToIntercept
+  type TeammatePlayer    = Player & CanDecideToMoveRandom & CanDecideToReceivePass

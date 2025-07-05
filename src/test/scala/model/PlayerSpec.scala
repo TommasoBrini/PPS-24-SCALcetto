@@ -23,7 +23,7 @@ class PlayerSpec extends AnyFlatSpec with Matchers:
 
   it should "correctly report it when carrying a ball" in:
     val ball: Ball        = Ball(Position(5, 5), Movement(Direction.none, 0))
-    val playerWithBall    = Player(1, Position(0, 0), Movement.still, Some(ball)).asAttackingPlayer
+    val playerWithBall    = Player(1, Position(0, 0), Movement.still, Some(ball)).asBallCarrierPlayer
     val playerWithoutBall = Player(2, Position(0, 0), Movement.still)
 
     playerWithBall.ball.isDefined shouldBe true
@@ -45,41 +45,41 @@ class PlayerSpec extends AnyFlatSpec with Matchers:
 
   it should "can decide to run to ball" in:
     val ball: Ball = Ball(Position(5, 5), Movement(Direction.none, 0))
-    val player     = Player(1, Position(0, 0), Movement.still, Some(ball)).asAttackingPlayer
+    val player     = Player(1, Position(0, 0), Movement.still, Some(ball)).asBallCarrierPlayer
     player.createMoveToBallDecision(player.position.getDirection(ball.position)) shouldBe Decision.MoveToBall(
       player.position.getDirection(ball.position)
     )
 
   "A Player with a ball" should "be able to pass" in:
     val ball: Ball        = Ball(Position(5, 5), Movement(Direction.none, 0))
-    val playerWithBall    = Player(1, Position(0, 0), Movement.still, Some(ball)).asAttackingPlayer
+    val playerWithBall    = Player(1, Position(0, 0), Movement.still, Some(ball)).asBallCarrierPlayer
     val playerWithoutBall = Player(2, Position(0, 0), Movement.still)
     playerWithBall.createPassDecision(playerWithoutBall) shouldBe Decision.Pass(playerWithBall, playerWithoutBall)
 
   it should "be able to shoot" in:
     val ball: Ball     = Ball(Position(5, 5), Movement(Direction.none, 0))
-    val playerWithBall = Player(1, Position(0, 0), Movement.still, Some(ball)).asAttackingPlayer
+    val playerWithBall = Player(1, Position(0, 0), Movement.still, Some(ball)).asBallCarrierPlayer
     playerWithBall.createShootDecision(Position(10, 10)) shouldBe Decision.Shoot(playerWithBall, Position(10, 10))
 
   it should "be able to move to goal" in:
-    val player = Player(1, Position(0, 0)).asAttackingPlayer
+    val player = Player(1, Position(0, 0)).asBallCarrierPlayer
     player.createMoveToGoalDecision(player.position.getDirection(Position(10, 0))) shouldBe Decision.MoveToGoal(
       player.position.getDirection(Position(10, 0))
     )
 
   "A opponent" should "be able to mark an opponent" in:
-    val defender = Player(1, Position(0, 0)).asDefendingPlayer
+    val defender = Player(1, Position(0, 0)).asOpponentPlayer
     val target   = Player(2, Position(1, 1))
     defender.createMarkDecision(target, 1) shouldBe Decision.Mark(defender, target, 1)
 
   it should "be able to tackle a ball" in:
     val ball: Ball = Ball(Position(5, 5), Movement(Direction.none, 0))
-    val player     = Player(1, Position(0, 0)).asDefendingPlayer
+    val player     = Player(1, Position(0, 0)).asOpponentPlayer
     player.createTackleDecision(ball) shouldBe Decision.Tackle(ball)
 
   it should "be able to intercept a ball" in:
     val ball: Ball = Ball(Position(5, 5), Movement(Direction.none, 0))
-    val player     = Player(1, Position(0, 0)).asDefendingPlayer
+    val player     = Player(1, Position(0, 0)).asOpponentPlayer
     player.createInterceptDecision(ball) shouldBe Decision.Intercept(ball)
 
   "A teammate" should "be able to receive a pass" in:

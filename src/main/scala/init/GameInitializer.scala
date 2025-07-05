@@ -29,7 +29,7 @@ object GameInitializer:
       Player(
         id = id * 10 + i,
         position = Position(posX, posY)
-      ).asDefendingPlayer
+      ).asOpponentPlayer
     }.toList
     Team(id, players, false)
 
@@ -53,5 +53,5 @@ object GameInitializer:
       ball = Some(b),
       movement = Movement(Direction(0, 0), 0),
       decision = Decision.Initial
-    ).asAttackingPlayer
+    ).asBallCarrierPlayer
     Team(id, ballPlayer :: players, true)

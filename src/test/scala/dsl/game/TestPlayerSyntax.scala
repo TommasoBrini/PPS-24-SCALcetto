@@ -14,8 +14,8 @@ import scala.util.Random
 class TestPlayerSyntax extends AnyFlatSpec with Matchers:
   "A Player" should "correctly report hasBall when carrying a ball" in:
     val ball: Ball        = Ball(Position(5, 5), Movement(Direction.none, 0))
-    val playerWithBall    = Player(1, Position(0, 0), Movement.still, Some(ball)).asAttackingPlayer
-    val playerWithoutBall = Player(2, Position(0, 0), Movement.still).asDefendingPlayer
+    val playerWithBall    = Player(1, Position(0, 0), Movement.still, Some(ball)).asBallCarrierPlayer
+    val playerWithoutBall = Player(2, Position(0, 0), Movement.still).asOpponentPlayer
 
     playerWithBall.ball.isDefined shouldBe playerWithBall.hasBall
     playerWithoutBall.ball.isDefined shouldBe playerWithoutBall.hasBall

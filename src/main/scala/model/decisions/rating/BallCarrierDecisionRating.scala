@@ -6,10 +6,10 @@ import config.Util
 import config.UIConfig
 import dsl.space.PositionSyntax.*
 
-/** Rating system for attacking player decisions Provides evaluation methods for run, pass, shoot, and move-to-goal
+/** Rating system for ball carrier player decisions Provides evaluation methods for run, pass, shoot, and move-to-goal
   * decisions
   */
-object AttackingDecisionRating:
+object BallCarrierDecisionRating:
 
   /** Rates a run decision based on path clarity
     * @param run

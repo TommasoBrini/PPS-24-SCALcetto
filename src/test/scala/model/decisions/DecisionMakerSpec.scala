@@ -7,25 +7,24 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import model.decisions.DecisionMaker.*
 import model.decisions.PlayerRoleFactory.*
-import model.decisions.PlayerTypes.*
 
 class DecisionMakerSpec extends AnyFlatSpec with Matchers:
 
-  "DecisionMaker.decide" should "return a decision for ControlPlayer" in:
-    val controlPlayer  = Player(1, Position(5, 5), Movement.still).asAttackingPlayer
+  "DecisionMaker.decide" should "return a decision for carrier player" in:
+    val carrierPlayer  = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
     val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammatePlayer
-    val team1          = Team(1, List(controlPlayer, teammatePlayer), hasBall = true)
+    val team1          = Team(1, List(carrierPlayer, teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
     val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
     val markings       = Map[Player, Player]()
 
-    val decision = controlPlayer.decide(state, markings)
+    val decision = carrierPlayer.decide(state, markings)
 
     decision should not be Decision.Initial
     decision shouldBe a[Decision]
 
   it should "return a decision for OpponentPlayer" in:
-    val opponentPlayer = Player(2, Position(10, 10), Movement.still).asDefendingPlayer
+    val opponentPlayer = Player(2, Position(10, 10), Movement.still).asOpponentPlayer
     val team1          = Team(1, List(), hasBall = true)
     val team2          = Team(2, List(opponentPlayer), hasBall = false)
     val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -60,8 +59,8 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
   it should "handle markings for OpponentPlayer" in:
     val player1        = Player(2, Position(10, 10), Movement.still)
     val player2        = Player(1, Position(5, 5), Movement.still)
-    val opponentPlayer = player1.asDefendingPlayer
-    val targetPlayer   = player2.asAttackingPlayer
+    val opponentPlayer = player1.asOpponentPlayer
+    val targetPlayer   = player2.asBallCarrierPlayer
     val team1          = Team(1, List(targetPlayer), hasBall = true)
     val team2          = Team(2, List(opponentPlayer), hasBall = false)
     val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -73,7 +72,7 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     decision shouldBe a[Decision]
 
   it should "handle empty markings for OpponentPlayer" in:
-    val opponentPlayer = Player(2, Position(10, 10), Movement.still).asDefendingPlayer
+    val opponentPlayer = Player(2, Position(10, 10), Movement.still).asOpponentPlayer
     val team1          = Team(1, List(), hasBall = true)
     val team2          = Team(2, List(opponentPlayer), hasBall = false)
     val state          = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
@@ -88,40 +87,40 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     val player1        = Player(1, Position(5, 5), Movement.still)
     val player2        = Player(2, Position(10, 10), Movement.still)
     val player3        = Player(3, Position(6, 6), Movement.still)
-    val controlPlayer  = player1.asAttackingPlayer
-    val opponentPlayer = player2.asDefendingPlayer
+    val carrierPlayer  = player1.asBallCarrierPlayer
+    val opponentPlayer = player2.asOpponentPlayer
     val teammatePlayer = player3.asTeammatePlayer
 
-    val team1    = Team(1, List(controlPlayer, teammatePlayer), hasBall = true)
+    val team1    = Team(1, List(carrierPlayer, teammatePlayer), hasBall = true)
     val team2    = Team(2, List(opponentPlayer), hasBall = false)
     val ball     = Ball(Position(15, 15), Movement(Direction(1, 1), 2))
     val state    = MatchState((team1, team2), ball)
     val markings = Map(player2 -> player1)
 
-    val controlDecision  = controlPlayer.decide(state, markings)
+    val carrierDecision  = carrierPlayer.decide(state, markings)
     val opponentDecision = opponentPlayer.decide(state, markings)
     val teammateDecision = teammatePlayer.decide(state, markings)
 
-    controlDecision should not be Decision.Initial
+    carrierDecision should not be Decision.Initial
     opponentDecision should not be Decision.Initial
     teammateDecision should not be Decision.Initial
 
   it should "handle players with ball" in:
     val ball           = Ball(Position(5, 5), Movement.still)
-    val controlPlayer  = Player(1, Position(5, 5), Movement.still, ball = Some(ball)).asAttackingPlayer
+    val carrierPlayer  = Player(1, Position(5, 5), Movement.still, ball = Some(ball)).asBallCarrierPlayer
     val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammatePlayer
-    val team1          = Team(1, List(controlPlayer, teammatePlayer), hasBall = true)
+    val team1          = Team(1, List(carrierPlayer, teammatePlayer), hasBall = true)
     val team2          = Team(2, List(), hasBall = false)
     val state          = MatchState((team1, team2), ball)
     val markings       = Map[Player, Player]()
-    val decision       = controlPlayer.decide(state, markings)
+    val decision       = carrierPlayer.decide(state, markings)
 
     decision should not be Decision.Initial
     decision shouldBe a[Decision]
 
   it should "handle players near ball" in:
     val ball           = Ball(Position(6, 6), Movement.still)
-    val opponentPlayer = Player(2, Position(5, 5), Movement.still).asDefendingPlayer
+    val opponentPlayer = Player(2, Position(5, 5), Movement.still).asOpponentPlayer
     val team1          = Team(1, List(), hasBall = true)
     val team2          = Team(2, List(opponentPlayer), hasBall = false)
     val state          = MatchState((team1, team2), ball)

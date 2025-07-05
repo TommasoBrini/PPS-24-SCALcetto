@@ -53,12 +53,12 @@ object Act:
         case Stopped(step)          => player.copy(movement = Movement.still)
         case _                      => player
 
-  private[update] def updateMovement(ball: Ball, playerInControl: Option[Player]): Ball =
-    val movement: Movement = playerInControl match
+  private[update] def updateMovement(ball: Ball, carrierPlayer: Option[Player]): Ball =
+    val movement: Movement = carrierPlayer match
       case Some(Player(_, _, _, _, Hit(direction, speed), _)) => Movement(direction, speed)
       case Some(Player(_, _, movement, _, Move(_, _), _))     => movement
       case _                                                  => ball.movement
-    val newPosition = playerInControl match
+    val newPosition = carrierPlayer match
       case Some(Player(_, p, m, _, _, _)) => p + (m * (UIConfig.ballSize / 2))
       case _                              => ball.position
     ball.copy(position = newPosition, movement = movement)
@@ -85,9 +85,9 @@ object Act:
     def updatedTeam(team: Team): Team =
       val newPlayers: List[Player] = team.players.map { player =>
         if !team.hasBall then
-          player.asDefendingPlayer
+          player.asOpponentPlayer
         else if player.hasBall then
-          player.asAttackingPlayer
+          player.asBallCarrierPlayer
         else {
           player.asTeammatePlayer
         }

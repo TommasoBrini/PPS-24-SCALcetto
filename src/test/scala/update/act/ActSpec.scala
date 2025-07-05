@@ -101,7 +101,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val player  = Player(0, Position(0, 0), Movement.still, Some(ball))
     updateMovement(ball, Some(player)).movement should be(initial)
 
-  it should "move with the player that controls it" in:
+  it should "move with the player that als it" in:
     val ball = Ball(Position(0, 0))
     val player =
       Player(0, Position(0, 0), Movement.still, Some(ball), Move(defaultDirection, MatchConfig.playerWithBallSpeed))
