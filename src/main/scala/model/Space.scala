@@ -6,6 +6,7 @@ import scala.annotation.targetName
 import scala.util.Random
 
 object Space:
+  opaque type Speed = Int
 
   opaque type Position = (Int, Int)
   object Position:
@@ -28,15 +29,17 @@ object Space:
     def getDirection(to: Position): Direction =
       val dx = to.x - p.x
       val dy = to.y - p.y
-      // Hypot with both argument zero returns zero, implying a division by zero returning Double.NaN
       if dx == 0 && dy == 0 then Direction.none
       else (dx / Math.hypot(dx, dy), dy / Math.hypot(dx, dy))
 
-  case class Movement(direction: Direction, speed: Int)
+  opaque type Movement = (Direction, Speed)
+  extension (m: Movement)
+    def direction: Direction = m._1
+    def speed: Int           = m._2
 
-  // TODO move this in creational dsl
   object Movement:
-    def still: Movement = Movement(Direction.none, 0)
+    def apply(direction: Direction, speed: Int): Movement = (direction, speed)
+    def still: Movement                                   = (Direction.none, 0)
 
   enum Bounce:
     case VerticalBounce, HorizontalBounce, ObliqueBounce

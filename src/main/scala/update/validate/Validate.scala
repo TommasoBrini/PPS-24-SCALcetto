@@ -1,6 +1,8 @@
 package update.validate
 
-import model.Match.*
+import model.Match.{Action, Decision, Match, Player, Side, Team}
+import Side.West
+import Decision.*
 import config.MatchConfig
 import config.UIConfig
 import model.Match.Action.*
@@ -11,21 +13,24 @@ import monads.States.*
 
 import scala.util.Random
 
-object Validate {
+object Validate:
   def validateStep: State[Match, Unit] =
     State(s => (validate(s), ()))
 
   def validate(state: Match): Match =
-    state.copy(teams = state.teams.map(_.validate()))
+    val teamA: Team              = state.teams.teamA
+    val teamB: Team              = state.teams.teamB
+    val validTeams: (Team, Team) = (teamA.validate(), teamB.validate())
+    state.copy(teams = validTeams)
 
   extension (team: Team)
     def validate(): Team =
-      Team(team.players.map(_.validate()), team.hasBall)
+      team.copy(players = team.players.map(_.validate()))
 
   extension (player: Player)
     def validate(): Player =
       val accuracy = Random.nextDouble()
-      player.copy(action =
+      player.copy(nextAction =
         if accuracy < getSuccessRate(player.decision)
         then getSuccessAction(player.decision)
         else getFailureAction(player.decision, accuracy)
@@ -40,18 +45,23 @@ object Validate {
 
   private def getSuccessAction(decision: Decision): Action =
     decision match
-      case Confusion(step)      => Action.Stopped(step)
-      case Pass(from, to)       => Action.Hit(from.position.getDirection(to.position), MatchConfig.ballSpeed)
-      case Shoot(striker, goal) => Action.Hit(striker.position.getDirection(goal), MatchConfig.ballSpeed + 1) // todo
-      case Run(direction)       => Action.Move(direction, MatchConfig.playerSpeed)
-      case MoveToGoal(goalDirection) => Action.Move(goalDirection, MatchConfig.playerSpeed)
+      case Confusion(step)           => Action.Stopped(step)
+      case Pass(from, to)            => Action.Hit(from.position.getDirection(to.position), MatchConfig.ballSpeed)
+      case Shoot(striker, goal)      => Action.Hit(striker.position.getDirection(goal), MatchConfig.ballSpeed + 1)
+      case Run(direction, _)         => Action.Move(direction, MatchConfig.playerWithBallSpeed)
+      case MoveToGoal(goalDirection) => Action.Move(goalDirection, MatchConfig.playerWithBallSpeed)
       case Tackle(ball)              => Action.Take(ball)
       case ReceivePass(ball)         => Action.Take(ball)
       case Intercept(ball)           => Action.Take(ball)
-      case MoveToBall(direction)     => Action.Move(direction, MatchConfig.playerSpeed)
+      case MoveToBall(direction)     => Action.Move(direction, MatchConfig.playerMaxSpeed)
       case MoveRandom(direction, _)  => Action.Move(direction, MatchConfig.playerSpeed)
-      case Mark(player, target) => Action.Move(player.position.getDirection(target.position), MatchConfig.playerSpeed)
-      case _                    => Action.Initial
+      case Mark(player, target, teamSide) =>
+        if target.hasBall then
+          Action.Move(player.position.getDirection(target.position), MatchConfig.playerSpeed)
+        else
+          val strategicDirection = calculateMarkDirection(player, target, teamSide)
+          Action.Move(strategicDirection, MatchConfig.playerSpeed)
+      case _ => Action.Initial
 
   private def getFailureAction(decision: Decision, accuracy: Double): Action =
     (decision, accuracy) match
@@ -61,10 +71,9 @@ object Validate {
       case _                                => Action.Initial
 
   private def shootSuccess(striker: Player, goal: Position): Double = striker.position.getDistance(goal) match
-    case goalDistance if goalDistance <= MatchConfig.lowDistanceShoot  => 0.1
-    case goalDistance if goalDistance <= MatchConfig.midDistanceShoot  => 0.6
-    case goalDistance if goalDistance <= MatchConfig.highDistanceShoot => 0.4
-    case _                                                             => 0.0
+    case goalDistance if goalDistance <= MatchConfig.lowDistanceToGoal  => 0.1
+    case goalDistance if goalDistance <= MatchConfig.highDistanceToGoal => 0.4
+    case _                                                              => 0.0
 
   private def failedShoot(striker: Player, goal: Position, accuracy: Double): Action =
     val targetOffset: Double =
@@ -74,4 +83,18 @@ object Validate {
       case _                   => Position(goal.x, goal.y + targetOffset.toInt)
     Action.Hit(striker.position.getDirection(newShootingTarget), MatchConfig.ballSpeed + 1)
 
-}
+  private def calculateMarkDirection(defender: Player, target: Player, teamSide: Side): model.Space.Direction =
+    val ownGoalX = if teamSide == West then UIConfig.goalWestX else UIConfig.goalEastX
+    val ownGoalY = UIConfig.midGoalY
+    val ownGoal  = Position(ownGoalX, ownGoalY)
+
+    val targetToGoalDirection = target.position.getDirection(ownGoal)
+
+    val strategicX = target.position.x + (targetToGoalDirection.x * MatchConfig.proximityRange).toInt
+    val strategicY = target.position.y + (targetToGoalDirection.y * MatchConfig.proximityRange).toInt
+
+    val clampedX          = Math.max(0, Math.min(UIConfig.fieldWidth, strategicX))
+    val clampedY          = Math.max(0, Math.min(UIConfig.fieldHeight, strategicY))
+    val strategicPosition = Position(clampedX, clampedY)
+
+    defender.position.getDirection(strategicPosition)

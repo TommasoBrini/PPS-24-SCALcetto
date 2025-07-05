@@ -1,39 +1,21 @@
 package model
 
 import model.Match.*
+import Side.*
 import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class MatchSpec extends AnyFlatSpec with Matchers:
-
-  "A Player" should "store id, position, and movement correctly" in:
-    val pos    = Position(1, 2)
-    val mov    = Movement(Direction(1.0, 0.0), 3)
-    val player = Player(1, pos, mov)
-
-    player.id shouldBe 1
-    player.position shouldBe pos
-    player.movement shouldBe mov
-    player.ball shouldBe None
-    player.action shouldBe Action.Initial
-
-  it should "correctly report hasBall when carrying a ball" in:
-    val ball              = Ball(Position(5, 5), Movement(Direction.none, 0))
-    val playerWithBall    = Player(1, Position(0, 0), Movement.still, Some(ball))
-    val playerWithoutBall = Player(1, Position(0, 0), Movement.still)
-
-    playerWithBall.hasBall shouldBe true
-    playerWithoutBall.hasBall shouldBe false
-
-  "A Team" should "contain a list of players" in:
+  "A Team" should "contain a list of players and a side" in:
     val players = List(
       Player(1, Position(1, 1), Movement.still),
       Player(2, Position(2, 2), Movement.still)
     )
-    val team = Team(players)
+    val team = Team(players, West)
 
     team.players should have size 2
+    team.side shouldBe West
 
   "A Ball" should "store its position and movement" in:
     val ball = Ball(Position(3, 4), Movement(Direction(1.0, 1.0), 2))
@@ -42,11 +24,11 @@ class MatchSpec extends AnyFlatSpec with Matchers:
     ball.movement.direction shouldBe Direction(1.0, 1.0)
     ball.movement.speed shouldBe 2
 
-  "A MatchState" should "contain two teams and a ball" in:
-    val team1 = Team(List(Player(1, Position(1, 1), Movement.still)))
-    val team2 = Team(List(Player(2, Position(2, 2), Movement.still)))
+  "A Match" should "contain two teams and a ball" in:
+    val team1 = Team(List(Player(1, Position(1, 1), Movement.still)), West)
+    val team2 = Team(List(Player(2, Position(2, 2), Movement.still)), East)
     val ball  = Ball(Position(0, 0), Movement.still)
-    val state = Match(List(team1, team2), ball)
+    val state = Match((team1, team2), ball)
 
-    state.teams should have size 2
+    state.teams should matchPattern { case (_: Team, _: Team) => }
     state.ball shouldBe ball

@@ -3,8 +3,8 @@ package model
 import Space.*
 
 object Match:
-  export Space.*
 
+  export Space.*
   enum Action:
     case Initial
     case Stopped(remainingStep: Int)
@@ -15,28 +15,37 @@ object Match:
   enum Decision:
     case Initial
     case Confusion(remainingStep: Int)
+    case Run(direction: Direction, steps: Int)
     case Pass(from: Player, to: Player)
     case Shoot(striker: Player, goal: Position)
-    case Run(direction: Direction)
     case MoveToGoal(goalDirection: Direction)
+
+    case Mark(defender: Player, target: Player, teamSide: Side)
     case Tackle(ball: Ball)
-    case ReceivePass(ball: Ball)
     case Intercept(ball: Ball)
     case MoveToBall(directionToBall: Direction)
+
     case MoveRandom(direction: Direction, steps: Int)
-    case Mark(defender: Player, target: Player)
+    case ReceivePass(ball: Ball)
 
-  case class Team(players: List[Player], hasBall: Boolean = false)
-
+  // TODO change this after making creational DSL
   case class Player(
       id: Int,
       position: Position,
       movement: Movement = Movement.still,
       ball: Option[Ball] = None,
       decision: Decision = Decision.Initial,
-      action: Action = Action.Initial
+      nextAction: Action = Action.Initial
   ):
     def hasBall: Boolean = ball.isDefined
+
+  enum Side:
+    case West, East
+  case class Team(players: List[Player], side: Side, hasBall: Boolean = false)
+  object Team:
+    import Side.West
+    def apply(players: List[Player], hasBall: Boolean): Team = Team(players, West, hasBall)
+    def apply(players: List[Player]): Team                   = Team(players, false)
 
   case class Ball(position: Position, movement: Movement = Movement.still):
     def isHeadingToward(player: Player, tolerance: Double): Boolean =
@@ -44,8 +53,8 @@ object Match:
       val actual: Direction   = movement.direction
       Math.abs(actual.x - toPlayer.x) + Math.abs(actual.y - toPlayer.y) < tolerance
 
-  case class Match(teams: List[Team], ball: Ball):
+  case class Match(teams: (Team, Team), ball: Ball):
     def map(mapper: Match => Match): Match = mapper.apply(this)
     def mapIf(condition: Match => Boolean, mapper: Match => Match): Match =
       if condition.apply(this) then map(mapper) else this
-    def players: List[Player] = teams.flatMap(_.players)
+    def players: List[Player] = teams._1.players ++ teams._2.players

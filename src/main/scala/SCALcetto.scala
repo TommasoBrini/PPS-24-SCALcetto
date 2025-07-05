@@ -9,4 +9,4 @@ import init.GameInitializer
 
   val initialState: Match = GameInitializer.initialSimulationState()
 
-  initialize(initialState, 1000)
+  initialize(initialState, 50)

@@ -48,9 +48,9 @@ object Act:
 
   def tackleBallCarrier(state: Match): Match =
     state.copy(teams =
-      state.teams.map(t =>
+      state.teams.map((t: Team) =>
         t.copy(players = t.players.map({
-          case p if p.hasBall => p.copy(ball = None, action = Stopped(MatchConfig.stoppedAfterTackle))
+          case p if p.hasBall => p.copy(ball = None, nextAction = Stopped(MatchConfig.stoppedAfterTackle))
           case p              => p
         }))
       )
@@ -78,9 +78,9 @@ object Act:
     def move(): Team            = team.copy(players = team.players.map(_.move()))
 
   extension (player: Player)
-    def updateMovement(): Player = player.action match
+    def updateMovement(): Player = player.nextAction match
       case Hit(_, _) =>
-        player.copy(movement = Movement.still, ball = None, action = Stopped(MatchConfig.stoppedAfterHit))
+        player.copy(movement = Movement.still, ball = None, nextAction = Stopped(MatchConfig.stoppedAfterHit))
       case Move(direction, speed) => player.copy(movement = Movement(direction, speed))
       case Stopped(duration)      => player.copy(movement = Movement.still)
       case Take(ball)             => player.copy(movement = Movement.still)
