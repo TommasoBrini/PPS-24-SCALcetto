@@ -3,14 +3,7 @@ package model.decisions
 import model.Match.*
 import config.UIConfig
 import model.decisions.CommonPlayerDecisions.*
-import scala.annotation.targetName
-
-/** Type aliases for player roles
-  */
-object PlayerTypes:
-  type AttackingPlayer = Player & CanDecideToPass & CanDecideToShoot & CanDecideToMoveToGoal
-  type DefendingPlayer = Player & CanDecideToMark & CanDecideToTackle & CanDecideToIntercept
-  type TeammatePlayer  = Player & CanDecideToMoveRandom & CanDecideToReceivePass
+import model.decisions.PlayerTypes.*
 
 /** Factory for creating specialized player instances with specific decision-making capabilities
   */

@@ -4,7 +4,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import model.Match.*
 import model.Space.*
-import model.decisions.rating.ControlDecisionRating.*
+import model.decisions.rating.AttackingDecisionRating.*
 import config.MatchConfig
 import config.UIConfig
 

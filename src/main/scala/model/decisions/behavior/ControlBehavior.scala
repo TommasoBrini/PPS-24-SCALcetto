@@ -4,7 +4,7 @@ import model.Match.*
 import model.decisions.PlayerTypes.*
 import model.decisions.CommonPlayerDecisions.*
 import model.decisions.DecisionGenerator.*
-import model.decisions.rating.ControlDecisionRating.*
+import model.decisions.rating.AttackingDecisionRating.*
 import model.decisions.PlayerRoleFactory.*
 
 object ControlBehavior:
