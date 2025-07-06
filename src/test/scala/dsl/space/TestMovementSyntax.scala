@@ -6,7 +6,6 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.shouldBe
 import model.Match.{Ball, Player, Team}
 import model.Space.Bounce.*
-import model.decisions.PlayerDecisionFactory.*
 
 import MovementSyntax.*
 import PositionSyntax.*

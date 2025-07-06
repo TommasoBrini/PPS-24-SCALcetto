@@ -4,11 +4,11 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import model.Match.*
 import model.Space.*
-import model.decisions.rating.ControlDecisionRating.*
+import model.decisions.rating.BallCarrierDecisionRating.*
 import config.MatchConfig
 import config.UIConfig
 
-class ControlDecisionRatingSpec extends AnyFlatSpec with Matchers:
+class RatingSpec extends AnyFlatSpec with Matchers:
 
   "Shoot rate" should "be 1.0 when the distance is near, no opponents and no initial decision" in:
     val ball = Ball(Position(10, 10))
