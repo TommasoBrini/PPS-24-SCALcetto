@@ -10,7 +10,7 @@ import dsl.game.TeamsSyntax.*
 object CommonPlayerDecisions:
   extension (player: Player)
     def decideRun(direction: Direction, steps: Int): Decision = Decision.Run(direction, steps)
-    def possibleRunDirections(matchState: MatchState): List[Decision] =
+    def possibleRunDirections(matchState: Match): List[Decision] =
       val runDirections =
         for
           dx <- -1 to 1
@@ -27,7 +27,7 @@ trait CanDecideToPass:
   self: Player =>
   def decidePass(to: Player): Decision = Decision.Pass(this, to)
   // TODO maybe this will not work
-  def possiblePasses(state: MatchState): List[Decision] =
+  def possiblePasses(state: Match): List[Decision] =
     for
       teammate <- state.teams.teamOf(this).players.filter(!_.equals(this))
     yield this.decidePass(teammate)
@@ -35,7 +35,7 @@ trait CanDecideToPass:
 trait CanDecideToShoot:
   self: Player =>
   def decideShoot(goal: Position): Decision = Decision.Shoot(this, goal)
-  def possibleShots(matchState: MatchState): List[Decision] =
+  def possibleShots(matchState: Match): List[Decision] =
     val goalX: Int =
       if matchState.teams.head.players.contains(this)
       then UIConfig.goalEastX
@@ -50,7 +50,7 @@ trait CanDecideToShoot:
 trait CanDecideToMoveToGoal:
   self: Player =>
   def decideMoveToGoal(direction: Direction): Decision = Decision.MoveToGoal(direction)
-  def possibleMovesToGoal(matchState: MatchState): List[Decision] =
+  def possibleMovesToGoal(matchState: Match): List[Decision] =
     val goalPosition: Position =
       if matchState.teams.head.players.contains(this)
       then Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)
@@ -59,7 +59,7 @@ trait CanDecideToMoveToGoal:
 
 trait CanDecideToMark:
   self: Player =>
-  def decideMark(target: Player, teamId: Int): Decision = Decision.Mark(this, target, teamId)
+  def decideMark(target: Player, teamSide: Side): Decision = Decision.Mark(this, target, teamSide)
 
 trait CanDecideToTackle:
   self: Player =>

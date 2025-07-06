@@ -1,33 +1,41 @@
 package update.validate
 
-import model.Match.{Action, Decision, MatchState, Player, Team}
+import model.Match.{Action, Decision, Match, Player, Side, Team}
+import Side.West
 import Decision.*
 import config.MatchConfig
 import config.UIConfig
+import model.Match.Action.*
+import model.Match.Decision.*
 import model.Space.Position
-import dsl.game.TeamsSyntax.*
-import dsl.game.PlayerSyntax.*
-import dsl.space.PositionSyntax.*
-import dsl.space.DirectionSyntax.*
+import monads.States.*
+import dsl.MatchSyntax.*
+import dsl.SpaceSyntax.*
 
 import scala.util.Random
 
 object Validate:
-  def validate(state: MatchState): MatchState =
+  def validateStep: State[Match, Unit] =
+    State(s => (validate(s), ()))
+
+  def validate(state: Match): Match =
     val teamA: Team              = state.teams.teamA
     val teamB: Team              = state.teams.teamB
-    val validTeams: (Team, Team) = (validate(teamA), validate(teamB))
+    val validTeams: (Team, Team) = (teamA.validate(), teamB.validate())
     state.copy(teams = validTeams)
 
-  def validate(team: Team): Team =
-    Team(team.id, team.players.map(validate), team.hasBall)
+  extension (team: Team)
+    def validate(): Team =
+      team.copy(players = team.players.map(_.validate()))
 
-  def validate(player: Player): Player =
-    val accuracy = Random.nextDouble()
-    player.copy(nextAction =
-      if accuracy < getSuccessRate(player.decision) then getSuccessAction(player.decision)
-      else getFailureAction(player.decision, accuracy)
-    )
+  extension (player: Player)
+    def validate(): Player =
+      val accuracy = Random.nextDouble()
+      player.copy(nextAction =
+        if accuracy < getSuccessRate(player.decision)
+        then getSuccessAction(player.decision)
+        else getFailureAction(player.decision, accuracy)
+      )
 
   private def getSuccessRate(decision: Decision): Double =
     decision match
@@ -48,17 +56,17 @@ object Validate:
       case Intercept(ball)           => Action.Take(ball)
       case MoveToBall(direction)     => Action.Move(direction, MatchConfig.playerMaxSpeed)
       case MoveRandom(direction, _)  => Action.Move(direction, MatchConfig.playerSpeed)
-      case Mark(player, target, teamId) =>
+      case Mark(player, target, teamSide) =>
         if target.hasBall then
           Action.Move(player.position.getDirection(target.position), MatchConfig.playerSpeed)
         else
-          val strategicDirection = calculateMarkDirection(player, target, teamId)
+          val strategicDirection = calculateMarkDirection(player, target, teamSide)
           Action.Move(strategicDirection, MatchConfig.playerSpeed)
       case _ => Action.Initial
 
   private def getFailureAction(decision: Decision, accuracy: Double): Action =
     (decision, accuracy) match
-      case (Pass(from, to), _) => Action.Hit(from.position.getDirection(to.position).jitter, MatchConfig.ballSpeed)
+      case (Pass(from, to), _) => Action.Hit((from.position getDirection to.position).jitter, MatchConfig.ballSpeed)
       case (Tackle(_), _)      => Action.Stopped(MatchConfig.stoppedAfterTackle)
       case (Shoot(striker, goal), accuracy) => failedShoot(striker, goal, accuracy)
       case _                                => Action.Initial
@@ -76,8 +84,8 @@ object Validate:
       case _                   => Position(goal.x, goal.y + targetOffset.toInt)
     Action.Hit(striker.position.getDirection(newShootingTarget), MatchConfig.ballSpeed + 1)
 
-  private def calculateMarkDirection(defender: Player, target: Player, teamId: Int): model.Space.Direction =
-    val ownGoalX = if teamId == 1 then UIConfig.goalWestX else UIConfig.goalEastX
+  private def calculateMarkDirection(defender: Player, target: Player, teamSide: Side): model.Space.Direction =
+    val ownGoalX = if teamSide == West then UIConfig.goalWestX else UIConfig.goalEastX
     val ownGoalY = UIConfig.midGoalY
     val ownGoal  = Position(ownGoalX, ownGoalY)
 

@@ -14,7 +14,7 @@ import scala.util.Random
 class TestTeamsSyntax extends AnyFlatSpec with Matchers:
 
   "A (Team, Teams) " should " return its opponent if requested" in:
-    val teamA: Team         = Team(1, List(), true)
-    val teamB: Team         = Team(2, List())
+    val teamA: Team         = Team(List(), true)
+    val teamB: Team         = Team(List())
     val teams: (Team, Team) = (teamA, teamB)
-    (teams opponentOf teamB, teams opponentOf teamB.id) shouldBe (teamA, teamA)
+    teams opponentOf teamB shouldBe teamA

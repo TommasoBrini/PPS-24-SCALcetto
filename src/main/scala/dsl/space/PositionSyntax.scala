@@ -26,7 +26,7 @@ object PositionSyntax:
       if checkAxisOutOfBound(p.x, widthBound) && checkAxisOutOfBound(p.y, heightBound) then ObliqueBounce
       else if checkAxisOutOfBound(p.x, widthBound) then HorizontalBounce
       else VerticalBounce
-    def isGoal: Boolean =
+    def isInsideGoal: Boolean =
       val firstGoalPost: Int  = (UIConfig.fieldHeight - UIConfig.goalHeight) / 2
       val secondGoalPost: Int = firstGoalPost + UIConfig.goalHeight
       (p.x <= 0 || p.x >= UIConfig.fieldWidth) && (p.y >= firstGoalPost && p.y <= secondGoalPost)

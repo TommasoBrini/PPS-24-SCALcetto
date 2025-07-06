@@ -21,9 +21,9 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       ball = Some(Ball(Position(5, 5), Movement.still))
     ).asControlDecisionPlayer
     val teammate = Player(2, Position(6, 6), Movement.still).asTeammateDecisionPlayer
-    val team1    = Team(1, List(controlPlayer, teammate), hasBall = true)
-    val team2    = Team(2, List(), hasBall = false)
-    val state    = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1    = Team(List(controlPlayer, teammate), hasBall = true)
+    val team2    = Team(List(), hasBall = false)
+    val state    = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -33,9 +33,9 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
   it should "return Pass decision when teammate is available" in:
     val controlPlayer = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
     val teammate      = Player(2, Position(6, 6), Movement.still).asTeammateDecisionPlayer
-    val team1         = Team(1, List(controlPlayer, teammate), hasBall = true)
-    val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1         = Team(List(controlPlayer, teammate), hasBall = true)
+    val team2         = Team(List(), hasBall = false)
+    val state         = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -48,12 +48,12 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
         Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
         Movement.still,
         Some(Ball(Position(0, 0), Movement.still)),
-        Action.Initial,
-        Decision.Tackle(Ball(Position(0, 0), Movement.still))
+        Decision.Tackle(Ball(Position(0, 0), Movement.still)),
+        Action.Initial
       ).asControlDecisionPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
-    val team2 = Team(2, List())
-    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1 = Team(List(controlPlayer), hasBall = true)
+    val team2 = Team(List(), false)
+    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -65,12 +65,12 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
       Movement.still,
       Some(Ball(Position(0, 0), Movement.still)),
-      Action.Initial,
-      Decision.Tackle(Ball(Position(0, 0), Movement.still))
+      Decision.Tackle(Ball(Position(0, 0), Movement.still)),
+      Action.Initial
     ).asControlDecisionPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
-    val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1 = Team(List(controlPlayer), hasBall = true)
+    val team2 = Team(List(), hasBall = false)
+    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -84,12 +84,12 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
       Movement.still,
       Some(Ball(Position(0, 0), Movement.still)),
-      Action.Initial,
-      Decision.Tackle(Ball(Position(0, 0), Movement.still))
+      Decision.Tackle(Ball(Position(0, 0), Movement.still)),
+      Action.Initial
     ).asControlDecisionPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
-    val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState((team1, team2), ball)
+    val team1 = Team(List(controlPlayer), hasBall = true)
+    val team2 = Team(List(), hasBall = false)
+    val state = Match((team1, team2), ball)
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -102,12 +102,12 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
       Movement.still,
       Some(Ball(Position(0, 0), Movement.still)),
-      Action.Initial,
-      Decision.Tackle(Ball(Position(0, 0), Movement.still))
+      Decision.Tackle(Ball(Position(0, 0), Movement.still)),
+      Action.Initial
     ).asControlDecisionPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
-    val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1 = Team(List(controlPlayer), hasBall = true)
+    val team2 = Team(List(), hasBall = false)
+    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -121,12 +121,12 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
         Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
         Movement.still,
         Some(Ball(Position(0, 0), Movement.still)),
-        Action.Initial,
-        Decision.Tackle(Ball(Position(0, 0), Movement.still))
+        Decision.Tackle(Ball(Position(0, 0), Movement.still)),
+        Action.Initial
       ).asControlDecisionPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
-    val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1 = Team(List(controlPlayer), hasBall = true)
+    val team2 = Team(List(), hasBall = false)
+    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -136,9 +136,9 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
   it should "handle multiple possible decisions" in:
     val controlPlayer = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
     val teammate      = Player(2, Position(6, 6), Movement.still).asTeammateDecisionPlayer
-    val team1         = Team(1, List(controlPlayer, teammate), hasBall = true)
-    val team2         = Team(2, List(), hasBall = false)
-    val state         = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1         = Team(List(controlPlayer, teammate), hasBall = true)
+    val team2         = Team(List(), hasBall = false)
+    val state         = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
@@ -151,12 +151,12 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
       Movement.still,
       Some(Ball(Position(0, 0), Movement.still)),
-      Action.Initial,
-      Decision.Tackle(Ball(Position(0, 0), Movement.still))
+      Decision.Tackle(Ball(Position(0, 0), Movement.still)),
+      Action.Initial
     ).asControlDecisionPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
-    val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1 = Team(List(controlPlayer), hasBall = true)
+    val team2 = Team(List(), hasBall = false)
+    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision1 = controlPlayer.calculateBestDecision(state)
     val decision2 = controlPlayer.calculateBestDecision(state)
@@ -169,12 +169,12 @@ class ControlBehaviorSpec extends AnyFlatSpec with Matchers:
       Position(UIConfig.goalEastX - 2, UIConfig.midGoalY),
       Movement.still,
       Some(Ball(Position(0, 0), Movement.still)),
-      Action.Initial,
-      Decision.Tackle(Ball(Position(0, 0), Movement.still))
+      Decision.Tackle(Ball(Position(0, 0), Movement.still)),
+      Action.Initial
     ).asControlDecisionPlayer
-    val team1 = Team(1, List(controlPlayer), hasBall = true)
-    val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1 = Team(List(controlPlayer), hasBall = true)
+    val team2 = Team(List(), hasBall = false)
+    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = controlPlayer.calculateBestDecision(state)
 
