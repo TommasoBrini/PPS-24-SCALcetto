@@ -30,7 +30,7 @@ object CommonPlayerDecisions:
       * @return
       *   list of possible run decisions
       */
-    def generatePossibleRunDirections(matchState: MatchState): List[Decision] =
+    def generatePossibleRunDirections(matchState: Match): List[Decision] =
       val validDirections =
         for
           dx <- -1 to 1
@@ -77,7 +77,7 @@ trait CanDecideToPass:
     * @return
     *   list of possible pass decisions
     */
-  def generatePossiblePasses(matchState: MatchState): List[Decision] =
+  def generatePossiblePasses(matchState: Match): List[Decision] =
     for
       teammate <- matchState.teams.teamOf(this).players.filter(!_.equals(this))
     yield this.createPassDecision(teammate)
@@ -103,11 +103,11 @@ trait CanDecideToShoot:
     * @return
     *   list of possible shoot decisions
     */
-  def generatePossibleShots(matchState: MatchState): List[Decision] =
+  def generatePossibleShots(matchState: Match): List[Decision] =
     val goalPositions = determineGoalPositions(matchState)
     goalPositions.map(createShootDecision)
 
-  private def determineGoalPositions(matchState: MatchState): List[Position] =
+  private def determineGoalPositions(matchState: Match): List[Position] =
     val goalX = determineGoalXCoordinate(matchState)
     List(
       Position(goalX, UIConfig.firstPoleY),
@@ -115,7 +115,7 @@ trait CanDecideToShoot:
       Position(goalX, UIConfig.secondPoleY)
     )
 
-  private def determineGoalXCoordinate(matchState: MatchState): Int =
+  private def determineGoalXCoordinate(matchState: Match): Int =
     if Util.isPlayerInFirstTeam(this, matchState) then UIConfig.goalEastX else UIConfig.goalWestX
 
 /** Trait for players that can move towards the goal
@@ -138,12 +138,12 @@ trait CanDecideToMoveToGoal:
     * @return
     *   list of possible move to goal decisions
     */
-  def generatePossibleMovesToGoal(matchState: MatchState): List[Decision] =
+  def generatePossibleMovesToGoal(matchState: Match): List[Decision] =
     val goalPosition    = determineGoalPosition(matchState)
     val directionToGoal = this.position.getDirection(goalPosition)
     List(createMoveToGoalDecision(directionToGoal))
 
-  private def determineGoalPosition(matchState: MatchState): Position =
+  private def determineGoalPosition(matchState: Match): Position =
     if Util.isPlayerInFirstTeam(this, matchState) then
       Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)
     else
@@ -162,8 +162,8 @@ trait CanDecideToMark:
     * @return
     *   a mark decision
     */
-  def createMarkDecision(target: Player, teamId: Int): Decision =
-    Decision.Mark(this, target, teamId)
+  def createMarkDecision(target: Player, teamSide: Side): Decision =
+    Decision.Mark(this, target, teamSide)
 
 /** Trait for players that can tackle the ball
   */

@@ -11,9 +11,9 @@ object SimulationLoop:
 
   private var timer: Option[SwingTimer] = None
   private var view: SwingView           = _
-  private var state: MatchState         = _
+  private var state: Match              = _
 
-  def initialize(initialState: MatchState, initialFrameRate: Int = 30): Unit =
+  def initialize(initialState: Match, initialFrameRate: Int = 30): Unit =
     val delayMs: Int = 1000 / initialFrameRate
     state = initialState
     view = new SwingView(state)
@@ -41,9 +41,8 @@ object SimulationLoop:
   private def createTimer(delayMs: Int): Unit =
     val newTimer: SwingTimer = new SwingTimer(
       delayMs,
-      new ActionListener:
-        override def actionPerformed(e: ActionEvent): Unit =
-          state = update(state, Event.StepEvent)
-          view.render(state)
+      (e: ActionEvent) =>
+        state = update(state)
+        view.render(state)
     )
     timer = Some(newTimer)

@@ -31,7 +31,7 @@ object OpponentBehavior:
     *   the best decision for the player
     */
   extension (player: OpponentPlayer)
-    def calculateBestDecision(matchState: MatchState, target: Option[Player]): Decision =
+    def calculateBestDecision(matchState: Match, target: Option[Player]): Decision =
       player.nextAction match
         case Action.Stopped(remainingSteps) if remainingSteps > 0 =>
           continueConfusionState(player, remainingSteps)
@@ -59,7 +59,7 @@ object OpponentBehavior:
     * @return
     *   the selected defensive decision
     */
-  private def selectDefensiveAction(player: OpponentPlayer, matchState: MatchState, target: Option[Player]): Decision =
+  private def selectDefensiveAction(player: OpponentPlayer, matchState: Match, target: Option[Player]): Decision =
     val situation = analyzeDefensiveSituation(player, matchState)
 
     situation match
@@ -80,7 +80,7 @@ object OpponentBehavior:
     * @return
     *   the categorized defensive situation
     */
-  private def analyzeDefensiveSituation(player: OpponentPlayer, matchState: MatchState): DefensiveSituation =
+  private def analyzeDefensiveSituation(player: OpponentPlayer, matchState: Match): DefensiveSituation =
     val ballPlayer     = findBallCarrier(matchState)
     val distanceToBall = calculateDistanceToBall(player, matchState.ball)
     val distanceToBallCarrier = ballPlayer.map(carrier =>
@@ -104,7 +104,7 @@ object OpponentBehavior:
     * @return
     *   optional player carrying the ball
     */
-  private def findBallCarrier(matchState: MatchState): Option[Player] =
+  private def findBallCarrier(matchState: Match): Option[Player] =
     matchState.teams.players.find(_.hasBall)
 
   /** Calculates the distance between a player and the ball
@@ -159,12 +159,12 @@ object OpponentBehavior:
     */
   private def createMarkingOrMoveDecision(
       player: OpponentPlayer,
-      matchState: MatchState,
+      matchState: Match,
       target: Option[Player]
   ): Decision =
     target match
       case Some(targetPlayer) =>
-        val teamId = matchState.teams.teamOf(player).id
-        player.createMarkDecision(targetPlayer, teamId)
+        val team = matchState.teams.teamOf(player)
+        player.createMarkDecision(targetPlayer, team.side)
       case None =>
         createMoveToBallDecision(player, matchState.ball)

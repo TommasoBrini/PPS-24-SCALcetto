@@ -21,7 +21,7 @@ object BallCarrierBehavior:
     *   the best decision for the player
     */
   extension (player: BallCarrierPlayer)
-    def calculateBestDecision(state: MatchState): Decision =
+    def calculateBestDecision(state: Match): Decision =
       player.decision match
         case Decision.Run(direction, steps) if steps > 0 =>
           continueCurrentRun(player, direction, steps)
@@ -33,12 +33,9 @@ object BallCarrierBehavior:
   private def continueCurrentRun(player: Player, direction: Direction, remainingSteps: Int): Decision =
     player.createRunDecision(direction, remainingSteps - 1)
 
-  /** Selects the best decision from all possible options
-    *
-    * Generates all possible decisions for the player and rates them to find the optimal choice based on the current
-    * match state.
+  /** Selects the decision with the highest rating
     */
-  private def selectBestDecision(player: BallCarrierPlayer, state: MatchState): Decision =
+  private def selectBestDecision(player: BallCarrierPlayer, state: Match): Decision =
     val possibleDecisions = player.generateAllPossibleDecisions(state)
     val decisionRatings   = rateAllDecisions(possibleDecisions, player, state)
     selectHighestRatedDecision(decisionRatings)
@@ -47,14 +44,14 @@ object BallCarrierBehavior:
     *
     * Maps each decision to its rating using the appropriate rating function for the decision type.
     */
-  private def rateAllDecisions(decisions: List[Decision], player: Player, state: MatchState): Map[Decision, Double] =
+  private def rateAllDecisions(decisions: List[Decision], player: Player, state: Match): Map[Decision, Double] =
     decisions.map(decision =>
       (decision, calculateDecisionRating(decision, player, state))
     ).toMap
 
   /** Calculates the rating for a specific decision
     */
-  private def calculateDecisionRating(decision: Decision, player: Player, state: MatchState): Double =
+  private def calculateDecisionRating(decision: Decision, player: Player, state: Match): Double =
     decision match
       case run: Decision.Run               => run.rate(player, state)
       case pass: Decision.Pass             => pass.rate(state)

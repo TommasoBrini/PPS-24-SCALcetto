@@ -34,7 +34,7 @@ object TeammateBehavior:
     *   the best decision for the player
     */
   extension (player: TeammatePlayer)
-    def calculateBestDecision(state: MatchState): Decision =
+    def calculateBestDecision(state: Match): Decision =
       val situation = analyzeSituation(player, state)
       takeDecision(player, situation, state)
 
@@ -46,7 +46,7 @@ object TeammateBehavior:
     * @return
     *   the identified situation
     */
-  private def analyzeSituation(player: TeammatePlayer, state: MatchState): TeammateSituation =
+  private def analyzeSituation(player: TeammatePlayer, state: Match): TeammateSituation =
     player.nextAction match
       case Stopped(steps) if steps > 0 => TeammateSituation.Confusion(steps - 1)
       case _ =>
@@ -70,7 +70,7 @@ object TeammateBehavior:
   private def isBallInProximityAndNoOneHasBall(
       distanceToBall: Double,
       player: TeammatePlayer,
-      state: MatchState
+      state: Match
   ): Boolean =
     distanceToBall < MatchConfig.proximityRange && !state.teams.players.exists(_.hasBall)
 
@@ -97,7 +97,7 @@ object TeammateBehavior:
     * @return
     *   the decision to be made
     */
-  private def takeDecision(player: TeammatePlayer, situation: TeammateSituation, state: MatchState): Decision =
+  private def takeDecision(player: TeammatePlayer, situation: TeammateSituation, state: Match): Decision =
     situation match
       case TeammateSituation.Confusion(remainingSteps) =>
         player.createConfusionDecision(remainingSteps)

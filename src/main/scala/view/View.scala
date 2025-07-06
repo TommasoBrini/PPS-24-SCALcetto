@@ -11,7 +11,7 @@ import java.awt.BasicStroke
 import dsl.game.TeamsSyntax.*
 
 object View:
-  class MatchPanel(var state: MatchState) extends Panel:
+  class MatchPanel(var state: Match) extends Panel:
     background = Colors.backgroundColor
 
     override def paintComponent(g: Graphics2D): Unit =
@@ -43,9 +43,9 @@ object View:
       val circleY    = (fieldHeight - circleSize) / 2
       g.drawOval(circleX, circleY, circleSize, circleSize)
 
-      g.drawRect(0, ((fieldHeight - goalAreaHeight)) / 2, goalAreaWidth, goalAreaHeight)
+      g.drawRect(0, (fieldHeight - goalAreaHeight) / 2, goalAreaWidth, goalAreaHeight)
       g.drawRect(
-        (fieldWidth - goalAreaWidth),
+        fieldWidth - goalAreaWidth,
         (fieldHeight - goalAreaHeight) / 2,
         goalAreaWidth,
         goalAreaHeight
@@ -54,7 +54,7 @@ object View:
       drawCenteredOval(g, state.ball.position, ballSize, Colors.ballColor, Drawing.ballBorderWidth)
 
       g.setColor(Colors.goalColor)
-      g.fillRect(-(goalWidth), (fieldHeight - goalHeight) / 2, goalWidth, goalHeight)
+      g.fillRect(-goalWidth, (fieldHeight - goalHeight) / 2, goalWidth, goalHeight)
       g.fillRect(fieldWidth, (fieldHeight - goalHeight) / 2, goalWidth, goalHeight)
 
       val teamA  = state.teams.teamA
@@ -95,7 +95,7 @@ object View:
         repaint()
     }
 
-  class SwingView(initialState: MatchState):
+  class SwingView(initialState: Match):
     private val panel: MatchPanel    = new MatchPanel(initialState)
     private val infoPanel: InfoPanel = new InfoPanel()
 
@@ -165,6 +165,6 @@ object View:
           action
       }
 
-    def render(state: MatchState): Unit =
+    def render(state: Match): Unit =
       panel.state = state
       panel.repaint()

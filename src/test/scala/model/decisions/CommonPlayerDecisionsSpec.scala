@@ -10,6 +10,7 @@ import config.UIConfig
 import model.decisions.PlayerRoleFactory.*
 import config.MatchConfig
 import model.decisions.DecisionGenerator.*
+import Side.*
 
 class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
 
@@ -40,9 +41,9 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
 
   "CommonPlayerDecisions.possibleRuns" should "return list of Run decisions" in:
     val player = Player(1, Position(5, 5), Movement.still)
-    val team1  = Team(1, List(player), hasBall = true)
-    val team2  = Team(2, List(), hasBall = false)
-    val state  = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1  = Team(List(player), West, hasBall = true)
+    val team2  = Team(Nil, East, hasBall = false)
+    val state  = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleRuns = player.generatePossibleRunDirections(state)
 
@@ -53,9 +54,9 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
 
   it should "exclude stationary movement (0,0)" in:
     val player = Player(1, Position(5, 5), Movement.still)
-    val team1  = Team(1, List(player), hasBall = true)
-    val team2  = Team(2, List(), hasBall = false)
-    val state  = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1  = Team(List(player), West, hasBall = true)
+    val team2  = Team(Nil, East, hasBall = false)
+    val state  = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleRuns = player.generatePossibleRunDirections(state)
 
@@ -63,9 +64,9 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
 
   it should "include all valid movement directions" in:
     val player = Player(1, Position(5, 5), Movement.still)
-    val team1  = Team(1, List(player), hasBall = true)
-    val team2  = Team(2, List(), hasBall = false)
-    val state  = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1  = Team(List(player), West, hasBall = true)
+    val team2  = Team(Nil, East, hasBall = false)
+    val state  = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleRuns = player.generatePossibleRunDirections(state)
 
@@ -108,9 +109,9 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val teammate1 = Player(2, Position(6, 6), Movement.still)
     val teammate2 = Player(3, Position(7, 7), Movement.still)
     val opponent  = Player(4, Position(10, 10), Movement.still)
-    val team1     = Team(1, List(passer, teammate1, teammate2), hasBall = true)
-    val team2     = Team(2, List(opponent), hasBall = false)
-    val state     = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1     = Team(List(passer, teammate1, teammate2), West, hasBall = true)
+    val team2     = Team(List(opponent), East, hasBall = false)
+    val state     = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possiblePasses = passer.generatePossiblePasses(state)
 
@@ -125,9 +126,9 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
     val passer   = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
     val teammate = Player(2, Position(6, 6), Movement.still)
     val opponent = Player(3, Position(10, 10), Movement.still)
-    val team1    = Team(1, List(passer, teammate), hasBall = true)
-    val team2    = Team(2, List(opponent), hasBall = false)
-    val state    = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1    = Team(List(passer, teammate), West, hasBall = true)
+    val team2    = Team(List(opponent), East, hasBall = false)
+    val state    = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possiblePasses = passer.generatePossiblePasses(state)
 
@@ -136,9 +137,9 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
 
   it should "not include passes to self" in:
     val passer = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
-    val team1  = Team(1, List(passer), hasBall = true)
-    val team2  = Team(2, List(), hasBall = false)
-    val state  = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1  = Team(List(passer), West, hasBall = true)
+    val team2  = Team(Nil, East, hasBall = false)
+    val state  = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possiblePasses = passer.generatePossiblePasses(state)
 
@@ -155,9 +156,9 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
 
   "CanDecideToShoot.possibleShots" should "return list of Shoot decisions for all goal positions" in:
     val striker = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
-    val team1   = Team(1, List(striker), hasBall = true)
-    val team2   = Team(2, List(), hasBall = false)
-    val state   = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1   = Team(List(striker), West, hasBall = true)
+    val team2   = Team(Nil, East, hasBall = false)
+    val state   = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleShots = striker.generatePossibleShots(state)
 
@@ -169,9 +170,9 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
 
   it should "include correct goal positions for team 1" in:
     val striker = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
-    val team1   = Team(1, List(striker), hasBall = true)
-    val team2   = Team(2, List(), hasBall = false)
-    val state   = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1   = Team(List(striker), West, hasBall = true)
+    val team2   = Team(Nil, East, hasBall = false)
+    val state   = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleShots = striker.generatePossibleShots(state)
 
@@ -198,9 +199,9 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
       Movement.still,
       decision = Run(Direction(1, 0), MatchConfig.runSteps)
     ).asBallCarrierPlayer
-    val team1 = Team(1, List(player), hasBall = true)
-    val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1 = Team(List(player), West, hasBall = true)
+    val team2 = Team(Nil, East, hasBall = false)
+    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleMoves = player.generatePossibleMovesToGoal(state)
 
@@ -214,9 +215,9 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
       Movement.still,
       decision = Run(Direction(1, 0), MatchConfig.runSteps)
     ).asBallCarrierPlayer
-    val team1 = Team(1, List(player), hasBall = true)
-    val team2 = Team(2, List(), hasBall = false)
-    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
+    val team1 = Team(List(player), West, hasBall = true)
+    val team2 = Team(Nil, East, hasBall = false)
+    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possibleMoves = player.generatePossibleMovesToGoal(state)
 
@@ -229,7 +230,7 @@ class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:
   "CanDecideToMark.decideMark" should "create Mark decision with correct players" in:
     val marker   = Player(1, Position(5, 5), Movement.still).asOpponentPlayer
     val target   = Player(2, Position(6, 6), Movement.still)
-    val decision = marker.createMarkDecision(target, 1)
+    val decision = marker.createMarkDecision(target, West)
 
     decision shouldBe a[Mark]
     decision.asInstanceOf[Mark].defender shouldBe marker
