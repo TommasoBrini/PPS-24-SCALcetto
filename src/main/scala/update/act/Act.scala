@@ -1,16 +1,15 @@
 package update.act
 
 import config.{MatchConfig, UIConfig}
-import model.Space.*
-import model.Match.*
-import model.Match.Action.*
-import model.Match.Decision.{Intercept, Tackle}
+import model.Match.{Action, Ball, Decision, Match, Movement, Player, Team}
+import Action.*
+import Decision.Tackle
+import model.decisions.PlayerDecisionFactory.*
+import dsl.MatchSyntax.*
 import dsl.SpaceSyntax.*
-import monads.States.*
+import monads.States.State
 import update.Update.Event
-import update.Update.Event.*
-
-import scala.language.postfixOps
+import Event.*
 
 object Act:
 
@@ -36,6 +35,7 @@ object Act:
     def isBallOut: Boolean =
       state.ball.position.isOutOfBound(UIConfig.fieldWidth, UIConfig.fieldHeight)
 
+  // TODO - Test all this mud
   def existsSuccessfulTackle(state: Match): Boolean = state.players.exists {
     case Player(_, _, _, _, Tackle(_), Take(_)) => true
     case _                                      => false

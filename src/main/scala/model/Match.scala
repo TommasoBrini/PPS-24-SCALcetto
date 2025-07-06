@@ -1,10 +1,8 @@
 package model
 
-import Space.*
-
 object Match:
-
   export Space.*
+
   enum Action:
     case Initial
     case Stopped(remainingStep: Int)
@@ -28,16 +26,15 @@ object Match:
     case MoveRandom(direction: Direction, steps: Int)
     case ReceivePass(ball: Ball)
 
-  // TODO change this after making creational DSL
+  private type ID = Int
   case class Player(
-      id: Int,
+      id: ID,
       position: Position,
       movement: Movement = Movement.still,
       ball: Option[Ball] = None,
       decision: Decision = Decision.Initial,
       nextAction: Action = Action.Initial
-  ):
-    def hasBall: Boolean = ball.isDefined
+  )
 
   enum Side:
     case West, East
@@ -47,14 +44,12 @@ object Match:
     def apply(players: List[Player], hasBall: Boolean): Team = Team(players, West, hasBall)
     def apply(players: List[Player]): Team                   = Team(players, false)
 
-  case class Ball(position: Position, movement: Movement = Movement.still):
-    def isHeadingToward(player: Player, tolerance: Double): Boolean =
-      val toPlayer: Direction = position.getDirection(player.position)
-      val actual: Direction   = movement.direction
-      Math.abs(actual.x - toPlayer.x) + Math.abs(actual.y - toPlayer.y) < tolerance
+  case class Ball(position: Position, movement: Movement = Movement.still)
 
   case class Match(teams: (Team, Team), ball: Ball):
     def map(mapper: Match => Match): Match = mapper.apply(this)
     def mapIf(condition: Match => Boolean, mapper: Match => Match): Match =
       if condition.apply(this) then map(mapper) else this
     def players: List[Player] = teams._1.players ++ teams._2.players
+
+import Space.*

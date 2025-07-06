@@ -5,7 +5,7 @@ import config.UIConfig
 import model.decisions.PlayerDecisionFactory.*
 import model.Space.*
 import config.MatchConfig
-import dsl.SpaceSyntax.*
+import dsl.game.TeamsSyntax.*
 
 object CommonPlayerDecisions:
   extension (player: Player)

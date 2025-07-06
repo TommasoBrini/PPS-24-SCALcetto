@@ -1,10 +1,10 @@
 package config
 
-import dsl.SpaceSyntax.*
 import model.Match.{Match, Player, Team}
 import model.Space.{Direction, Position}
-
-import scala.collection.IterableOnce.*
+import dsl.game.PlayerSyntax.*
+import dsl.space.PositionSyntax.*
+import dsl.game.TeamsSyntax.*
 
 object Util:
 
@@ -13,17 +13,17 @@ object Util:
       case (ballCarrier :: Nil, rest) => (Some(ballCarrier), rest)
       case _                          => (None, attackers)
     var unassignedAttackers = others.toSet
-    var availableDefenders  = defenders.sortBy(_.id)
+    var availableDefenders  = defenders
     var markings            = Map.empty[Player, Player]
     withBallOpt.foreach { ballCarrier =>
-      val maybeDefender = availableDefenders.minByOption(_.position.getDistance(ballCarrier.position))
+      val maybeDefender = availableDefenders.minByOption(_.position distanceFrom ballCarrier.position)
       maybeDefender.foreach { defender =>
         markings += (defender -> ballCarrier)
         availableDefenders = availableDefenders.filterNot(_ == defender)
       }
     }
     availableDefenders.foreach { defender =>
-      val maybeTarget = unassignedAttackers.minByOption(_.position.getDistance(defender.position))
+      val maybeTarget = unassignedAttackers.minByOption(_.position distanceFrom defender.position)
       maybeTarget.foreach { target =>
         markings += (defender -> target)
         unassignedAttackers -= target
@@ -37,7 +37,7 @@ object Util:
       !positionIsInBetween(from, to, opponent.position)
     }
 
-  def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
+  private def positionIsInBetween(start: Position, end: Position, mid: Position): Boolean =
     val dx1       = end.x - start.x
     val dy1       = end.y - start.y
     val dx2       = mid.x - start.x

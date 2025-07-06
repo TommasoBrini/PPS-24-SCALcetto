@@ -3,7 +3,9 @@ import config.MatchConfig
 import model.Match.*
 import model.decisions.DecisorPlayer.OpponentPlayer
 import model.decisions.CommonPlayerDecisions.*
-import dsl.SpaceSyntax.*
+import dsl.game.TeamsSyntax.*
+import dsl.game.PlayerSyntax.*
+import dsl.space.PositionSyntax.*
 
 object OpponentBehavior:
   extension (player: OpponentPlayer)
@@ -11,8 +13,8 @@ object OpponentBehavior:
       val ballPlayer: Option[Player] = state.teams.players.find(_.hasBall)
 
       val ball: Ball                           = state.ball
-      val distanceToBall: Double               = player.position.getDistance(ball.position)
-      val distanceToBallPlayer: Option[Double] = ballPlayer.map(p => player.position.getDistance(p.position))
+      val distanceToBall: Double               = player.position distanceFrom ball.position
+      val distanceToBallPlayer: Option[Double] = ballPlayer.map(p => player.position distanceFrom p.position)
       val nextDecision: Decision = player.nextAction match
         case Action.Stopped(step) if step > 0 => player.decideConfusion(step - 1)
         case _ =>
@@ -26,5 +28,4 @@ object OpponentBehavior:
           else
             target.map(t => player.decideMark(t, state.teams.teamOf(player).side))
               .getOrElse(player.decideMoveToBall(player.position.getDirection(ball.position)))
-
       nextDecision

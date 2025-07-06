@@ -12,9 +12,13 @@ object Space:
   object Position:
     def apply(x: Int, y: Int): Position = (x, y)
   extension (p: Position)
-    def x: Int                            = p._1
-    def y: Int                            = p._2
-    def getDistance(p2: Position): Double = Math.hypot(p2.x - p.x, p2.y - p.y)
+    def x: Int = p._1
+    def y: Int = p._2
+    def getDirection(to: Position): Direction =
+      val dx = to.x - p.x
+      val dy = to.y - p.y
+      if dx == 0 && dy == 0 then Direction.none
+      else (dx / Math.hypot(dx, dy), dy / Math.hypot(dx, dy))
 
   opaque type Direction = (Double, Double)
   object Direction:
@@ -24,13 +28,6 @@ object Space:
   extension (d: Direction)
     def x: Double = d._1
     def y: Double = d._2
-
-  extension (p: Position)
-    def getDirection(to: Position): Direction =
-      val dx = to.x - p.x
-      val dy = to.y - p.y
-      if dx == 0 && dy == 0 then Direction.none
-      else (dx / Math.hypot(dx, dy), dy / Math.hypot(dx, dy))
 
   opaque type Movement = (Direction, Speed)
   extension (m: Movement)

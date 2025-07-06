@@ -5,6 +5,7 @@ import config.MatchConfig.*
 import model.Match.*
 import model.Match.Side.West
 import model.decisions.PlayerDecisionFactory.*
+import dsl.game.PlayerSyntax.*
 
 import scala.util.Random
 

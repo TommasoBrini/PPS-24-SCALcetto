@@ -1,45 +1,38 @@
 package update
 
-import model.Match.*
+import model.Match.Match
+import monads.States.State
 import init.GameInitializer.initialSimulationState
-import decide.Decide.*
-import validate.Validate.*
-import act.Act.{act, actStep, isBallOut, isGoal}
+import decide.Decide.decideStep
+import validate.Validate.validateStep
+import act.Act.actStep
 import config.UIConfig.*
-import dsl.SpaceSyntax.*
-import monads.States.*
+import dsl.space.PositionSyntax.*
+import dsl.space.MovementSyntax.*
 
 import scala.annotation.tailrec
 
 object Update:
   enum Event:
-    case BallOut, Goal, Restart
+    case BallOut, Goal
 
   def update(state: Match): Match =
-    val updateFlow: State[Match, Unit] =
+    val updateFlow: State[Match, Option[Event]] =
       for
         _     <- decideStep
         _     <- validateStep
         event <- actStep
-        end   <- handleEvent(event)
-      yield end
-    val (updated, _) = updateFlow.run(state)
-    updated
+      yield event
+    val (updated, event) = updateFlow.run(state)
+    handleEvent(updated, event)
 
   import Event.*
-  private def handleEvent(event: Option[Event]): State[Match, Unit] =
-    State(state => {
-      (
-        event match
-          case Some(BallOut) =>
-            val bounceType = state.ball.position getBounce (fieldWidth, fieldHeight)
-            state.copy(ball = state.ball.copy(movement = state.ball.movement getMovementFrom bounceType))
-          case Some(Goal) =>
-            println("Goal!!!")
-            initialSimulationState()
-          case Some(Restart) => initialSimulationState()
-          case _             => state
-        ,
-        ()
-      )
-    })
+  private def handleEvent(state: Match, event: Option[Event]): Match =
+    event match
+      case Some(BallOut) =>
+        val bounceType = state.ball.position getBounce (fieldWidth, fieldHeight)
+        state.copy(ball = state.ball.copy(movement = state.ball.movement getMovementFrom bounceType))
+      case Some(Goal) =>
+        println("Goal!!!")
+        initialSimulationState()
+      case _ => state

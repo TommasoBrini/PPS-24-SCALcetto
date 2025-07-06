@@ -8,7 +8,6 @@ import org.scalatest.matchers.should.Matchers
 
 import scala.Tuple
 import model.Match.Team
-import dsl.SpaceSyntax.*
 
 class GameInitializerSpec extends AnyFlatSpec with Matchers:
 

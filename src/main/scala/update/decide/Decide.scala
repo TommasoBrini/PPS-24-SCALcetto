@@ -5,7 +5,8 @@ import model.Match.*
 import model.decisions.DecisionMaker.*
 import monads.States.*
 import model.decisions.PlayerDecisionFactory.*
-import dsl.SpaceSyntax.TeamsSyntax.*
+import dsl.game.TeamsSyntax.*
+import dsl.game.PlayerSyntax.*
 
 object Decide:
 

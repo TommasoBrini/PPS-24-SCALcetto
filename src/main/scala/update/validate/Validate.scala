@@ -8,8 +8,9 @@ import config.UIConfig
 import model.Match.Action.*
 import model.Match.Decision.*
 import model.Space.Position
-import dsl.SpaceSyntax.*
 import monads.States.*
+import dsl.MatchSyntax.*
+import dsl.SpaceSyntax.*
 
 import scala.util.Random
 
@@ -65,12 +66,12 @@ object Validate:
 
   private def getFailureAction(decision: Decision, accuracy: Double): Action =
     (decision, accuracy) match
-      case (Pass(from, to), _) => Action.Hit(from.position.getDirection(to.position).jitter, MatchConfig.ballSpeed)
+      case (Pass(from, to), _) => Action.Hit((from.position getDirection to.position).jitter, MatchConfig.ballSpeed)
       case (Tackle(_), _)      => Action.Stopped(MatchConfig.stoppedAfterTackle)
       case (Shoot(striker, goal), accuracy) => failedShoot(striker, goal, accuracy)
       case _                                => Action.Initial
 
-  private def shootSuccess(striker: Player, goal: Position): Double = striker.position.getDistance(goal) match
+  private def shootSuccess(striker: Player, goal: Position): Double = striker.position distanceFrom goal match
     case goalDistance if goalDistance <= MatchConfig.lowDistanceToGoal  => 0.1
     case goalDistance if goalDistance <= MatchConfig.highDistanceToGoal => 0.4
     case _                                                              => 0.0

@@ -3,7 +3,8 @@ import model.Match.*
 import config.MatchConfig
 import config.Util
 import config.UIConfig
-import dsl.SpaceSyntax.TeamsSyntax.*
+import dsl.game.TeamsSyntax.*
+import dsl.space.PositionSyntax.*
 
 object ControlDecisionRating:
   extension (run: Decision.Run)
@@ -19,7 +20,7 @@ object ControlDecisionRating:
       val team        = state.teams.teamOf(pass.from)
       val pathClear   = Util.isPathClear(from, to, state, team)
       val advancement = if state.teams.head.players.contains(pass.from) then to.x - from.x else from.x - to.x
-      val distance    = from.getDistance(to)
+      val distance    = from distanceFrom to
       if !pathClear then 0.0
       else if distance < 30 && advancement > 20 then 1.0
       else if advancement > 50 && distance < 100 then 0.8
@@ -29,7 +30,7 @@ object ControlDecisionRating:
 
   extension (shoot: Decision.Shoot)
     def rate(state: Match): Double =
-      val distance = shoot.striker.position.getDistance(shoot.goal)
+      val distance = shoot.striker.position distanceFrom shoot.goal
       if (
         distance > MatchConfig.highDistanceToGoal || !Util.isPathClear(
           shoot.striker.position,
