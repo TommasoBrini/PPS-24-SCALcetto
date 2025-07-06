@@ -2,18 +2,24 @@ package dsl.creation.build
 
 import model.Match.*
 
-case class TeamBuilder(
-    side: Side,
-    private val players: List[Player] = List.empty,
-    private val hasBall: Boolean = false
-):
-  def withPlayer(newPlayer: Player): TeamBuilder =
-    copy(players = players :+ newPlayer)
+final class TeamBuilder(side: Side):
+  private val players = scala.collection.mutable.ListBuffer[PlayerBuilder]()
+  private var hasBall = false
 
-  def withPlayers(newPlayers: List[Player]): TeamBuilder =
-    copy(players = players ++ newPlayers)
+  def withBall: TeamBuilder = {
+    hasBall = true
+    this
+  }
 
-  def havingBall(has: Boolean = true): TeamBuilder =
-    copy(hasBall = has)
+  def player(id: ID): PlayerBuilder =
+    val player = PlayerBuilder(id)
+    players += player
+    player
 
-  def build(): Team = Team(players, side, hasBall)
+  def apply(body: TeamBuilder ?=> Unit): TeamBuilder =
+    body(using this)
+    this
+
+  /* materialise immutable model.Team */
+
+  def build(): Team = Team(players.map(_.build()).toList, side, hasBall)

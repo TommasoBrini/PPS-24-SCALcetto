@@ -2,18 +2,17 @@ package dsl.creation.build
 
 import model.Match.*
 
-case class MatchBuilder(
-    teams: (Team, Team),
-    ball: Ball,
-    matchSituation: MatchSituation
-):
-  def withTeams(teamA: Team, teamB: Team): MatchBuilder =
-    copy(teams = (teamA, teamB))
+final class MatchBuilder:
+  private val teams = scala.collection.mutable.ListBuffer[TeamBuilder]()
+  private val b     = BallBuilder()
 
-  def withBall(givenBall: Ball): MatchBuilder =
-    copy(ball = givenBall)
+  def team(side: Side): TeamBuilder =
+    val t = TeamBuilder(side)
+    teams += t
+    t
 
-  def withSituation(situation: MatchSituation): MatchBuilder =
-    copy(matchSituation = situation)
+  def ball: BallBuilder = b
 
-  def build(): Match = ???
+  def build(): Match =
+    require(teams.size == 2, "exactly two teams required")
+    Match((teams.head.build(), teams.last.build()), ball.build())
