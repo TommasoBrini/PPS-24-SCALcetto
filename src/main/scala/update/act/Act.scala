@@ -85,7 +85,9 @@ object Act:
       case Stopped(duration)      => player.copy(movement = Movement.still)
       case Take(ball)             => player.copy(movement = Movement.still)
       case _                      => player
-    def move(): Player = player.copy(position = player.position + player.movement)
+    def move(): Player =
+      val newPosition = (player.position + player.movement).clampToField
+      player.copy(position = newPosition)
 
   extension (ball: Ball)
     def updateMovement(carrier: Option[Player]): Ball = carrier match
