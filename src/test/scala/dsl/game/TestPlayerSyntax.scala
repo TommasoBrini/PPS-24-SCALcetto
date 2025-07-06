@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers.shouldBe
 import model.Match.{Ball, Player, Team}
 import model.Space.Bounce.*
 import model.decisions.PlayerDecisionFactory.*
-import PlayerSyntax.*
+import dsl.game.PlayerSyntax.*
 
 import scala.util.Random
 

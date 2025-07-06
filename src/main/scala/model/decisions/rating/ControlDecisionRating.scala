@@ -3,21 +3,22 @@ import model.Match.*
 import config.MatchConfig
 import config.Util
 import config.UIConfig
+import dsl.game.TeamsSyntax.*
 import dsl.space.PositionSyntax.*
 
 object ControlDecisionRating:
   extension (run: Decision.Run)
-    def rate(player: Player, state: MatchState): Double =
+    def rate(player: Player, state: Match): Double =
       if Util.isDirectionClear(player.position, run.direction, state)
       then 0.2
       else 0.0
 
   extension (pass: Decision.Pass)
-    def rate(state: MatchState): Double =
-      val from      = pass.from.position
-      val to        = pass.to.position
-      val teamId    = if state.teams.head.players.contains(pass.from) then state.teams.head.id else state.teams.last.id
-      val pathClear = Util.isPathClear(from, to, state, teamId)
+    def rate(state: Match): Double =
+      val from        = pass.from.position
+      val to          = pass.to.position
+      val team        = state.teams.teamOf(pass.from)
+      val pathClear   = Util.isPathClear(from, to, state, team)
       val advancement = if state.teams.head.players.contains(pass.from) then to.x - from.x else from.x - to.x
       val distance    = from distanceFrom to
       if !pathClear then 0.0
@@ -28,22 +29,21 @@ object ControlDecisionRating:
       else 0.0
 
   extension (shoot: Decision.Shoot)
-    def rate(state: MatchState): Double =
+    def rate(state: Match): Double =
       val distance = shoot.striker.position distanceFrom shoot.goal
-      val teamId = if state.teams.head.players.contains(shoot.striker) then state.teams.head.id else state.teams.last.id
       if (
         distance > MatchConfig.highDistanceToGoal || !Util.isPathClear(
           shoot.striker.position,
           shoot.goal,
           state,
-          teamId
+          state.teams.teamOf(shoot.striker)
         )
       ) then 0.0
       else if distance <= MatchConfig.lowDistanceToGoal then 1.0
       else 0.2
 
   extension (moveToGoal: Decision.MoveToGoal)
-    def rate(player: Player, state: MatchState): Double =
+    def rate(player: Player, state: Match): Double =
       val isTeamHead = state.teams.head.players.contains(player)
       val isOffensiveHalf =
         if isTeamHead

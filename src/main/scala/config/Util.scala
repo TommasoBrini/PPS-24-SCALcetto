@@ -1,8 +1,7 @@
 package config
 
-import model.Match.MatchState
+import model.Match.{Match, Player, Team}
 import model.Space.{Direction, Position}
-import model.Match.Player
 import dsl.game.PlayerSyntax.*
 import dsl.space.PositionSyntax.*
 import dsl.game.TeamsSyntax.*
@@ -14,7 +13,7 @@ object Util:
       case (ballCarrier :: Nil, rest) => (Some(ballCarrier), rest)
       case _                          => (None, attackers)
     var unassignedAttackers = others.toSet
-    var availableDefenders  = defenders.sortBy(_.id)
+    var availableDefenders  = defenders
     var markings            = Map.empty[Player, Player]
     withBallOpt.foreach { ballCarrier =>
       val maybeDefender = availableDefenders.minByOption(_.position distanceFrom ballCarrier.position)
@@ -32,8 +31,8 @@ object Util:
     }
     markings
 
-  def isPathClear(from: Position, to: Position, state: MatchState, teamId: Int): Boolean =
-    val opponents: List[Player] = (state.teams opponentOf teamId).players
+  def isPathClear(from: Position, to: Position, state: Match, team: Team): Boolean =
+    val opponents: List[Player] = (state.teams opponentOf team).players
     opponents.forall { opponent =>
       !positionIsInBetween(from, to, opponent.position)
     }
@@ -50,7 +49,7 @@ object Util:
         (mid.y >= Math.min(start.y, end.y) && mid.y <= Math.max(start.y, end.y))
     collinear && inSegment
 
-  def isDirectionClear(from: Position, dir: Direction, state: MatchState): Boolean =
+  def isDirectionClear(from: Position, dir: Direction, state: Match): Boolean =
     val opponents = state.teams.players.filterNot(_.hasBall)
     !opponents.exists { opponent =>
       val dx    = opponent.position.x - from.x

@@ -9,14 +9,12 @@ import dsl.space.PositionSyntax.*
 
 object OpponentBehavior:
   extension (player: OpponentPlayer)
-    def calculateBestDecision(matchState: MatchState, target: Option[Player]): Decision =
-      val ballPlayer: Option[Player] = matchState.teams.players.find(_.hasBall)
+    def calculateBestDecision(state: Match, target: Option[Player]): Decision =
+      val ballPlayer: Option[Player] = state.teams.players.find(_.hasBall)
 
-      val ball: Ball                           = matchState.ball
+      val ball: Ball                           = state.ball
       val distanceToBall: Double               = player.position distanceFrom ball.position
       val distanceToBallPlayer: Option[Double] = ballPlayer.map(p => player.position distanceFrom p.position)
-      val teamId                               = matchState.teams.teamOf(player).id
-
       val nextDecision: Decision = player.nextAction match
         case Action.Stopped(step) if step > 0 => player.decideConfusion(step - 1)
         case _ =>
@@ -28,6 +26,6 @@ object OpponentBehavior:
             then player.decideIntercept(ball)
             else player.decideMoveToBall(player.position.getDirection(ball.position))
           else
-            target.map(t => player.decideMark(t, teamId))
+            target.map(t => player.decideMark(t, state.teams.teamOf(player).side))
               .getOrElse(player.decideMoveToBall(player.position.getDirection(ball.position)))
       nextDecision

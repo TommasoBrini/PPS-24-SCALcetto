@@ -13,7 +13,7 @@ import dsl.game.PlayerSyntax.*
 
 object TeammateBehavior:
   extension (player: TeammatePlayer)
-    def calculateBestDecision(state: MatchState): Decision =
+    def calculateBestDecision(state: Match): Decision =
       player.nextAction match
         case Stopped(steps) if steps > 0 => player.decideConfusion(steps - 1)
         case _ =>

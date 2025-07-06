@@ -19,8 +19,8 @@ object DecisionMaker:
       * @return
       *   the best action for the player
       */
-    def decide(matchState: MatchState, markings: Map[Player, Player]): Decision = player match
+    def decide(matchState: Match, markings: Map[Player, Player]): Decision = player match
       case c: ControlPlayer  => ControlBehavior.calculateBestDecision(c)(matchState)
       case o: OpponentPlayer => OpponentBehavior.calculateBestDecision(o)(matchState, markings.get(player))
       case t: TeammatePlayer => TeammateBehavior.calculateBestDecision(t)(matchState)
-      case _                 => throw new IllegalArgumentException("Unknown player type")
+      case _                 => throw new IllegalArgumentException("Unknown player type: " + player)

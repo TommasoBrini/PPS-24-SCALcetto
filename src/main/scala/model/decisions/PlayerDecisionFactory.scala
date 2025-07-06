@@ -9,15 +9,15 @@ import scala.annotation.targetName
 object PlayerDecisionFactory:
   extension (p: Player)
     def asControlDecisionPlayer: ControlPlayer =
-      new Player(p.id, p.position, p.movement, p.ball, p.nextAction, p.decision) with CanDecideToPass
+      new Player(p.id, p.position, p.movement, p.ball, p.decision, p.nextAction) with CanDecideToPass
         with CanDecideToShoot with CanDecideToMoveToGoal
 
     def asOpponentDecisionPlayer: OpponentPlayer =
-      new Player(p.id, p.position, p.movement, p.ball, p.nextAction, p.decision) with CanDecideToMark
+      new Player(p.id, p.position, p.movement, p.ball, p.decision, p.nextAction) with CanDecideToMark
         with CanDecideToTackle with CanDecideToIntercept
 
     def asTeammateDecisionPlayer: TeammatePlayer =
-      new Player(p.id, p.position, p.movement, p.ball, p.nextAction, p.decision) with CanDecideToMoveRandom
+      new Player(p.id, p.position, p.movement, p.ball, p.decision, p.nextAction) with CanDecideToMoveRandom
         with CanDecideToReceivePass
 
 object DecisorPlayer:
@@ -27,7 +27,7 @@ object DecisorPlayer:
 
 object PossibleDecisionFactory:
   extension (player: ControlPlayer)
-    def possibleDecisions(state: MatchState): List[Decision] =
+    def possibleDecisions(state: Match): List[Decision] =
       player.possibleRunDirections(state) ++ player.possiblePasses(state) ++ player.possibleShots(
         state
       ) ++ player.possibleMovesToGoal(state)

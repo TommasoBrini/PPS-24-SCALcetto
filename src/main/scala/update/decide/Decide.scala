@@ -3,11 +3,18 @@ package update.decide
 import config.Util
 import model.Match.*
 import model.decisions.DecisionMaker.*
+import monads.States.*
+import model.decisions.PlayerDecisionFactory.*
+import dsl.game.TeamsSyntax.*
+import dsl.game.PlayerSyntax.*
 
 object Decide:
 
-  def decide(state: MatchState): MatchState =
-    state.teams match
+  def decideStep: State[Match, Unit] =
+    State(s => (decide(s), ()))
+
+  def decide(state: Match): Match =
+    state.teams.map(assignRoles) match
       case (teamA, teamB) =>
         val (defenders, attackers) =
           if teamA.hasBall then (teamB, teamA)
@@ -27,3 +34,11 @@ object Decide:
         val newTeamB: Team = teamB.copy(players = playersBDecided)
 
         state.copy(teams = (newTeamA, newTeamB))
+
+  private def assignRoles(team: Team): Team = {
+    team.copy(players = team.players.map(p => {
+      if p.hasBall then p.asControlDecisionPlayer
+      else if team.hasBall then p.asTeammateDecisionPlayer
+      else p.asOpponentDecisionPlayer
+    }))
+  }

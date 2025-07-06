@@ -1,97 +1,99 @@
 package update.act
 
-import config.UIConfig
-import config.MatchConfig
-import model.Match.{Action, Ball, MatchState, Movement, Team}
-import model.Match.Action.*
-import model.Match.Player
+import config.{MatchConfig, UIConfig}
+import model.Match.{Action, Ball, Decision, Match, Movement, Player, Team}
+import Action.*
+import Decision.Tackle
 import model.decisions.PlayerDecisionFactory.*
-import dsl.game.TeamsSyntax.*
-import dsl.game.PlayerSyntax.*
-import dsl.space.PositionSyntax.*
-import dsl.space.MovementSyntax.*
+import dsl.MatchSyntax.*
+import dsl.SpaceSyntax.*
+import monads.States.State
+import update.Update.Event
+import Event.*
 
 object Act:
-  def act(state: MatchState): MatchState =
-    val updateState: MatchState = move(updateMovements(state))
-    updatePlayers(updateState)
 
-  private[update] def updateMovements(state: MatchState): MatchState =
-    val newOwnerOpt = state.teams.players.find(_.nextAction match
-      case Take(_) => true
-      case _       => false
+  def actStep: State[Match, Option[Event]] =
+    State(s => {
+      val updated = s.act()
+      if isGoal(updated) then (updated, Some(Goal))
+      else if isBallOut(updated) then (updated, Some(BallOut))
+      else (updated, None)
+    })
+
+  extension (state: Match)
+    def act(): Match =
+      state
+        .mapIf(existsSuccessfulTackle, tackleBallCarrier)
+        .mapIf(isPossessionChanging, updateBallPossession)
+        .map(updateMovements)
+        .map(moveEntities)
+
+    def isGoal: Boolean =
+      state.ball.position.isInsideGoal
+
+    def isBallOut: Boolean =
+      state.ball.position.isOutOfBound(UIConfig.fieldWidth, UIConfig.fieldHeight)
+
+  // TODO - Test all this mud
+  def existsSuccessfulTackle(state: Match): Boolean = state.players.exists {
+    case Player(_, _, _, _, Tackle(_), Take(_)) => true
+    case _                                      => false
+  }
+
+  def isPossessionChanging(state: Match): Boolean = state.players.exists {
+    case Player(_, _, _, _, _, Take(_)) => true
+    case _                              => false
+  }
+
+  def tackleBallCarrier(state: Match): Match =
+    state.copy(teams =
+      state.teams.map((t: Team) =>
+        t.copy(players = t.players.map({
+          case p if p.hasBall => p.copy(ball = None, nextAction = Stopped(MatchConfig.stoppedAfterTackle))
+          case p              => p
+        }))
+      )
     )
-    val teamA = state.teams.teamA.copy(hasBall =
-      if newOwnerOpt.isDefined then state.teams.teamA.players.contains(newOwnerOpt.get) else state.teams.teamA.hasBall
-    )
-    val teamB = state.teams.teamB.copy(hasBall =
-      if newOwnerOpt.isDefined then state.teams.teamB.players.contains(newOwnerOpt.get) else state.teams.teamB.hasBall
-    )
 
-    val ballOwner: Option[Player] =
-      if newOwnerOpt.isDefined then newOwnerOpt else state.teams.players.find(_.hasBall)
+  def updateBallPossession(state: Match): Match =
+    state.copy(teams = state.teams.map(_.updateBallPossession()))
 
-    val updateTeams: (Team, Team) = (updateMovement(teamA, ballOwner), updateMovement(teamB, ballOwner))
+  def updateMovements(state: Match): Match =
+    val carrier = state.players.find(_.hasBall)
+    val teams   = state.teams.map(_.updateMovements())
+    val ball    = state.ball.updateMovement(carrier)
+    Match(teams, ball)
 
-    MatchState(
-      updateTeams,
-      updateMovement(state.ball, ballOwner)
-    )
+  def moveEntities(state: Match): Match = Match(state.teams.map(_.move()), state.ball.move())
 
-  private[update] def updateMovement(team: Team, ballOwner: Option[Player]): Team =
-    team.copy(players = team.players.map(updateMovement(_, ballOwner)))
+  extension (team: Team)
+    def updateBallPossession(): Team =
+      val updatedPlayers = team.players.map({
+        case p @ Player(_, _, _, _, _, Take(ball)) => p.copy(ball = Some(ball))
+        case p                                     => p
+      })
+      team.copy(players = updatedPlayers, hasBall = updatedPlayers.exists(_.hasBall))
+    def updateMovements(): Team = team.copy(players = team.players.map(_.updateMovement()))
+    def move(): Team            = team.copy(players = team.players.map(_.move()))
 
-  private[update] def updateMovement(player: Player, ballOwner: Option[Player]): Player =
-    if player.hasBall && ballOwner.isDefined && player.id != ballOwner.get.id then
-      player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(MatchConfig.stoppedAfterTackle))
-    else
-      player.nextAction match
-        case Take(ball) => player.copy(movement = Movement.still, ball = Some(ball))
-        case Hit(_, _) =>
-          player.copy(movement = Movement.still, ball = None, nextAction = Action.Stopped(MatchConfig.stoppedAfterHit))
-        case Move(direction, speed) => player.copy(movement = Movement(direction, speed))
-        case Stopped(step)          => player.copy(movement = Movement.still)
-        case _                      => player
+  extension (player: Player)
+    def updateMovement(): Player = player.nextAction match
+      case Hit(_, _) =>
+        player.copy(movement = Movement.still, ball = None, nextAction = Stopped(MatchConfig.stoppedAfterHit))
+      case Move(direction, speed) => player.copy(movement = Movement(direction, speed))
+      case Stopped(duration)      => player.copy(movement = Movement.still)
+      case Take(ball)             => player.copy(movement = Movement.still)
+      case _                      => player
+    def move(): Player = player.copy(position = player.position + player.movement)
 
-  private[update] def updateMovement(ball: Ball, playerInControl: Option[Player]): Ball =
-    val movement: Movement = playerInControl match
-      case Some(Player(_, _, _, _, Hit(direction, speed), _)) => Movement(direction, speed)
-      case Some(Player(_, _, movement, _, Move(_, _), _))     => movement
-      case _                                                  => ball.movement
-    val newPosition = playerInControl match
-      case Some(Player(_, p, m, _, _, _)) => p + (m * (UIConfig.ballSize / 2))
-      case _                              => ball.position
-    ball.copy(position = newPosition, movement = movement)
-
-  private[update] def move(state: MatchState): MatchState =
-    MatchState((move(state.teams.teamA), move(state.teams.teamB)), move(state.ball))
-
-  private[update] def move(team: Team): Team =
-    team.copy(players = team.players.map(move))
-
-  private[update] def move(p: Player) =
-    p.copy(position = (p.position + p.movement).clampToField)
-
-  private[update] def move(ball: Ball): Ball =
-    ball.copy(position = ball.position + ball.movement)
-
-  def isAGoal(state: MatchState): Boolean =
-    state.ball.position.isGoal
-
-  def isBallOut(state: MatchState): Boolean =
-    state.ball.position.isOutOfBound(UIConfig.fieldWidth, UIConfig.fieldHeight)
-
-  private def updatePlayers(state: MatchState): MatchState =
-    def updatedTeam(team: Team): Team =
-      val newPlayers: List[Player] = team.players.map { player =>
-        if !team.hasBall then
-          player.asOpponentDecisionPlayer
-        else if player.hasBall then
-          player.asControlDecisionPlayer
-        else {
-          player.asTeammateDecisionPlayer
-        }
-      }
-      team.copy(players = newPlayers)
-    val newTeams: (Team, Team) = (updatedTeam(state.teams.teamA), updatedTeam(state.teams.teamB))
-    state.copy(teams = newTeams)
+  extension (ball: Ball)
+    def updateMovement(carrier: Option[Player]): Ball = carrier match
+      case Some(Player(_, _, _, _, _, Hit(direction, speed))) => ball.copy(movement = Movement(direction, speed))
+      case Some(Player(_, position, _, _, _, Move(direction, speed))) =>
+        val movement = Movement(direction, speed)
+        ball.copy(position = position + (movement * (UIConfig.ballSize / 2)), movement = movement)
+      case Some(Player(_, position, movement, _, _, Take(ball))) =>
+        ball.copy(position = position + (movement * (UIConfig.ballSize / 2)), movement = movement)
+      case _ => ball
+    def move(): Ball = ball.copy(position = ball.position + ball.movement)
