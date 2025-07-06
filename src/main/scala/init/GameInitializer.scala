@@ -4,7 +4,7 @@ import config.UIConfig.*
 import config.MatchConfig.*
 import model.Match.*
 import model.Match.Side.West
-import model.decisions.PlayerDecisionFactory.*
+import model.decisions.PlayerRoleFactory.*
 import dsl.game.PlayerSyntax.*
 
 import scala.util.Random
@@ -39,6 +39,6 @@ object GameInitializer:
     val updated: List[Player] = side match
       case East =>
         val carrier = players.head.copy(position = Position(realFieldWidth / 2, realFieldHeight / 2), ball = Some(ball))
-        players.map(p => if p.id == carrier.id then carrier.asControlDecisionPlayer else p.asTeammateDecisionPlayer)
-      case _ => players.map(_.asOpponentDecisionPlayer)
+        players.map(p => if p.id == carrier.id then carrier.asBallCarrierPlayer else p.asTeammatePlayer)
+      case _ => players.map(_.asOpponentPlayer)
     Team(updated, side, hasBall = updated.exists(_.hasBall))

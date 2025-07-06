@@ -4,41 +4,57 @@ import config.Util
 import model.Match.*
 import model.decisions.DecisionMaker.*
 import monads.States.*
-import model.decisions.PlayerDecisionFactory.*
 import dsl.game.TeamsSyntax.*
 import dsl.game.PlayerSyntax.*
+import model.decisions.PlayerRoleFactory.*
 
 object Decide:
 
+  /** Main decision function that orchestrates the decision-making process for all players
+    */
   def decideStep: State[Match, Unit] =
     State(s => (decide(s), ()))
 
   def decide(state: Match): Match =
     state.teams.map(assignRoles) match
       case (teamA, teamB) =>
-        val (defenders, attackers) =
-          if teamA.hasBall then (teamB, teamA)
-          else (teamA, teamB)
+        val (defenders, attackers) = determineTeamRoles(teamA, teamB)
+        val markings               = Util.assignMarkings(defenders.players, attackers.players)
+        val updatedTeams           = updateBothTeams(teamA, teamB, state, markings)
+        state.copy(teams = updatedTeams)
 
-        val markings = Util.assignMarkings(defenders.players, attackers.players)
+  /** Determines which team has the ball and returns them as (defenders, attackers)
+    */
+  private def determineTeamRoles(teamA: Team, teamB: Team): (Team, Team) =
+    if teamA.hasBall then (teamB, teamA) else (teamA, teamB)
 
-        // TODO do some dry here
-        val playersADecided: List[Player] = teamA.players.map(player =>
-          player.copy(decision = player.decide(state, markings))
-        )
-        val newTeamA: Team = teamA.copy(players = playersADecided)
+  /** Updates both teams with new player decisions */
+  private def updateBothTeams(
+      teamA: Team,
+      teamB: Team,
+      state: Match,
+      markings: Map[Player, Player]
+  ): (Team, Team) =
+    val updatedTeamA = updateTeamDecisions(teamA, state, markings)
+    val updatedTeamB = updateTeamDecisions(teamB, state, markings)
+    (updatedTeamA, updatedTeamB)
 
-        val playersBDecided: List[Player] = teamB.players.map(player =>
-          player.copy(decision = player.decide(state, markings))
-        )
-        val newTeamB: Team = teamB.copy(players = playersBDecided)
+  /** Updates all players in a team with new decisions
+    */
+  private def updateTeamDecisions(team: Team, state: Match, markings: Map[Player, Player]): Team =
+    val updatedPlayers = team.players.map(player => updatePlayerDecision(player, state, markings))
+    team.copy(players = updatedPlayers)
 
-        state.copy(teams = (newTeamA, newTeamB))
+  /** Updates a single player's decision based on the current state and markings
+    */
+  private def updatePlayerDecision(player: Player, state: Match, markings: Map[Player, Player]): Player =
+    player.copy(decision = player.decide(state, markings))
 
-  private def assignRoles(team: Team): Team = {
-    team.copy(players = team.players.map(p => {
-      if p.hasBall then p.asControlDecisionPlayer
-      else if team.hasBall then p.asTeammateDecisionPlayer
-      else p.asOpponentDecisionPlayer
-    }))
-  }
+  private def assignRoles(team: Team): Team =
+    team.copy(players =
+      team.players.map(p =>
+        if p.hasBall then p.asBallCarrierPlayer
+        else if team.hasBall then p.asTeammatePlayer
+        else p.asOpponentPlayer
+      )
+    )

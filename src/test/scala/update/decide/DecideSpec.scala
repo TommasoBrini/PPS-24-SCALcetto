@@ -8,7 +8,7 @@ import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import Decide.*
-import model.decisions.PlayerDecisionFactory.*
+import model.decisions.PlayerRoleFactory.*
 import config.MatchConfig
 
 import dsl.game.TeamsSyntax.*
@@ -16,9 +16,9 @@ import dsl.game.TeamsSyntax.*
 class DecideSpec extends AnyFlatSpec with Matchers:
 
   "Decide.decide" should "update all players with new decisions" in:
-    val player1 = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
-    val player2 = Player(2, Position(10, 10), Movement.still).asOpponentDecisionPlayer
-    val player3 = Player(3, Position(15, 15), Movement.still).asTeammateDecisionPlayer
+    val player1 = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
+    val player2 = Player(2, Position(10, 10), Movement.still).asOpponentPlayer
+    val player3 = Player(3, Position(15, 15), Movement.still).asTeammatePlayer
     val team1   = Team(List(player1, player3), hasBall = true)
     val team2   = Team(List(player2))
     val ball    = Ball(Position(0, 0), Movement.still)
@@ -31,9 +31,9 @@ class DecideSpec extends AnyFlatSpec with Matchers:
     }
 
   it should "assign markings between defenders and attackers" in:
-    val attacker      = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
-    val defender      = Player(2, Position(10, 10), Movement.still).asOpponentDecisionPlayer
-    val teammate      = Player(3, Position(15, 15), Movement.still).asTeammateDecisionPlayer
+    val attacker      = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
+    val defender      = Player(2, Position(10, 10), Movement.still).asOpponentPlayer
+    val teammate      = Player(3, Position(15, 15), Movement.still).asTeammatePlayer
     val attackingTeam = Team(List(attacker, teammate), hasBall = true)
     val defendingTeam = Team(List(defender))
     val ball          = Ball(Position(0, 0), Movement.still)
@@ -58,9 +58,9 @@ class DecideSpec extends AnyFlatSpec with Matchers:
     updatedState.teams.players should have size 0
 
   it should "preserve team structure and ball state" in:
-    val player1  = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
-    val player2  = Player(2, Position(10, 10), Movement.still).asOpponentDecisionPlayer
-    val teammate = Player(3, Position(15, 15), Movement.still).asTeammateDecisionPlayer
+    val player1  = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
+    val player2  = Player(2, Position(10, 10), Movement.still).asOpponentPlayer
+    val teammate = Player(3, Position(15, 15), Movement.still).asTeammatePlayer
     val team1    = Team(List(player1, teammate), hasBall = true)
     val team2    = Team(List(player2), hasBall = false)
     val ball     = Ball(Position(15, 15), Movement(Direction(1, 1), 2))
@@ -73,10 +73,10 @@ class DecideSpec extends AnyFlatSpec with Matchers:
     updatedState.ball shouldBe ball
 
   it should "update decisions for multiple players per team" in:
-    val player1 = Player(1, Position(5, 5), Movement.still).asControlDecisionPlayer
-    val player2 = Player(2, Position(6, 6), Movement.still).asTeammateDecisionPlayer
-    val player3 = Player(3, Position(10, 10), Movement.still).asOpponentDecisionPlayer
-    val player4 = Player(4, Position(11, 11), Movement.still).asOpponentDecisionPlayer
+    val player1 = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
+    val player2 = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
+    val player3 = Player(3, Position(10, 10), Movement.still).asOpponentPlayer
+    val player4 = Player(4, Position(11, 11), Movement.still).asOpponentPlayer
 
     val team1 = Team(List(player1, player2), hasBall = true)
     val team2 = Team(List(player3, player4), hasBall = false)
@@ -95,13 +95,12 @@ class DecideSpec extends AnyFlatSpec with Matchers:
       Position(5, 5),
       Movement.still,
       decision = Run(Direction(1, 0), MatchConfig.runSteps)
-    ).asControlDecisionPlayer
-    val player2 =
-      Player(2, Position(10, 10), Movement.still, decision = Mark(player1, player1, East)).asOpponentDecisionPlayer
-    val team1 = Team(List(player1), side = West, hasBall = true)
-    val team2 = Team(List(player2), side = East, hasBall = false)
-    val ball  = Ball(Position(0, 0), Movement.still)
-    val state = Match((team1, team2), ball)
+    ).asBallCarrierPlayer
+    val player2 = Player(2, Position(10, 10), Movement.still, decision = Mark(player1, player1, East)).asOpponentPlayer
+    val team1   = Team(List(player1), side = West, hasBall = true)
+    val team2   = Team(List(player2), side = East, hasBall = false)
+    val ball    = Ball(Position(0, 0), Movement.still)
+    val state   = Match((team1, team2), ball)
 
     val updatedState = decide(state)
 
