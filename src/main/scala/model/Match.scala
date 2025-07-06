@@ -26,7 +26,7 @@ object Match:
     case MoveRandom(direction: Direction, steps: Int)
     case ReceivePass(ball: Ball)
 
-  private type ID = Int
+  type ID = Int
   case class Player(
       id: ID,
       position: Position,
