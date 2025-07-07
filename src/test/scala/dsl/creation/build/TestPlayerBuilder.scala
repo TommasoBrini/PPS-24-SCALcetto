@@ -13,8 +13,8 @@ final class TestPlayerBuilder extends AnyFlatSpec with Matchers {
       .at(5, 6)
       .move(Direction(0, 1))(speed = 4)
       .ownsBall(true)
-      .decision(Decision.Confusion(5))
-      .nextAction(Action.Stopped(4))
+      .decidedTo(Decision.Confusion(5))
+      .isGoingTo(Action.Stopped(4))
       .build()
 
     player.id shouldBe 42

@@ -21,15 +21,15 @@ class TestGenSituation extends AnyFlatSpec with Matchers {
     teamB.players should have size teamSize
 
   it should "assign the ball to one player in team B" in:
-    kickOff.teams.teamB.players.exists(_.ball.isDefined) shouldEqual false
-    kickOff.teams.teamA.players.exists(_.ball.isDefined) shouldEqual true
+    kickOff.teams.teamEast.players.exists(_.ball.isDefined) shouldEqual false
+    kickOff.teams.teamWest.players.exists(_.ball.isDefined) shouldEqual true
 
   it should "place the ball at the center of the field" in:
     kickOff.ball.position.x shouldEqual (fieldWidth / 2)
     kickOff.ball.position.y shouldEqual (fieldHeight / 2)
 
   it should "place players within the field boundaries" in:
-    kickOff.teams.teamA.players.foreach { player =>
+    kickOff.teams.teamWest.players.foreach { player =>
       player.position.x should be >= 1
       player.position.x should be <= fieldWidth - 2
       player.position.y should be >= 1

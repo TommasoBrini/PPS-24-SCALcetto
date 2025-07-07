@@ -2,16 +2,18 @@ package dsl.creation.build
 
 import model.Match.*
 
+import scala.collection.mutable.ListBuffer
+
 final class MatchBuilder:
-  private val teams = scala.collection.mutable.ListBuffer[TeamBuilder]()
-  private val b     = BallBuilder()
+  private val teams: ListBuffer[TeamBuilder] = ListBuffer[TeamBuilder]()
+  private val matchBall: BallBuilder         = BallBuilder()
 
   def team(side: Side): TeamBuilder =
-    val t = TeamBuilder(side)
-    teams += t
-    t
+    val newTeam: TeamBuilder = TeamBuilder(side)
+    teams += newTeam
+    newTeam
 
-  def ball: BallBuilder = b
+  def ball: BallBuilder = matchBall
 
   def build(): Match =
     require(teams.size == 2, "exactly two teams required")

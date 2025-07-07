@@ -6,6 +6,7 @@ import model.Match.{Match, Side}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.*
+import dsl.MatchSyntax.*
 
 /** Behaviour-as-documentation tests for the CreationSyntax DSL. */
 final class TestMatchCreationSyntax extends AnyFlatSpec with Matchers {
@@ -44,8 +45,8 @@ final class TestMatchCreationSyntax extends AnyFlatSpec with Matchers {
       }
       ball.at(50, 35)
     }
-    matchObj.teams._1.hasBall shouldBe true // only West starts with the ball
-    matchObj.teams._2.hasBall shouldBe false
+    matchObj.teams.teamWest.hasBall shouldBe true // only West starts with the ball
+    matchObj.teams.teamEast.hasBall shouldBe false
   }
 
   it should "throw when fewer than two teams are provided" in {

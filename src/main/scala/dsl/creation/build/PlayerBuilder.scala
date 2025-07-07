@@ -3,38 +3,37 @@ package dsl.creation.build
 import model.Match.*
 
 final class PlayerBuilder(id: Int):
-  private var pos: Position        = Position(0, 0)
-  private var mov: Movement        = Movement.still
-  private var ballPresent: Boolean = false
-  private var decision: Decision   = Decision.Initial
-  private var action: Action       = Action.Initial
+  private var position: Position = Position(0, 0)
+  private var motion: Movement   = Movement.still
+  private var withBall: Boolean  = false
+  private var decision: Decision = Decision.Initial
+  private var action: Action     = Action.Initial
 
   /* DSL words */
   def at(x: Int, y: Int): PlayerBuilder = {
-    pos = Position(x, y)
+    position = Position(x, y)
     this
   }
 
   def move(dir: Direction)(speed: Int): PlayerBuilder =
-    mov = Movement(Direction(dir.x, dir.y), speed)
+    motion = Movement(Direction(dir.x, dir.y), speed)
     this
 
-  infix def ownsBall(hasBall: Boolean): PlayerBuilder = {
-    ballPresent = hasBall
-    this
-  }
-
-  def decision(d: Decision): PlayerBuilder = {
-    decision = d
+  def ownsBall(hasBall: Boolean): PlayerBuilder = {
+    withBall = hasBall
     this
   }
 
-  def nextAction(a: Action): PlayerBuilder = {
-    action = a
+  def decidedTo(playerDecision: Decision): PlayerBuilder = {
+    decision = playerDecision
     this
   }
 
-  // materialise immutable Player
+  def isGoingTo(playerAction: Action): PlayerBuilder = {
+    action = playerAction
+    this
+  }
+
   def build(): Player =
-    val ball = if ballPresent then Some(Ball(pos)) else None
-    Player(id, pos, mov, ball, decision, action)
+    val ball = if withBall then Some(Ball(position)) else None
+    Player(id, position, motion, ball, decision, action)

@@ -7,7 +7,7 @@ import model.Match.Side.{East, West}
 import dsl.creation.CreationSyntax.*
 import dsl.creation.build.MatchBuilder
 import dsl.creation.build.TeamBuilder
-import model.Space.{Direction, Movement}
+import model.Space.Direction
 import dsl.MatchSyntax.*
 
 import scala.util.Random
@@ -17,7 +17,7 @@ object GenSituation:
     newMatch {
 
       /* ---------- WEST team (ball carrier) ---------- */
-      team(West).withBall { // makes mb: TeamBuilder implicit
+      team(West) withBall { // makes mb: TeamBuilder implicit
         val minX = 1
         val maxX = fieldWidth / 2 - 1
 
@@ -41,7 +41,7 @@ object GenSituation:
           val x = Random.between(minX, maxX + 1)
           val y = Random.between(1, fieldHeight)
           // East IDs are 20, 21, 22 …
-          player(East.seed * 10 + idx).at(x, y)
+          player(East.seed * 10 + idx) at (x, y)
         }
       }
 

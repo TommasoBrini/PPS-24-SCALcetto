@@ -2,10 +2,8 @@ package update.validate
 
 import model.Match.{Action, Decision, Match, Player, Side, Team}
 import Side.West
-import Decision.*
 import config.MatchConfig
 import config.UIConfig
-import model.Match.Action.*
 import model.Match.Decision.*
 import model.Space.Position
 import monads.States.*
@@ -19,9 +17,9 @@ object Validate:
     State(s => (validate(s), ()))
 
   def validate(state: Match): Match =
-    val teamA: Team              = state.teams.teamA
-    val teamB: Team              = state.teams.teamB
-    val validTeams: (Team, Team) = (teamA.validate(), teamB.validate())
+    val teamWest: Team           = state.teams.teamWest
+    val teamEast: Team           = state.teams.teamEast
+    val validTeams: (Team, Team) = (teamWest.validate(), teamEast.validate())
     state.copy(teams = validTeams)
 
   extension (team: Team)

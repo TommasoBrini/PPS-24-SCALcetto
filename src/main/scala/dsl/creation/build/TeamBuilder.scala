@@ -1,10 +1,11 @@
 package dsl.creation.build
 
 import model.Match.*
+import scala.collection.mutable.ListBuffer
 
 final class TeamBuilder(side: Side):
-  private val players = scala.collection.mutable.ListBuffer[PlayerBuilder]()
-  private var hasBall = false
+  private val players: ListBuffer[PlayerBuilder] = ListBuffer[PlayerBuilder]()
+  private var hasBall: Boolean                   = false
 
   def withBall: TeamBuilder = {
     hasBall = true
@@ -19,7 +20,5 @@ final class TeamBuilder(side: Side):
   def apply(body: TeamBuilder ?=> Unit): TeamBuilder =
     body(using this)
     this
-
-  /* materialise immutable model.Team */
 
   def build(): Team = Team(players.map(_.build()).toList, side, hasBall)

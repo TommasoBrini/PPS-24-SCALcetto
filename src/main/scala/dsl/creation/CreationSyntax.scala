@@ -2,6 +2,7 @@ package dsl.creation
 
 import dsl.creation.build.{BallBuilder, MatchBuilder, PlayerBuilder, TeamBuilder}
 import model.Match.{Match, Side}
+import scala.language.postfixOps
 
 object CreationSyntax:
   def newMatch(body: MatchBuilder ?=> Unit): Match =
@@ -11,6 +12,9 @@ object CreationSyntax:
 
   def team(side: Side)(using mb: MatchBuilder): TeamBuilder =
     mb.team(side)
+
+  def teamSolo(side: Side): TeamBuilder =
+    TeamBuilder(side)
 
   def ball(using mb: MatchBuilder): BallBuilder =
     mb.ball
