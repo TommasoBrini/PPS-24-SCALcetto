@@ -2,11 +2,11 @@ package update
 
 import model.Match.Match
 import monads.States.State
-import init.GameInitializer.initialSimulationState
 import decide.Decide.decideStep
 import validate.Validate.validateStep
 import act.Act.actStep
 import config.UIConfig.*
+import dsl.creation.GenSituation
 import dsl.space.PositionSyntax.*
 import dsl.space.MovementSyntax.*
 
@@ -34,5 +34,5 @@ object Update:
         state.copy(ball = state.ball.copy(movement = state.ball.movement getMovementFrom bounceType))
       case Some(Goal) =>
         println("Goal!!!")
-        initialSimulationState()
+        GenSituation.kickOff
       case _ => state

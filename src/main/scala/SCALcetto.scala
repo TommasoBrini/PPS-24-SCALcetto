@@ -1,12 +1,12 @@
 import model.Match.*
 import SimulationLoop.*
-import init.GameInitializer
+import dsl.creation.GenSituation
 
 /** new version -> v1.0.0
   */
 
 @main def SCALcetto(): Unit =
 
-  val initialState: Match = GameInitializer.initialSimulationState()
+  val initialState: Match = GenSituation.kickOff
 
   initialize(initialState, 50)

@@ -1,6 +1,7 @@
 package dsl.game
 
-import model.Match.{Player, Team}
+import model.Match.Side.{East, West}
+import model.Match.{Player, Side, Team}
 
 export TeamsSyntax.*
 
@@ -26,3 +27,8 @@ object TeamsSyntax:
     def teamOf(player: Player): Team       = getTeamOf(teams, player)
     def withBall: Option[Team]             = getTeamWithBall(teams)
     def map(f: Team => Team): (Team, Team) = (f(teams._1), f(teams._2))
+
+  extension (side: Side)
+    def seed: Int = side match
+      case West => 1
+      case East => 2

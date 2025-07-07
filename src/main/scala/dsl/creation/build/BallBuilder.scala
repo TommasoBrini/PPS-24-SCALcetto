@@ -7,10 +7,10 @@ final class BallBuilder:
   private var pos: Position = Position(0, 0)
   private var mov: Movement = Movement.still
 
-  def at(x: Int, y: Int): this.type =
+  def at(x: Int, y: Int): BallBuilder =
     pos = Position(x, y)
     this
-  def move(dir: Direction)(speed: Int): this.type =
+  def move(dir: Direction, speed: Int): BallBuilder =
     mov = Movement(Direction(dir.x, dir.y), speed)
     this
 

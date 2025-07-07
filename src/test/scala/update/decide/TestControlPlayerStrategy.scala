@@ -5,7 +5,6 @@ import org.scalatest.matchers.should.Matchers
 import model.Match.*
 import config.UIConfig.*
 import config.MatchConfig.*
-import init.GameInitializer.{realFieldHeight, realFieldWidth}
 import junit.runner.Version.id
 
 import scala.::
