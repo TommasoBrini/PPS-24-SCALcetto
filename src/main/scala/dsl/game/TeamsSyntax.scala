@@ -19,9 +19,25 @@ object TeamsSyntax:
     else if teams.teamEast.hasBall then Option(teams.teamEast)
     else Option.empty
 
+  private def getWestTeam(teams: (Team, Team)): Team = (teams._1.side, teams._2.side) match
+    case (West, East) => teams._1
+    case (East, West) => teams._2
+    case _ =>
+      throw new IllegalArgumentException(
+        s"Unexpected sides: ${teams._1.side} & ${teams._2.side}"
+      )
+
+  private def getEastTeam(teams: (Team, Team)): Team = (teams._1.side, teams._2.side) match
+    case (West, East) => teams._2
+    case (East, West) => teams._1
+    case _ =>
+      throw new IllegalArgumentException(
+        s"Unexpected sides: ${teams._1.side} & ${teams._2.side}"
+      )
+
   extension (teams: (Team, Team))
-    def teamWest: Team                     = teams._1
-    def teamEast: Team                     = teams._2
+    def teamWest: Team                     = getWestTeam(teams)
+    def teamEast: Team                     = getEastTeam(teams)
     def opponentOf(team: Team): Team       = getOpponent(teams, team)
     def players: List[Player]              = teamWest.players ::: teamEast.players
     def teamOf(player: Player): Team       = getTeamOf(teams, player)

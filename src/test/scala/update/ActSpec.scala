@@ -8,6 +8,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import update.act.Act.*
 import dsl.MatchSyntax.players
+import Side.*
 
 class ActSpec extends AnyFlatSpec with Matchers:
   val defaultSpeed                = 1
@@ -17,8 +18,9 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val initialPosition = Position(0, 0)
     val player =
       Player(0, initialPosition, movement = Movement.still, nextAction = Move(defaultDirection, defaultSpeed))
-    val team           = Team(List(player))
-    val state          = Match((team, team), Ball(Position(0, 0)))
+    val teamA          = Team(List(player), East)
+    val teamB          = Team(List(player), West)
+    val state          = Match((teamA, teamB), Ball(Position(0, 0)))
     val updated: Match = state.act()
     updated.teams.players
       .forall(_.movement == Movement(defaultDirection, defaultSpeed)) should be(true)

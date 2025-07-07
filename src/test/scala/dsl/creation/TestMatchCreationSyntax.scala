@@ -13,21 +13,12 @@ final class TestMatchCreationSyntax extends AnyFlatSpec with Matchers {
 
   /* ------------------------------------------------------------------ */
   "newMatch" should "assemble a complete Match when two teams and a ball are declared" in {
-    val kickoff: Match = newMatch {
-
-      team(Side.West) {       // implicit TeamBuilder in scope
-        player(10).at(10, 20) // West striker
-      }
-
-      team(Side.East) {
-        player(20).at(80, 20) // East striker
-      }
-
-      ball // DSL object
-        .at(45, 30)
-        .move(Direction(0, 0), 0)
-    }
-
+    val kickoff: Match = newMatch:
+      team(Side.West):         // implicit TeamBuilder in scope
+        player(10) at (10, 20) // West striker
+      team(Side.East):
+        player(20) at (80, 20) // East striker
+      ball at (45, 30) move (Direction(0, 0), 0)
     val (west, east) = kickoff.teams
     west.side shouldBe Side.West
     east.side shouldBe Side.East
