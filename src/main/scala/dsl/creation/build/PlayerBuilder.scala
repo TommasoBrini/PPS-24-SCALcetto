@@ -9,30 +9,25 @@ final class PlayerBuilder(id: Int):
   private var decision: Decision = Decision.Initial
   private var action: Action     = Action.Initial
 
-  /* DSL words */
-  def at(x: Int, y: Int): PlayerBuilder = {
+  def at(x: Int, y: Int): PlayerBuilder =
     position = Position(x, y)
     this
-  }
 
   def move(dir: Direction)(speed: Int): PlayerBuilder =
     motion = Movement(Direction(dir.x, dir.y), speed)
     this
 
-  def ownsBall(hasBall: Boolean): PlayerBuilder = {
+  def ownsBall(hasBall: Boolean): PlayerBuilder =
     withBall = hasBall
     this
-  }
 
-  def decidedTo(playerDecision: Decision): PlayerBuilder = {
+  def decidedTo(playerDecision: Decision): PlayerBuilder =
     decision = playerDecision
     this
-  }
 
-  def isGoingTo(playerAction: Action): PlayerBuilder = {
+  def isGoingTo(playerAction: Action): PlayerBuilder =
     action = playerAction
     this
-  }
 
   def build(): Player =
     val ball = if withBall then Some(Ball(position)) else None

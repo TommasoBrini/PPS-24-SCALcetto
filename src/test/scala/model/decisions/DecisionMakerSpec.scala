@@ -27,7 +27,7 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
   it should "return a decision for OpponentPlayer" in:
     val opponentPlayer = Player(2, Position(10, 10), Movement.still).asOpponentPlayer
     val team1          = Team(List(), West, hasBall = true)
-    val team2          = Team(List(opponentPlayer), East, hasBall = false)
+    val team2          = Team(List(opponentPlayer), East)
     val state          = Match((team1, team2), Ball(Position(0, 0), Movement.still))
     val markings       = Map[Player, Player]()
 

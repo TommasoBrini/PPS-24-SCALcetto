@@ -7,10 +7,9 @@ final class TeamBuilder(side: Side):
   private val players: ListBuffer[PlayerBuilder] = ListBuffer[PlayerBuilder]()
   private var hasBall: Boolean                   = false
 
-  def withBall: TeamBuilder = {
+  def withBall: TeamBuilder =
     hasBall = true
     this
-  }
 
   def player(id: ID): PlayerBuilder =
     val player = PlayerBuilder(id)
