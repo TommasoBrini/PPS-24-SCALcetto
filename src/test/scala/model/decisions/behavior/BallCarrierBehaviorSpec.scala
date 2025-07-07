@@ -5,8 +5,8 @@ import model.Match.Decision.*
 import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import model.decisions.behavior.BallCarrierBehavior.*
-import model.decisions.PlayerRoleFactory.*
+import dsl.decisions.behavior.BallCarrierBehavior.*
+import dsl.decisions.PlayerRoleFactory.*
 import config.UIConfig
 import model.Match.Action
 

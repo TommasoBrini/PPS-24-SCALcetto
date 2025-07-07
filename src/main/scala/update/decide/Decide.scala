@@ -2,11 +2,11 @@ package update.decide
 
 import config.Util
 import model.Match.*
-import model.decisions.DecisionMaker.*
+import dsl.decisions.DecisionMaker.*
 import monads.States.*
 import dsl.game.TeamsSyntax.*
 import dsl.game.PlayerSyntax.*
-import model.decisions.PlayerRoleFactory.*
+import dsl.decisions.PlayerRoleFactory.*
 
 object Decide:
 

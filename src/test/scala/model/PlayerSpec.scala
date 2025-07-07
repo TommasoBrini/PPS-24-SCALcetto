@@ -5,10 +5,10 @@ import model.Match.*
 import Side.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import model.decisions.PlayerRoleFactory.*
-import model.decisions.PlayerTypes.*
+import dsl.decisions.PlayerRoleFactory.*
+import dsl.decisions.PlayerTypes.*
 import config.MatchConfig
-import model.decisions.CommonPlayerDecisions.*
+import dsl.decisions.CommonPlayerDecisions.*
 
 class PlayerSpec extends AnyFlatSpec with Matchers:
   "A Player" should "store id, position, and movement correctly" in:

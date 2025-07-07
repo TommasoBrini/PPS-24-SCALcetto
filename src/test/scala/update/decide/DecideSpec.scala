@@ -8,7 +8,7 @@ import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import Decide.*
-import model.decisions.PlayerRoleFactory.*
+import dsl.decisions.PlayerRoleFactory.*
 import config.MatchConfig
 
 import dsl.game.TeamsSyntax.*

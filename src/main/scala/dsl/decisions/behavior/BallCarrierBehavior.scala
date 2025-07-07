@@ -1,11 +1,11 @@
-package model.decisions.behavior
+package dsl.decisions.behavior
 
 import model.Match.*
-import model.decisions.PlayerTypes.*
-import model.decisions.CommonPlayerDecisions.*
-import model.decisions.DecisionGenerator.*
-import model.decisions.rating.BallCarrierDecisionRating.*
-import model.decisions.PlayerRoleFactory.*
+import dsl.decisions.PlayerTypes.*
+import dsl.decisions.CommonPlayerDecisions.*
+import dsl.decisions.DecisionGenerator.*
+import dsl.decisions.rating.BallCarrierDecisionRating.*
+import dsl.decisions.PlayerRoleFactory.*
 
 /** Behavior implementation for ball carrier players
   */

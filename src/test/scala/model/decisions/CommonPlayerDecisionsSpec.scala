@@ -5,11 +5,11 @@ import model.Match.Decision.*
 import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import model.decisions.CommonPlayerDecisions.*
+import dsl.decisions.CommonPlayerDecisions.*
 import config.UIConfig
-import model.decisions.PlayerRoleFactory.*
+import dsl.decisions.PlayerRoleFactory.*
 import config.MatchConfig
-import model.decisions.DecisionGenerator.*
+import dsl.decisions.DecisionGenerator.*
 import Side.*
 
 class CommonPlayerDecisionsSpec extends AnyFlatSpec with Matchers:

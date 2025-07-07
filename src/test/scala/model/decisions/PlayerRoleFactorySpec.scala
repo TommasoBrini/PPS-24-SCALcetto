@@ -5,11 +5,11 @@ import model.Match.Decision.*
 import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import model.decisions.PlayerRoleFactory.*
-import model.decisions.PlayerTypes.*
-import model.decisions.DecisionGenerator.*
+import dsl.decisions.PlayerRoleFactory.*
+import dsl.decisions.PlayerTypes.*
+import dsl.decisions.DecisionGenerator.*
 import config.MatchConfig
-import model.decisions.CommonPlayerDecisions.*
+import dsl.decisions.CommonPlayerDecisions.*
 import dsl.game.TeamsSyntax.*
 
 class PlayerRoleFactorySpec extends AnyFlatSpec with Matchers:

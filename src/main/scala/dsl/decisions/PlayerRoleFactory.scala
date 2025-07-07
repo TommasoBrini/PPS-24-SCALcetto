@@ -1,9 +1,9 @@
-package model.decisions
+package dsl.decisions
 
 import model.Match.*
 import config.UIConfig
-import model.decisions.CommonPlayerDecisions.*
-import model.decisions.PlayerTypes.*
+import CommonPlayerDecisions.*
+import PlayerTypes.*
 
 /** Factory for creating specialized player instances with specific decision-making capabilities
   */

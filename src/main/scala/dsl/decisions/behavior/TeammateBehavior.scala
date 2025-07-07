@@ -1,12 +1,12 @@
-package model.decisions.behavior
+package dsl.decisions.behavior
 
 import config.MatchConfig
 import model.Match.*
 import model.Match.Action.Stopped
 import model.Match.Decision.MoveRandom
-import model.decisions.PlayerTypes.*
-import model.decisions.DecisionGenerator.*
-import model.decisions.CommonPlayerDecisions.*
+import dsl.decisions.PlayerTypes.*
+import dsl.decisions.DecisionGenerator.*
+import dsl.decisions.CommonPlayerDecisions.*
 import scala.util.Random
 import dsl.space.PositionSyntax.*
 import dsl.game.TeamsSyntax.*

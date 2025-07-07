@@ -1,4 +1,4 @@
-package model.decisions
+package dsl.decisions
 
 import model.Match.*
 import config.UIConfig

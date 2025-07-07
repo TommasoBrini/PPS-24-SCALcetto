@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers.shouldBe
 import model.Match.{Ball, Player, Team}
 import model.Space.Bounce.*
 import dsl.game.PlayerSyntax.*
-import model.decisions.PlayerRoleFactory.*
+import dsl.decisions.PlayerRoleFactory.*
 import model.Match.Decision
 import model.Match.Action
 

@@ -4,7 +4,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import model.Match.*
 import model.Space.*
-import model.decisions.rating.BallCarrierDecisionRating.*
+import dsl.decisions.rating.BallCarrierDecisionRating.*
 import config.MatchConfig
 import config.UIConfig
 

@@ -1,7 +1,7 @@
-package model.decisions
+package dsl.decisions
 
 import model.Match.*
-import model.decisions.CommonPlayerDecisions.*
+import CommonPlayerDecisions.*
 
 /** Type aliases for player roles
   */

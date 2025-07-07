@@ -20,7 +20,7 @@ final class PlayerBuilder(id: Int):
     this
 
   def ownsBall(hasBall: Boolean): PlayerBuilder = {
-    ballPresent = true
+    ballPresent = hasBall
     this
   }
 

@@ -6,8 +6,8 @@ import Side.*
 import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import model.decisions.DecisionMaker.*
-import model.decisions.PlayerRoleFactory.*
+import dsl.decisions.DecisionMaker.*
+import dsl.decisions.PlayerRoleFactory.*
 
 class DecisionMakerSpec extends AnyFlatSpec with Matchers:
 
