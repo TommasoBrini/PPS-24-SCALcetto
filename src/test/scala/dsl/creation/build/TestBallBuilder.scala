@@ -1,9 +1,7 @@
 package dsl.creation.build
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.shouldBe
 import model.Space.{Direction, Movement, Position}
 import org.scalatest.matchers.should.Matchers
