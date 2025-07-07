@@ -19,7 +19,7 @@ final class PlayerBuilder(id: Int):
     mov = Movement(Direction(dir.x, dir.y), speed)
     this
 
-  def ownsBall(hasBall: Boolean): PlayerBuilder = {
+  infix def ownsBall(hasBall: Boolean): PlayerBuilder = {
     ballPresent = hasBall
     this
   }

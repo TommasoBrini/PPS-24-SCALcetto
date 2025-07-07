@@ -28,7 +28,7 @@ object GenSituation:
           // West IDs are 10, 11, 12 …
           val pb = player(West.seed * 10 + idx).at(x, y)
           if idx == 0 then // first player starts as carrier
-            pb.ownsBall(true)
+            pb ownsBall true
         }
       }
 
