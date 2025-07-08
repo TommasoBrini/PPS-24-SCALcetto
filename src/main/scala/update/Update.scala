@@ -1,34 +1,38 @@
 package update
 
-import model.Match.*
-import Event.*
-import init.GameInitializer.initialSimulationState
-import decide.Decide.*
-import validate.Validate.*
-import act.Act.{act, isAGoal, isBallOut}
-import config.FieldConfig
-import config.FieldConfig.{heightBound, widthBound}
+import model.Match.Match
+import monads.States.State
+import decide.Decide.decideStep
+import validate.Validate.validateStep
+import act.Act.actStep
+import config.UIConfig.*
+import dsl.creation.SituationGenerator
+import dsl.space.PositionSyntax.*
+import dsl.space.MovementSyntax.*
 
 import scala.annotation.tailrec
 
 object Update:
-  @tailrec
-  def update(state: MatchState, event: Event): MatchState = event match
-    case StepEvent =>
-      update(state, DecideEvent)
-    case DecideEvent =>
-      val newState: MatchState = decide(state)
-      update(newState, ValidateEvent)
-    case ValidateEvent =>
-      val newState: MatchState = validate(state)
-      update(newState, ActEvent)
-    case ActEvent =>
-      val newState: MatchState = act(state)
-      if isAGoal(newState) then update(newState, GoalEvent)
-      else if isBallOut(newState) then update(newState, BallOutEvent)
-      else newState
-    case BallOutEvent =>
-      val bounceType = state.ball.position.getBounce(widthBound, heightBound)
-      MatchState(state.teams, state.ball.copy(movement = state.ball.movement.bounce(bounceType)))
-    case GoalEvent    => update(state, RestartEvent)
-    case RestartEvent => initialSimulationState()
+  enum Event:
+    case BallOut, Goal
+
+  def update(state: Match): Match =
+    val updateFlow: State[Match, Option[Event]] =
+      for
+        _     <- decideStep
+        _     <- validateStep
+        event <- actStep
+      yield event
+    val (updated, event) = updateFlow.run(state)
+    handleEvent(updated, event)
+
+  import Event.*
+  private def handleEvent(state: Match, event: Option[Event]): Match =
+    event match
+      case Some(BallOut) =>
+        val bounceType = state.ball.position getBounce (fieldWidth, fieldHeight)
+        state.copy(ball = state.ball.copy(movement = state.ball.movement getMovementFrom bounceType))
+      case Some(Goal) =>
+        println("Goal!!!")
+        SituationGenerator.kickOff
+      case _ => state

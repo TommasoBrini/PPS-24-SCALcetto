@@ -1,60 +1,60 @@
 package update.decide
 
+import config.Util
 import model.Match.*
-import update.decide.behaviours.{ControlPlayerBehavior, OpponentBehaviour, TeammateBehavior}
+import dsl.decisions.DecisionMaker.*
+import monads.States.*
+import dsl.game.TeamsSyntax.*
+import dsl.game.PlayerSyntax.*
+import dsl.decisions.PlayerRoleFactory.*
 
 object Decide:
 
-  def decide(state: MatchState): MatchState =
-    state.teams match
-      case List(teamA, teamB) =>
-        val (defenders, attackers) =
-          if teamA.hasBall then (teamB, teamA)
-          else (teamA, teamB)
+  /** Main decision function that orchestrates the decision-making process for all players
+    */
+  def decideStep: State[Match, Unit] =
+    State(s => (decide(s), ()))
 
-        val markings = assignMarkings(defenders.players, attackers.players)
+  def decide(state: Match): Match =
+    state.teams.map(assignRoles) match
+      case (teamA, teamB) =>
+        val (defenders, attackers) = determineTeamRoles(teamA, teamB)
+        val markings               = Util.assignMarkings(defenders.players, attackers.players)
+        val updatedTeams           = updateBothTeams(teamA, teamB, state, markings)
+        state.copy(teams = updatedTeams)
 
-        def decideFor(player: Player, team: Team, opponents: Team): Decision =
-          val behavior =
-            if player.hasBall then ControlPlayerBehavior
-            else if team.players.exists(_.hasBall) then TeammateBehavior
-            else new OpponentBehaviour(markings.get(player))
+  /** Determines which team has the ball and returns them as (defenders, attackers)
+    */
+  private def determineTeamRoles(teamA: Team, teamB: Team): (Team, Team) =
+    if teamA.hasBall then (teamB, teamA) else (teamA, teamB)
 
-          behavior.decide(player, state)
+  /** Updates both teams with new player decisions */
+  private def updateBothTeams(
+      teamA: Team,
+      teamB: Team,
+      state: Match,
+      markings: Map[Player, Player]
+  ): (Team, Team) =
+    val updatedTeamA = updateTeamDecisions(teamA, state, markings)
+    val updatedTeamB = updateTeamDecisions(teamB, state, markings)
+    (updatedTeamA, updatedTeamB)
 
-        val newTeams = List(teamA, teamB).map { team =>
-          val opponents  = if team.id == teamA.id then teamB else teamA
-          val newPlayers = team.players.map(p => p.copy(decision = decideFor(p, team, opponents)))
-          team.copy(players = newPlayers)
-        }
+  /** Updates all players in a team with new decisions
+    */
+  private def updateTeamDecisions(team: Team, state: Match, markings: Map[Player, Player]): Team =
+    val updatedPlayers = team.players.map(player => updatePlayerDecision(player, state, markings))
+    team.copy(players = updatedPlayers)
 
-        state.copy(teams = newTeams)
-      case _ =>
-        throw new IllegalArgumentException("MatchState must contain exactly two teams.")
+  /** Updates a single player's decision based on the current state and markings
+    */
+  private def updatePlayerDecision(player: Player, state: Match, markings: Map[Player, Player]): Player =
+    player.copy(decision = player.decide(state, markings))
 
-  private def assignMarkings(defenders: List[Player], attackers: List[Player]): Map[Player, Player] =
-    val (withBallOpt, others) = attackers.partition(_.hasBall) match
-      case (ballCarrier :: Nil, rest) => (Some(ballCarrier), rest)
-      case _                          => (None, attackers)
-
-    var unassignedAttackers = others.toSet
-    var availableDefenders  = defenders.sortBy(_.id)
-    var markings            = Map.empty[Player, Player]
-
-    withBallOpt.foreach { ballCarrier =>
-      val maybeDefender = availableDefenders.minByOption(_.position.getDistance(ballCarrier.position))
-      maybeDefender.foreach { defender =>
-        markings += (defender -> ballCarrier)
-        availableDefenders = availableDefenders.filterNot(_ == defender)
-      }
-    }
-
-    availableDefenders.foreach { defender =>
-      val maybeTarget = unassignedAttackers.minByOption(_.position.getDistance(defender.position))
-      maybeTarget.foreach { target =>
-        markings += (defender -> target)
-        unassignedAttackers -= target
-      }
-    }
-
-    markings
+  private def assignRoles(team: Team): Team =
+    team.copy(players =
+      team.players.map(p =>
+        if p.hasBall then p.asBallCarrierPlayer
+        else if team.hasBall then p.asTeammatePlayer
+        else p.asOpponentPlayer
+      )
+    )
