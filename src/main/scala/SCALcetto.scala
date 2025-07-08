@@ -2,7 +2,7 @@ import model.Match.*
 import SimulationLoop.*
 import dsl.creation.SituationGenerator
 
-/** new version -> v1.0.0
+/** new version -> v3.0.0
   */
 
 @main def SCALcetto(): Unit =
