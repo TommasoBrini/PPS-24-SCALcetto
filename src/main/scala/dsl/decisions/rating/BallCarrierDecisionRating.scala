@@ -1,4 +1,4 @@
-package model.decisions.rating
+package dsl.decisions.rating
 
 import model.Match.*
 import config.MatchConfig

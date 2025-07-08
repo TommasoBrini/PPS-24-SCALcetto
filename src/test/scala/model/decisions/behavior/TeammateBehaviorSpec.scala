@@ -5,9 +5,9 @@ import model.Match.Decision.*
 import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import model.decisions.behavior.TeammateBehavior.*
-import model.decisions.PlayerRoleFactory.*
-import model.decisions.PlayerTypes.*
+import dsl.decisions.behavior.TeammateBehavior.*
+import dsl.decisions.PlayerRoleFactory.*
+import dsl.decisions.PlayerTypes.*
 import config.MatchConfig
 
 class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:

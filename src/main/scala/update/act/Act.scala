@@ -4,7 +4,7 @@ import config.{MatchConfig, UIConfig}
 import model.Match.{Action, Ball, Decision, Match, Movement, Player, Team}
 import Action.*
 import Decision.Tackle
-import model.decisions.PlayerRoleFactory.*
+import dsl.decisions.PlayerRoleFactory.*
 import dsl.MatchSyntax.*
 import dsl.SpaceSyntax.*
 import monads.States.State

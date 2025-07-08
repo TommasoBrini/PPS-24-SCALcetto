@@ -1,13 +1,13 @@
-package model.decisions
+package dsl.decisions
 
 import model.Match.*
-import model.decisions.PlayerTypes.*
-import model.decisions.PlayerRoleFactory.*
+import PlayerTypes.*
+import PlayerRoleFactory.*
 import config.UIConfig
-import model.decisions.CommonPlayerDecisions.*
+import CommonPlayerDecisions.*
 import config.Util
 import config.MatchConfig
-import model.decisions.behavior.{BallCarrierBehavior, OpponentBehavior, TeammateBehavior}
+import dsl.decisions.behavior.{BallCarrierBehavior, OpponentBehavior, TeammateBehavior}
 
 object DecisionMaker:
 

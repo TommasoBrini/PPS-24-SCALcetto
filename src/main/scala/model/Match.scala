@@ -26,7 +26,7 @@ object Match:
     case MoveRandom(direction: Direction, steps: Int)
     case ReceivePass(ball: Ball)
 
-  private type ID = Int
+  type ID = Int
   case class Player(
       id: ID,
       position: Position,
@@ -43,6 +43,7 @@ object Match:
     import Side.West
     def apply(players: List[Player], hasBall: Boolean): Team = Team(players, West, hasBall)
     def apply(players: List[Player]): Team                   = Team(players, false)
+    def apply(players: List[Player], side: Side): Team       = Team(players, side, false)
 
   case class Ball(position: Position, movement: Movement = Movement.still)
 

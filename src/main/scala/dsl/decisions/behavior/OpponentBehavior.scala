@@ -1,9 +1,9 @@
-package model.decisions.behavior
+package dsl.decisions.behavior
 
 import config.MatchConfig
 import model.Match.*
-import model.decisions.PlayerTypes.*
-import model.decisions.CommonPlayerDecisions.*
+import dsl.decisions.PlayerTypes.*
+import dsl.decisions.CommonPlayerDecisions.*
 import dsl.game.TeamsSyntax.*
 import dsl.game.PlayerSyntax.*
 import dsl.space.PositionSyntax.*

@@ -57,13 +57,13 @@ object View:
       g.fillRect(-goalWidth, (fieldHeight - goalHeight) / 2, goalWidth, goalHeight)
       g.fillRect(fieldWidth, (fieldHeight - goalHeight) / 2, goalWidth, goalHeight)
 
-      val teamA  = state.teams.teamA
+      val teamA  = state.teams.teamWest
       val colorA = Colors.teamBlue
       teamA.players.foreach { player =>
         drawCenteredRect(g, player.position, playerSize, colorA, Drawing.playerBorderWidth)
       }
 
-      val teamB  = state.teams.teamB
+      val teamB  = state.teams.teamEast
       val colorB = Colors.teamRed
       teamB.players.foreach { player =>
         drawCenteredRect(g, player.position, playerSize, colorB, Drawing.playerBorderWidth)
