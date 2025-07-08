@@ -18,9 +18,9 @@ class DecideSpec extends AnyFlatSpec with Matchers:
 
   "Decide.decide" should "update all players with new decisions" in:
     val state: Match = newMatch:
-      team(West).withBall:
-        player(1).at(5, 5).ownsBall(true) // ball-carrier
-        player(3).at(15, 15)
+      team(West) withBall:
+        player(1) at (5, 5) ownsBall true // ball-carrier
+        player(3) at (15, 15)
       team(East):
         player(2) at (10, 10)
       ball at (0, 0) move (Direction(0, 0), 0)
