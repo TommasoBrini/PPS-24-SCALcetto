@@ -38,7 +38,9 @@ object Match:
 
   enum Side:
     case West, East
+
   case class Team(players: List[Player], side: Side, hasBall: Boolean = false)
+
   object Team:
     import Side.West
     def apply(players: List[Player], hasBall: Boolean): Team = Team(players, West, hasBall)

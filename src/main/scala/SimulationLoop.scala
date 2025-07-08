@@ -2,7 +2,7 @@ import model.Match.*
 import update.Update.*
 import view.View.SwingView
 import config.UIConfig.*
-import dsl.creation.GenSituation
+import dsl.creation.SituationGenerator
 
 import javax.swing.Timer as SwingTimer
 import java.awt.event.{ActionEvent, ActionListener}
@@ -35,7 +35,7 @@ object SimulationLoop:
 
   private def reset(): Unit =
     pause()
-    state = GenSituation.kickOff
+    state = SituationGenerator.kickOff
     view.render(state)
 
   private def createTimer(delayMs: Int): Unit =

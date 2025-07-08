@@ -9,7 +9,7 @@ import dsl.game.TeamsSyntax.*
 
 class TestGenSituation extends AnyFlatSpec with Matchers {
 
-  val kickOff: Match = GenSituation.kickOff
+  val kickOff: Match = SituationGenerator.kickOff
 
   "kickOff" should "create initial simulation state with two teams and a ball" in:
     kickOff.ball should not be null
