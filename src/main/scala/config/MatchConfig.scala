@@ -3,7 +3,7 @@ package config
 import config.UIConfig
 
 object MatchConfig:
-  val teamSize: Int              = 10
+  val teamSize: Int              = 7
   val playerWithBallSpeed: Int   = 2
   val playerSpeed: Int           = 2
   val playerMaxSpeed: Int        = 2

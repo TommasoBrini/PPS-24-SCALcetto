@@ -1,9 +1,7 @@
 package model.decisions
 
 import model.Match.*
-import model.Match.Decision.*
 import Side.*
-import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import dsl.decisions.DecisionMaker.*
@@ -15,7 +13,7 @@ class DecisionMakerSpec extends AnyFlatSpec with Matchers:
     val carrierPlayer  = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
     val teammatePlayer = Player(3, Position(6, 6), Movement.still).asTeammatePlayer
     val team1          = Team(List(carrierPlayer, teammatePlayer), West, hasBall = true)
-    val team2          = Team(List(), East, hasBall = false)
+    val team2          = Team(List(), East)
     val state          = Match((team1, team2), Ball(Position(0, 0), Movement.still))
     val markings       = Map[Player, Player]()
 

@@ -26,7 +26,7 @@ object GenSituation:
           // West IDs are 10, 11, 12 …
           val ballCarrier = player(West.seed * 10 + idx) at (x, y)
           if idx == 0 then
-            ballCarrier ownsBall true
+            ballCarrier at (fieldWidth / 2, fieldHeight / 2) ownsBall true
 
       team(East):
         val minX = fieldWidth / 2 + 1
