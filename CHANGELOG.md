@@ -1,3 +1,28 @@
+## [3.0.0](https://github.com/TommasoBrini/PPS-24-SCALcetto/compare/v2.0.0...v3.0.0) (2025-07-08)
+
+### ⚠ BREAKING CHANGES
+
+* **release:** new release
+
+### Features
+
+* create util functions ([45e185d](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/45e185de77e3aae4ad26b02c2df916f735848ab7))
+* implement correct rating for control player behavior ([573ca2f](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/573ca2fa8a023bda5abc99a147fc7bb37ca4946c))
+* implement opponent behavior ([5125ff6](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/5125ff65bd81b491a26528bde38eeea5d776dac7))
+* implements mixin for decide, change decide architecture ([3080d7b](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/3080d7b9df050b951fe8e2dffdc4d36ddb17f6e4))
+* init new builder ([8890f9a](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/8890f9ae1ba6a9d3808b4df2423d74b67735e836))
+* Refactor act, make update flow more functional ([6c865bf](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/6c865bfc48d367cc961ae1e7c04082fd9c7d26ae))
+* **release:** new release ([76f739c](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/76f739ced95b2ecc780260f3c64544ab91d2f06a))
+* resolve movement out of field ([f998327](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/f99832709cb05928ffb7f3fd0930f54bc4462b84))
+* working dsl creation and structure ([3b94b9c](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/3b94b9c90bffe73543f7f154ce69eec2b982ed55))
+* working structure for creational DSLs ([4e85a52](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/4e85a5221bf8fe996251bd50e0751cbd31f399dd))
+
+### Bug Fixes
+
+* fix bug in decision pass ([94f495a](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/94f495a3ed975ffb04ecf74506862f071fd10ca3))
+* player in the middle now spawns correctly ([42a1c83](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/42a1c834f7d9a6df9bffeab672ca023feefc19c3))
+* refactor tests ([0f610bd](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/0f610bdd6c3baa62a9135f5646bf29de85637214))
+
 ## [2.0.0](https://github.com/TommasoBrini/PPS-24-SCALcetto/compare/v1.0.0...v2.0.0) (2025-06-27)
 
 ### ⚠ BREAKING CHANGES
