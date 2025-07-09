@@ -68,6 +68,21 @@ object View:
         drawCenteredRect(g, player.position, playerSize, colorB, Drawing.playerBorderWidth)
       }
 
+      // SCORE
+      val westScore = state.score.westScore.toString
+      val gap       = " : "
+      val eastScore = state.score.eastScore.toString
+      g.setColor(Colors.teamBlue)
+      g.drawString(westScore, fieldPanelWidth - 90, 20)
+
+      // 2. colon – neutral
+      g.setColor(Colors.textColor)
+      g.drawString(gap, fieldPanelWidth - 70, 20)
+
+      // 3. right number – red
+      g.setColor(Colors.teamRed)
+      g.drawString(eastScore, fieldPanelWidth - 50, 20)
+
       g.translate(-fieldOffsetX, -fieldOffsetY)
 
   class InfoPanel extends Panel:
@@ -80,19 +95,6 @@ object View:
 
       val yOffset = 20
       drawText(g, "SCALcetto - Football Simulation", 10, yOffset, Colors.textColor, titleFont.getSize)
-      val westScore = "0" // ‒‒‒ add
-      val gap       = ":"
-      val eastScore = "0"
-      g.setColor(Colors.teamBlue)
-      g.drawString(westScore, fieldPanelWidth - 50, yOffset)
-
-      // 2. colon – neutral
-      g.setColor(Colors.textColor)
-      g.drawString(gap, fieldPanelWidth - 30, yOffset)
-
-      // 3. right number – red
-      g.setColor(Colors.teamRed)
-      g.drawString(eastScore, fieldPanelWidth - 10, yOffset)
 
   class StyledButton(text: String) extends Button(text):
     background = Colors.buttonColor

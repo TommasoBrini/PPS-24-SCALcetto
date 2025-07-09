@@ -5,11 +5,12 @@ import config.UIConfig.{fieldHeight, fieldWidth}
 import model.Match.Match
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import model.Match.Score
 import dsl.game.TeamsSyntax.*
 
 class TestGenSituation extends AnyFlatSpec with Matchers {
 
-  val kickOff: Match = SituationGenerator.kickOff
+  val kickOff: Match = SituationGenerator.kickOff(Score.init())
 
   "kickOff" should "create initial simulation state with two teams and a ball" in:
     kickOff.ball should not be null

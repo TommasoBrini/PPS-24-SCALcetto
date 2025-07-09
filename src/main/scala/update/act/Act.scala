@@ -63,9 +63,10 @@ object Act:
     val carrier = state.players.find(_.hasBall)
     val teams   = state.teams.map(_.updateMovements())
     val ball    = state.ball.updateMovement(carrier)
-    Match(teams, ball)
+    val score   = state.score
+    Match(teams, ball, score)
 
-  def moveEntities(state: Match): Match = Match(state.teams.map(_.move()), state.ball.move())
+  def moveEntities(state: Match): Match = Match(state.teams.map(_.move()), state.ball.move(), state.score)
 
   extension (team: Team)
     def updateBallPossession(): Team =

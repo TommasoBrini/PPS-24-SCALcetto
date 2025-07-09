@@ -1,6 +1,7 @@
 package update
 
-import model.Match.Match
+import model.Match.{Match, Score, Side}
+import model.Match.Side.*
 import monads.States.State
 import decide.Decide.decideStep
 import validate.Validate.validateStep
@@ -34,5 +35,6 @@ object Update:
         state.copy(ball = state.ball.copy(movement = state.ball.movement getMovementFrom bounceType))
       case Some(Goal) =>
         println("Goal!!!")
-        SituationGenerator.kickOff
+        // TODO there will be the real change
+        SituationGenerator.kickOff(Score.init(), West)
       case _ => state
