@@ -119,14 +119,6 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val ball     = Ball(initial, movement)
     ball.move().position should be(initial + movement)
 
-  "isGoal" should "be true when you hit the first door" in:
-    val state = Match((Team(Nil), Team(Nil)), Ball(Position(0, UIConfig.fieldHeight / 2)))
-    state.isGoal should be(true)
-
-  it should "be true when you hit the second door" in:
-    val state = Match((Team(Nil), Team(Nil)), Ball(Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)))
-    state.isGoal should be(true)
-
   "isBallOut" should "be true if the ball is out" in:
     val state = Match((Team(Nil), Team(Nil)), Ball(Position(UIConfig.fieldWidth + 1, UIConfig.fieldHeight + 1)))
     state.isBallOut should be(true)

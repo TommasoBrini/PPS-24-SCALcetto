@@ -10,12 +10,13 @@ import config.UIConfig.*
 import dsl.creation.SituationGenerator
 import dsl.space.PositionSyntax.*
 import dsl.space.MovementSyntax.*
+import dsl.MatchSyntax.*
 
 import scala.annotation.tailrec
 
 object Update:
   enum Event:
-    case BallOut, Goal
+    case BallOut, GoalEast, GoalWest
 
   def update(state: Match): Match =
     val updateFlow: State[Match, Option[Event]] =
@@ -33,8 +34,10 @@ object Update:
       case Some(BallOut) =>
         val bounceType = state.ball.position getBounce (fieldWidth, fieldHeight)
         state.copy(ball = state.ball.copy(movement = state.ball.movement getMovementFrom bounceType))
-      case Some(Goal) =>
-        println("Goal!!!")
-        // TODO there will be the real change
-        SituationGenerator.kickOff(Score.init(), West)
+      case Some(GoalEast) =>
+        println("East Goal!!!")
+        SituationGenerator.kickOff(state.score.eastGoal, West)
+      case Some(GoalWest) =>
+        println("West Goal!!!")
+        SituationGenerator.kickOff(state.score.westGoal, East)
       case _ => state
