@@ -2,7 +2,6 @@ package view
 
 import scala.swing.*
 import scala.swing.event.*
-import java.awt.geom.{Ellipse2D, Line2D, Rectangle2D}
 import config.UIConfig.*
 import model.Match.*
 import model.Match.Position
@@ -81,6 +80,19 @@ object View:
 
       val yOffset = 20
       drawText(g, "SCALcetto - Football Simulation", 10, yOffset, Colors.textColor, titleFont.getSize)
+      val westScore = "0" // ‒‒‒ add
+      val gap       = ":"
+      val eastScore = "0"
+      g.setColor(Colors.teamBlue)
+      g.drawString(westScore, fieldPanelWidth - 50, yOffset)
+
+      // 2. colon – neutral
+      g.setColor(Colors.textColor)
+      g.drawString(gap, fieldPanelWidth - 30, yOffset)
+
+      // 3. right number – red
+      g.setColor(Colors.teamRed)
+      g.drawString(eastScore, fieldPanelWidth - 10, yOffset)
 
   class StyledButton(text: String) extends Button(text):
     background = Colors.buttonColor
