@@ -2,7 +2,6 @@ package view
 
 import scala.swing.*
 import scala.swing.event.*
-import java.awt.geom.{Ellipse2D, Line2D, Rectangle2D}
 import config.UIConfig.*
 import model.Match.*
 import model.Match.Position
@@ -68,6 +67,21 @@ object View:
       teamB.players.foreach { player =>
         drawCenteredRect(g, player.position, playerSize, colorB, Drawing.playerBorderWidth)
       }
+
+      // SCORE
+      val westScore = state.score.westScore.toString
+      val gap       = " : "
+      val eastScore = state.score.eastScore.toString
+      g.setColor(Colors.teamBlue)
+      g.drawString(westScore, fieldPanelWidth - 90, 20)
+
+      // 2. colon – neutral
+      g.setColor(Colors.textColor)
+      g.drawString(gap, fieldPanelWidth - 70, 20)
+
+      // 3. right number – red
+      g.setColor(Colors.teamRed)
+      g.drawString(eastScore, fieldPanelWidth - 50, 20)
 
       g.translate(-fieldOffsetX, -fieldOffsetY)
 

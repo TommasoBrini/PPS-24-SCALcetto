@@ -4,7 +4,6 @@ import config.{MatchConfig, UIConfig}
 import model.Match.{Action, Ball, Decision, Match, Movement, Player, Team}
 import Action.*
 import Decision.Tackle
-import dsl.decisions.PlayerRoleFactory.*
 import dsl.MatchSyntax.*
 import dsl.SpaceSyntax.*
 import monads.States.State
@@ -16,7 +15,8 @@ object Act:
   def actStep: State[Match, Option[Event]] =
     State(s => {
       val updated = s.act()
-      if isGoal(updated) then (updated, Some(Goal))
+      if updated.ball.position.goalWest then (updated, Some(GoalWest))
+      else if updated.ball.position.goalEast then (updated, Some(GoalEast))
       else if isBallOut(updated) then (updated, Some(BallOut))
       else (updated, None)
     })
@@ -28,9 +28,6 @@ object Act:
         .mapIf(isPossessionChanging, updateBallPossession)
         .map(updateMovements)
         .map(moveEntities)
-
-    def isGoal: Boolean =
-      state.ball.position.isInsideGoal
 
     def isBallOut: Boolean =
       state.ball.position.isOutOfBound(UIConfig.fieldWidth, UIConfig.fieldHeight)
@@ -63,9 +60,10 @@ object Act:
     val carrier = state.players.find(_.hasBall)
     val teams   = state.teams.map(_.updateMovements())
     val ball    = state.ball.updateMovement(carrier)
-    Match(teams, ball)
+    val score   = state.score
+    Match(teams, ball, score)
 
-  def moveEntities(state: Match): Match = Match(state.teams.map(_.move()), state.ball.move())
+  def moveEntities(state: Match): Match = Match(state.teams.map(_.move()), state.ball.move(), state.score)
 
   extension (team: Team)
     def updateBallPossession(): Team =

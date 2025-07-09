@@ -35,7 +35,7 @@ object SimulationLoop:
 
   private def reset(): Unit =
     pause()
-    state = SituationGenerator.kickOff
+    state = SituationGenerator.kickOff(Score.init())
     view.render(state)
 
   private def createTimer(delayMs: Int): Unit =

@@ -4,7 +4,7 @@ import model.Match.*
 
 import scala.collection.mutable.ListBuffer
 
-final class MatchBuilder:
+final class MatchBuilder(score: Score):
   private val teams: ListBuffer[TeamBuilder] = ListBuffer[TeamBuilder]()
   private val matchBall: BallBuilder         = BallBuilder()
 
@@ -17,4 +17,4 @@ final class MatchBuilder:
 
   def build(): Match =
     require(teams.size == 2, "exactly two teams required")
-    Match((teams.head.build(), teams.last.build()), ball.build())
+    Match((teams.head.build(), teams.last.build()), ball.build(), score)
