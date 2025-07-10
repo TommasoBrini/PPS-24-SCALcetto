@@ -4,13 +4,10 @@ import model.Space.{Direction, Movement, Position}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.shouldBe
-import model.Match.{Ball, Player, Team}
 import model.Space.Bounce.*
 
 import MovementSyntax.*
 import PositionSyntax.*
-
-import scala.util.Random
 
 class TestMovementSyntax extends AnyFlatSpec with Matchers:
   "A Movement" should "bounce its direction correctly and keep speed" in:

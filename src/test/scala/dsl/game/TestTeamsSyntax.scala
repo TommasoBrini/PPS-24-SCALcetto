@@ -5,7 +5,6 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.shouldBe
 import model.Match.{Side, Team}
 import TeamsSyntax.*
-import dsl.creation.CreationSyntax.*
 import dsl.creation.build.TeamBuilder
 import model.Match.Side.{East, West}
 

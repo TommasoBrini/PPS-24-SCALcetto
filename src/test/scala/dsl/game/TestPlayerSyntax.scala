@@ -4,14 +4,11 @@ import model.Space.{Direction, Movement, Position}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.shouldBe
-import model.Match.{Ball, Player, Team}
-import model.Space.Bounce.*
+import model.Match.{Ball, Player}
 import dsl.game.PlayerSyntax.*
 import dsl.decisions.PlayerRoleFactory.*
 import model.Match.Decision
 import model.Match.Action
-
-import scala.util.Random
 
 class TestPlayerSyntax extends AnyFlatSpec with Matchers:
   "A Player" should "correctly report hasBall when carrying a ball" in:

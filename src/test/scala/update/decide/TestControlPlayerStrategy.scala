@@ -5,9 +5,7 @@ import org.scalatest.matchers.should.Matchers
 import model.Match.*
 import config.UIConfig.*
 import config.MatchConfig.*
-import junit.runner.Version.id
 
-import scala.::
 import scala.util.Random
 
 class TestControlPlayerStrategy extends AnyFunSpec with Matchers {
