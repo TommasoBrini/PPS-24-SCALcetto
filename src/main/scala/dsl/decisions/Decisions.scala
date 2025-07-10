@@ -79,7 +79,7 @@ trait CanDecideToPass:
     */
   def generatePossiblePasses(matchState: Match): List[Decision] =
     for
-      teammate <- matchState.teams.teamOf(this).players.filter(!_.equals(this))
+      teammate <- matchState.teams.teamOf(this).players.filter(_.id != this.id)
     yield this.createPassDecision(teammate)
 
 /** Trait for players that can make shooting decisions

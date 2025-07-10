@@ -11,7 +11,7 @@ object TeamsSyntax:
     else teams.teamEast
 
   private def getTeamOf(teams: (Team, Team), player: Player): Team =
-    if teams.teamWest.players.contains(player) then teams.teamWest
+    if teams.teamWest.players.exists(_.id == player.id) then teams.teamWest
     else teams.teamEast
 
   private def getTeamWithBall(teams: (Team, Team)): Option[Team] =
