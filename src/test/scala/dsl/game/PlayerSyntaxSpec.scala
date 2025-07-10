@@ -10,7 +10,7 @@ import dsl.decisions.PlayerRoleFactory.*
 import model.Match.Decision
 import model.Match.Action
 
-class TestPlayerSyntax extends AnyFlatSpec with Matchers:
+class PlayerSyntaxSpec extends AnyFlatSpec with Matchers:
   "A Player" should "correctly report hasBall when carrying a ball" in:
     val ball: Ball = Ball(Position(5, 5), Movement(Direction.none, 0))
     val playerWithBall =

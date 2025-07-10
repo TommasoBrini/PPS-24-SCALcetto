@@ -9,7 +9,7 @@ import DirectionSyntax.*
 
 import scala.util.Random
 
-class TestDirectionSyntax extends AnyFlatSpec with Matchers:
+class DirectionSyntaxSpec extends AnyFlatSpec with Matchers:
 
   "A Direction" should "reflect correctly when bounced" in:
     val d = Direction(1.0, -1.0)

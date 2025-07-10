@@ -9,7 +9,7 @@ import model.Space.Bounce.*
 import MovementSyntax.*
 import PositionSyntax.*
 
-class TestMovementSyntax extends AnyFlatSpec with Matchers:
+class MovementSyntaxSpec extends AnyFlatSpec with Matchers:
   "A Movement" should "bounce its direction correctly and keep speed" in:
     val m       = Movement(Direction(1.0, -1.0), 5)
     val bounced = m getMovementFrom ObliqueBounce

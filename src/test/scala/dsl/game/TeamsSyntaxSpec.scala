@@ -8,7 +8,7 @@ import TeamsSyntax.*
 import dsl.creation.build.TeamBuilder
 import model.Match.Side.{East, West}
 
-class TestTeamsSyntax extends AnyFlatSpec with Matchers:
+class TeamsSyntaxSpec extends AnyFlatSpec with Matchers:
 
   "A (Team, Teams) " should " return its opponent if requested" in:
     val teamA: Team         = TeamBuilder(West).withBall.build()

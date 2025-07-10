@@ -6,7 +6,7 @@ import model.Space.{Direction, Movement, Position}
 import model.Match.*
 import org.scalatest.matchers.should.Matchers
 
-final class TestPlayerBuilder extends AnyFlatSpec with Matchers {
+final class PlayerBuilderSpec extends AnyFlatSpec with Matchers {
 
   "PlayerBuilder" should "apply every mutator and materialise an equivalent Player" in {
     val player = PlayerBuilder(42)
