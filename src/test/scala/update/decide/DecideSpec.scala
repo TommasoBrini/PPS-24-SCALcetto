@@ -1,17 +1,14 @@
 package update.decide
 
-import config.UIConfig
 import model.Match.*
 import Side.*
 import model.Match.Decision.*
-import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import Decide.*
-import dsl.decisions.PlayerRoleFactory.*
 import config.MatchConfig
 import dsl.creation.CreationSyntax.*
-
+import dsl.creation.build.{PlayerBuilder, TeamBuilder}
 import dsl.game.TeamsSyntax.*
 
 class DecideSpec extends AnyFlatSpec with Matchers:
@@ -92,10 +89,10 @@ class DecideSpec extends AnyFlatSpec with Matchers:
     }
 
   it should "handle players with existing decisions" in:
-    val player1 = playerSolo(1) at (5, 5) decidedTo Run(Direction(1, 0), MatchConfig.runSteps) ownsBall true
+    val player1 = PlayerBuilder(1) at (5, 5) decidedTo Run(Direction(1, 0), MatchConfig.runSteps) ownsBall true
     val state: Match = newMatch(Score.init()):
       team(West) withBall:
-        playerSolo(1) at (5, 5) decidedTo Run(Direction(1, 0), MatchConfig.runSteps) ownsBall true
+        player(1) at (5, 5) decidedTo Run(Direction(1, 0), MatchConfig.runSteps) ownsBall true
       team(East):
         player(2) at (10, 10) decidedTo Mark(player1.build(), player1.build(), East)
       ball at (0, 0) move (Direction(0, 0), 0)

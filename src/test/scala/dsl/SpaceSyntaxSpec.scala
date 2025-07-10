@@ -12,7 +12,7 @@ import model.Space.Bounce.*
 
 import scala.util.Random
 
-class TestSpaceSyntax extends AnyFlatSpec with Matchers:
+class SpaceSyntaxSpec extends AnyFlatSpec with Matchers:
 
   "isOutOfBound" should "return false for positions within bounds" in:
     val inside = Position(2, 2)

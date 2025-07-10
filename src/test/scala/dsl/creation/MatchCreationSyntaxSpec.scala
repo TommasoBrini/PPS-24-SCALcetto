@@ -9,7 +9,7 @@ import org.scalatest.matchers.should.Matchers.*
 import dsl.MatchSyntax.*
 import model.Match.Score
 
-final class TestMatchCreationSyntax extends AnyFlatSpec with Matchers {
+final class MatchCreationSyntaxSpec extends AnyFlatSpec with Matchers {
 
   "newMatch" should "assemble a complete Match when two teams and a ball are declared" in:
     val kickoff: Match = newMatch(Score.init()):

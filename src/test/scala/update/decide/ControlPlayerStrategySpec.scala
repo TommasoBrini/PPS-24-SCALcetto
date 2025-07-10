@@ -5,12 +5,10 @@ import org.scalatest.matchers.should.Matchers
 import model.Match.*
 import config.UIConfig.*
 import config.MatchConfig.*
-import junit.runner.Version.id
 
-import scala.::
 import scala.util.Random
 
-class TestControlPlayerStrategy extends AnyFunSpec with Matchers {
+class ControlPlayerStrategySpec extends AnyFunSpec with Matchers {
 
   private def generateTeamLeftInLine(id: Int): Team =
     val players = (0 until teamSize).map { i =>
@@ -37,7 +35,7 @@ class TestControlPlayerStrategy extends AnyFunSpec with Matchers {
       )
     }.toList
     Team(players, Side.East)
-
+// TODO fix this
 //  describe("A controlling player (has the ball)") {
 //
 //    it("shoots when close and the path is clear") {

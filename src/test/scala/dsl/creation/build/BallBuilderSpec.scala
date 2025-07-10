@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers.shouldBe
 import model.Space.{Direction, Movement, Position}
 import org.scalatest.matchers.should.Matchers
 
-class TestBallBuilder extends AnyFlatSpec with Matchers {
+class BallBuilderSpec extends AnyFlatSpec with Matchers {
 
   "BallBuild " should " build a Ball with the chosen position and movement" in:
     val builder = BallBuilder()

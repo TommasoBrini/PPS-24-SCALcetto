@@ -8,7 +8,7 @@ import model.Space.Bounce.*
 import PositionSyntax.*
 import config.UIConfig
 
-class TestPositionSyntax extends AnyFlatSpec with Matchers:
+class PositionSyntaxSpec extends AnyFlatSpec with Matchers:
   private val firstPost  = (UIConfig.fieldHeight - UIConfig.goalHeight) / 2
   private val secondPost = firstPost + UIConfig.goalHeight
   private val xWest      = 0                   // goal line at the west side

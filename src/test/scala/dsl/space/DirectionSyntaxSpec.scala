@@ -1,16 +1,15 @@
 package dsl.space
 
-import model.Space.{Direction, Movement, Position}
+import model.Space.Direction
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.shouldBe
-import model.Match.{Ball, Player, Team}
 import model.Space.Bounce.*
 import DirectionSyntax.*
 
 import scala.util.Random
 
-class TestDirectionSyntax extends AnyFlatSpec with Matchers:
+class DirectionSyntaxSpec extends AnyFlatSpec with Matchers:
 
   "A Direction" should "reflect correctly when bounced" in:
     val d = Direction(1.0, -1.0)

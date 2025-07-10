@@ -8,7 +8,7 @@ import org.scalatest.matchers.should.Matchers
 import model.Match.Score
 import dsl.game.TeamsSyntax.*
 
-class TestGenSituation extends AnyFlatSpec with Matchers {
+class GenSituationSpec extends AnyFlatSpec with Matchers {
 
   val kickOff: Match = SituationGenerator.kickOff(Score.init())
 
