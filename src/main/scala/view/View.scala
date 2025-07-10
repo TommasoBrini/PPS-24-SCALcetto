@@ -72,10 +72,10 @@ object View:
       val westScore = state.score.westScore.toString
       val gap       = " : "
       val eastScore = state.score.eastScore.toString
+
       g.setColor(Colors.teamBlue)
       g.drawString(westScore, fieldPanelWidth - 90, 20)
 
-      // 2. colon – neutral
       g.setColor(Colors.textColor)
       g.drawString(gap, fieldPanelWidth - 70, 20)
 
