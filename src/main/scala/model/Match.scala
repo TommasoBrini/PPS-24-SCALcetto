@@ -1,5 +1,5 @@
 package model
-import scala.annotation.tailrec
+
 object Match:
   export Space.*
 

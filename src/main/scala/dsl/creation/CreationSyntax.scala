@@ -15,12 +15,6 @@ object CreationSyntax:
   def team(side: Side)(using mb: MatchBuilder): TeamBuilder =
     mb.team(side)
 
-  def teamSolo(side: Side): TeamBuilder =
-    TeamBuilder(side)
-
-  def playerSolo(id: Int): PlayerBuilder =
-    PlayerBuilder(id)
-
   def ball(using mb: MatchBuilder): BallBuilder =
     mb.ball
 

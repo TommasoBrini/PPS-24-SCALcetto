@@ -5,7 +5,7 @@ import model.Match.Score
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class TestScoreSyntax extends AnyFlatSpec with Matchers:
+class ScoreSyntaxSpec extends AnyFlatSpec with Matchers:
 
   "westGoal" should "increment only the west team’s score" in:
     val initial = Score(2, 2)

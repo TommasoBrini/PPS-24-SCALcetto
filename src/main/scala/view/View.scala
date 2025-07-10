@@ -4,7 +4,6 @@ import scala.swing.*
 import scala.swing.event.*
 import config.UIConfig.*
 import model.Match.*
-import model.Match.Position
 import view.RenderUtils.*
 import java.awt.BasicStroke
 import dsl.game.TeamsSyntax.*
@@ -58,24 +57,22 @@ object View:
 
       val teamA  = state.teams.teamWest
       val colorA = Colors.teamBlue
-      teamA.players.foreach { player =>
+      teamA.players.foreach: player =>
         drawCenteredRect(g, player.position, playerSize, colorA, Drawing.playerBorderWidth)
-      }
 
       val teamB  = state.teams.teamEast
       val colorB = Colors.teamRed
-      teamB.players.foreach { player =>
+      teamB.players.foreach: player =>
         drawCenteredRect(g, player.position, playerSize, colorB, Drawing.playerBorderWidth)
-      }
 
       // SCORE
       val westScore = state.score.westScore.toString
       val gap       = " : "
       val eastScore = state.score.eastScore.toString
+
       g.setColor(Colors.teamBlue)
       g.drawString(westScore, fieldPanelWidth - 90, 20)
 
-      // 2. colon – neutral
       g.setColor(Colors.textColor)
       g.drawString(gap, fieldPanelWidth - 70, 20)
 

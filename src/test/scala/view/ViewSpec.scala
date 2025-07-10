@@ -4,7 +4,6 @@ import dsl.creation.SituationGenerator
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-import scala.swing.event.ButtonClicked
 import model.Match.*
 import view.View.SwingView
 
