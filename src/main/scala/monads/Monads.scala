@@ -1,7 +1,5 @@
 package monads
 
-import Streams.*, Stream.*
-
 object Monads:
 
   trait Monad[M[_]]:
@@ -17,10 +15,3 @@ object Monads:
 
     def seq[M[_]: Monad, A, B](m: M[A], m2: => M[B]): M[B] =
       map2(m, m2)((a, b) => b)
-
-    def seqN[M[_]: Monad, A](stream: Stream[M[A]]): M[A] =
-      stream match
-        case Cons(h, t) => (h(), t()) match
-            case (m, Empty()) => m
-            case (m, s)       => seq(m, seqN(s))
-        case Empty() => throw new NoSuchElementException("Stream is empty")

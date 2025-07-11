@@ -2,10 +2,8 @@ package view
 
 import scala.swing.*
 import scala.swing.event.*
-import java.awt.geom.{Ellipse2D, Line2D, Rectangle2D}
 import config.UIConfig.*
 import model.Match.*
-import model.Match.Position
 import view.RenderUtils.*
 import java.awt.BasicStroke
 import dsl.game.TeamsSyntax.*
@@ -59,19 +57,17 @@ object View:
 
       val teamA  = state.teams.teamWest
       val colorA = Colors.teamBlue
-      teamA.players.foreach { player =>
+      teamA.players.foreach: player =>
         drawCenteredRect(g, player.position, playerSize, colorA, Drawing.playerBorderWidth)
-      }
 
       val teamB  = state.teams.teamEast
       val colorB = Colors.teamRed
-      teamB.players.foreach { player =>
+      teamB.players.foreach: player =>
         drawCenteredRect(g, player.position, playerSize, colorB, Drawing.playerBorderWidth)
-      }
 
       g.translate(-fieldOffsetX, -fieldOffsetY)
 
-  class InfoPanel extends Panel:
+  class InfoPanel(var state: Match) extends Panel:
     background = Colors.infoPanelColor
     border = Swing.EmptyBorder(10)
 
@@ -79,8 +75,30 @@ object View:
       super.paintComponent(g)
       setupGraphics(g)
 
-      val yOffset = 20
-      drawText(g, "SCALcetto - Football Simulation", 10, yOffset, Colors.textColor, titleFont.getSize)
+      val yOffset       = 20
+      val titleFontSize = titleFont.getSize
+      drawText(g, "SCALcetto - Football Simulation", 10, yOffset, Colors.textColor, titleFontSize)
+
+      // Score rendering
+      val scoreFontSize = 32
+      val gap           = " : "
+      val westScore     = state.score.westScore.toString
+      val eastScore     = state.score.eastScore.toString
+      val metrics       = g.getFontMetrics(g.getFont.deriveFont(scoreFontSize.toFloat))
+      val totalWidth = metrics.stringWidth(westScore) + metrics.stringWidth(gap) + metrics.stringWidth(eastScore) + 40
+      val x          = (size.width - totalWidth) / 2
+      val y          = yOffset + 40
+
+      g.setFont(g.getFont.deriveFont(scoreFontSize.toFloat))
+      // Blue score
+      g.setColor(Colors.teamBlue)
+      g.drawString(westScore, x, y)
+      // Gap
+      g.setColor(Colors.textColor)
+      g.drawString(gap, x + metrics.stringWidth(westScore) + 20, y)
+      // Red score
+      g.setColor(Colors.teamRed)
+      g.drawString(eastScore, x + metrics.stringWidth(westScore) + 20 + metrics.stringWidth(gap) + 20, y)
 
   class StyledButton(text: String) extends Button(text):
     background = Colors.buttonColor
@@ -97,7 +115,7 @@ object View:
 
   class SwingView(initialState: Match):
     private val panel: MatchPanel    = new MatchPanel(initialState)
-    private val infoPanel: InfoPanel = new InfoPanel()
+    private val infoPanel: InfoPanel = new InfoPanel(initialState)
 
     panel.preferredSize = new Dimension(fieldPanelWidth, fieldPanelHeight)
     infoPanel.preferredSize = new Dimension(fieldPanelWidth, infoPanelHeight)
@@ -168,3 +186,5 @@ object View:
     def render(state: Match): Unit =
       panel.state = state
       panel.repaint()
+      infoPanel.state = state
+      infoPanel.repaint()

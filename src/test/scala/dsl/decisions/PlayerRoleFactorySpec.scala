@@ -1,4 +1,4 @@
-package model.decisions
+package dsl.decisions
 
 import model.Match.*
 import model.Match.Decision.*
@@ -12,29 +12,28 @@ import config.MatchConfig
 import dsl.decisions.CommonPlayerDecisions.*
 import dsl.game.TeamsSyntax.*
 import Side.*
+import dsl.creation.build.{BallBuilder, PlayerBuilder}
+import dsl.creation.CreationSyntax.*
 
 class PlayerRoleFactorySpec extends AnyFlatSpec with Matchers:
 
   "PlayerRoleFactory.asBallCarrierDecisionPlayer" should "convert player to BallCarrierPlayer" in:
-    val basePlayer        = Player(1, Position(5, 5), Movement.still)
-    val ballCarrierPlayer = basePlayer.asBallCarrierPlayer
+    val basePlayer        = PlayerBuilder(1) at (5, 5)
+    val ballCarrierPlayer = basePlayer.build().asBallCarrierPlayer
 
     ballCarrierPlayer shouldBe a[BallCarrierPlayer]
     ballCarrierPlayer.id shouldBe 1
     ballCarrierPlayer.position shouldBe Position(5, 5)
 
   it should "preserve all player properties" in:
-    val ball = Ball(Position(5, 5), Movement.still)
-    val basePlayer = Player(
-      1,
-      Position(5, 5),
-      Movement(Direction(1, 1), 2),
-      ball = Some(ball),
-      nextAction = Action.Move(Direction(1, 0), 1),
-      decision = Run(Direction(1, 0), MatchConfig.runSteps)
-    )
+    val ball = BallBuilder() at (5, 5)
+    val basePlayer = PlayerBuilder(1)
+      .at(5, 5)
+      .move(Direction(1, 1))(2)
+      .ownsBall(true)
+      .decidedTo(Run(Direction(1, 0), MatchConfig.runSteps))
+      .build()
     val ballCarrierPlayer = basePlayer.asBallCarrierPlayer
-
     ballCarrierPlayer.id shouldBe basePlayer.id
     ballCarrierPlayer.position shouldBe basePlayer.position
     ballCarrierPlayer.movement shouldBe basePlayer.movement
@@ -43,23 +42,22 @@ class PlayerRoleFactorySpec extends AnyFlatSpec with Matchers:
     ballCarrierPlayer.decision shouldBe basePlayer.decision
 
   "PlayerRoleFactory.asOpponentDecisionPlayer" should "convert player to OpponentPlayer" in:
-    val basePlayer     = Player(2, Position(10, 10), Movement.still)
-    val opponentPlayer = basePlayer.asOpponentPlayer
+    val basePlayer     = PlayerBuilder(2) at (10, 10)
+    val opponentPlayer = basePlayer.build().asOpponentPlayer
 
     opponentPlayer shouldBe a[OpponentPlayer]
     opponentPlayer.id shouldBe 2
     opponentPlayer.position shouldBe Position(10, 10)
 
   it should "preserve all player properties" in:
-    val ball = Ball(Position(10, 10), Movement.still)
-    val basePlayer = Player(
-      2,
-      Position(10, 10),
-      Movement(Direction(-1, -1), 1),
-      ball = Some(ball),
-      nextAction = Action.Stopped(2),
-      decision = Mark(Player(1, Position(5, 5), Movement.still), Player(1, Position(5, 5), Movement.still), Side.West)
-    )
+    val ball = BallBuilder() at (10, 10)
+    val basePlayer = PlayerBuilder(2)
+      .at(10, 10)
+      .move(Direction(-1, -1))(1)
+      .ownsBall(true)
+      .isGoingTo(Action.Stopped(2))
+      .decidedTo(Mark(PlayerBuilder(1).at(5, 5).build(), PlayerBuilder(1).at(5, 5).build(), West))
+      .build()
     val opponentPlayer = basePlayer.asOpponentPlayer
 
     opponentPlayer.id shouldBe basePlayer.id
@@ -70,23 +68,22 @@ class PlayerRoleFactorySpec extends AnyFlatSpec with Matchers:
     opponentPlayer.decision shouldBe basePlayer.decision
 
   "PlayerRoleFactory.asTeammateDecisionPlayer" should "convert player to TeammatePlayer" in:
-    val basePlayer     = Player(3, Position(6, 6), Movement.still)
-    val teammatePlayer = basePlayer.asTeammatePlayer
+    val basePlayer     = PlayerBuilder(3) at (6, 6)
+    val teammatePlayer = basePlayer.build().asTeammatePlayer
 
     teammatePlayer shouldBe a[TeammatePlayer]
     teammatePlayer.id shouldBe 3
     teammatePlayer.position shouldBe Position(6, 6)
 
   it should "preserve all player properties" in:
-    val ball = Ball(Position(6, 6), Movement.still)
-    val basePlayer = Player(
-      3,
-      Position(6, 6),
-      Movement(Direction(0, 1), 1),
-      ball = Some(ball),
-      nextAction = Action.Initial,
-      decision = MoveRandom(Direction(1, 0), 3)
-    )
+    val ball = BallBuilder() at (6, 6)
+    val basePlayer = PlayerBuilder(3)
+      .at(6, 6)
+      .move(Direction(0, 1))(1)
+      .ownsBall(true)
+      .isGoingTo(Action.Initial)
+      .decidedTo(MoveRandom(Direction(1, 0), 3))
+      .build()
     val teammatePlayer = basePlayer.asTeammatePlayer
 
     teammatePlayer.id shouldBe basePlayer.id
@@ -97,11 +94,14 @@ class PlayerRoleFactorySpec extends AnyFlatSpec with Matchers:
     teammatePlayer.decision shouldBe basePlayer.decision
 
   "PossibleDecisionFactory.possibleDecisions" should "return list of possible decisions for BallCarrierPlayer" in:
-    val ballCarrierPlayer = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
-    val teammate          = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
-    val team1             = Team(List(ballCarrierPlayer, teammate), West, hasBall = true)
-    val team2             = Team(List(), East, hasBall = false)
-    val state             = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val ballCarrierPlayer =
+      PlayerBuilder(1).at(5, 5).decidedTo(Decision.MoveToBall(Direction(1, 0))).build().asBallCarrierPlayer
+    val state = newMatch(Score.init()):
+      team(West) withBall:
+        player(1) at (5, 5) ownsBall true
+      team(East):
+        player(2) at (6, 6)
+      ball at (5, 5)
 
     val possibleDecisions = ballCarrierPlayer.generateAllPossibleDecisions(state)
 
@@ -112,21 +112,28 @@ class PlayerRoleFactorySpec extends AnyFlatSpec with Matchers:
 
   it should "include Run decisions" in:
     val ballCarrierPlayer =
-      Player(1, Position(5, 5), Movement.still, decision = Decision.MoveToBall(Direction(1, 0))).asBallCarrierPlayer
-    val team1 = Team(List(ballCarrierPlayer), West, hasBall = true)
-    val team2 = Team(List(), East, hasBall = false)
-    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+      PlayerBuilder(1).at(5, 5).decidedTo(Decision.MoveToBall(Direction(1, 0))).build().asBallCarrierPlayer
+    val state = newMatch(Score.init()):
+      team(West) withBall:
+        player(1) at (5, 5) ownsBall true
+      team(East):
+        player(2) at (6, 6)
+      ball at (5, 5)
 
     val possibleDecisions = ballCarrierPlayer.generateAllPossibleDecisions(state)
 
     possibleDecisions should contain atLeastOneElementOf (ballCarrierPlayer.generatePossibleRunDirections(state))
 
   it should "include Pass decisions when teammates are available" in:
-    val ballCarrierPlayer = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
-    val teammate          = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
-    val team1             = Team(List(ballCarrierPlayer, teammate), West, hasBall = true)
-    val team2             = Team(List(), East, hasBall = false)
-    val state             = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val ballCarrierPlayer =
+      PlayerBuilder(1).at(5, 5).decidedTo(Decision.MoveToBall(Direction(1, 0))).build().asBallCarrierPlayer
+    val state = newMatch(Score.init()):
+      team(West) withBall:
+        player(1) at (5, 5) ownsBall true
+        player(2) at (6, 6)
+      team(East):
+        player(3) at (10, 10)
+      ball at (5, 5)
 
     val possibleDecisions = ballCarrierPlayer.generateAllPossibleDecisions(state)
 
@@ -134,10 +141,13 @@ class PlayerRoleFactorySpec extends AnyFlatSpec with Matchers:
 
   it should "include Shoot decisions" in:
     val ballCarrierPlayer =
-      Player(1, Position(5, 5), Movement.still, decision = Decision.MoveToBall(Direction(1, 0))).asBallCarrierPlayer
-    val team1 = Team(List(ballCarrierPlayer), West, hasBall = true)
-    val team2 = Team(List(), East, hasBall = false)
-    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+      PlayerBuilder(1).at(5, 5).decidedTo(Decision.MoveToBall(Direction(1, 0))).build().asBallCarrierPlayer
+    val state = newMatch(Score.init()):
+      team(West) withBall:
+        player(1) at (5, 5) ownsBall true
+      team(East):
+        player(2) at (6, 6)
+      ball at (5, 5)
 
     val possibleDecisions = ballCarrierPlayer.generateAllPossibleDecisions(state)
 
@@ -145,10 +155,13 @@ class PlayerRoleFactorySpec extends AnyFlatSpec with Matchers:
 
   it should "include MoveToGoal decisions" in:
     val ballCarrierPlayer =
-      Player(1, Position(5, 5), Movement.still, decision = Decision.MoveToGoal(Direction(1, 0))).asBallCarrierPlayer
-    val team1 = Team(List(ballCarrierPlayer), West, hasBall = true)
-    val team2 = Team(List(), East, hasBall = false)
-    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+      PlayerBuilder(1).at(5, 5).decidedTo(Decision.MoveToGoal(Direction(1, 0))).build().asBallCarrierPlayer
+    val state = newMatch(Score.init()):
+      team(West) withBall:
+        player(1) at (5, 5) ownsBall true
+      team(East):
+        player(2) at (6, 6)
+      ball at (5, 5)
 
     val possibleDecisions = ballCarrierPlayer.generateAllPossibleDecisions(state)
 
@@ -156,10 +169,13 @@ class PlayerRoleFactorySpec extends AnyFlatSpec with Matchers:
 
   it should "handle player with Initial decision" in:
     val ballCarrierPlayer =
-      Player(1, Position(5, 5), Movement.still, decision = Decision.MoveToBall(Direction(1, 0))).asBallCarrierPlayer
-    val team1 = Team(List(ballCarrierPlayer), West, hasBall = true)
-    val team2 = Team(List(), East, hasBall = false)
-    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+      PlayerBuilder(1).at(5, 5).decidedTo(Decision.MoveToBall(Direction(1, 0))).build().asBallCarrierPlayer
+    val state = newMatch(Score.init()):
+      team(West) withBall:
+        player(1) at (5, 5) ownsBall true
+      team(East):
+        player(2) at (6, 6)
+      ball at (5, 5)
 
     val possibleDecisions = ballCarrierPlayer.generateAllPossibleDecisions(state)
 
@@ -170,15 +186,13 @@ class PlayerRoleFactorySpec extends AnyFlatSpec with Matchers:
 
   it should "handle player with existing decision" in:
     val ballCarrierPlayer =
-      Player(
-        1,
-        Position(5, 5),
-        Movement.still,
-        decision = Run(Direction(1, 0), MatchConfig.runSteps)
-      ).asBallCarrierPlayer
-    val team1 = Team(List(ballCarrierPlayer), West, hasBall = true)
-    val team2 = Team(List(), East, hasBall = false)
-    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+      PlayerBuilder(1).at(5, 5).decidedTo(Run(Direction(1, 0), MatchConfig.runSteps)).build().asBallCarrierPlayer
+    val state = newMatch(Score.init()):
+      team(West) withBall:
+        player(1) at (5, 5) ownsBall true
+      team(East):
+        player(2) at (6, 6)
+      ball at (5, 5)
 
     val possibleDecisions = ballCarrierPlayer.generateAllPossibleDecisions(state)
 
@@ -188,10 +202,13 @@ class PlayerRoleFactorySpec extends AnyFlatSpec with Matchers:
     }
 
   it should "return consistent decisions for same state" in:
-    val ballCarrierPlayer = Player(1, Position(5, 5), Movement.still).asBallCarrierPlayer
-    val team1             = Team(List(ballCarrierPlayer), West, hasBall = true)
-    val team2             = Team(List(), East, hasBall = false)
-    val state             = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val ballCarrierPlayer = PlayerBuilder(1).at(5, 5).build().asBallCarrierPlayer
+    val state = newMatch(Score.init()):
+      team(West) withBall:
+        player(1) at (5, 5) ownsBall true
+      team(East):
+        player(2) at (6, 6)
+      ball at (5, 5)
 
     val decisions1 = ballCarrierPlayer.generateAllPossibleDecisions(state)
     val decisions2 = ballCarrierPlayer.generateAllPossibleDecisions(state)
@@ -200,10 +217,13 @@ class PlayerRoleFactorySpec extends AnyFlatSpec with Matchers:
 
   it should "handle edge case positions" in:
     val ballCarrierPlayer =
-      Player(1, Position(0, 0), Movement.still, decision = Decision.MoveToBall(Direction(1, 0))).asBallCarrierPlayer
-    val team1 = Team(List(ballCarrierPlayer), West, hasBall = true)
-    val team2 = Team(List(), East, hasBall = false)
-    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+      PlayerBuilder(1).at(5, 5).decidedTo(Decision.MoveToBall(Direction(1, 0))).build().asBallCarrierPlayer
+    val state = newMatch(Score.init()):
+      team(West) withBall:
+        player(1) at (5, 5) ownsBall true
+      team(East):
+        player(2) at (6, 6)
+      ball at (5, 5)
 
     val possibleDecisions = ballCarrierPlayer.generateAllPossibleDecisions(state)
 

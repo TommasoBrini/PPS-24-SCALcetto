@@ -1,6 +1,7 @@
 package update
 
-import model.Match.Match
+import model.Match.{Match, Score, Side}
+import model.Match.Side.*
 import monads.States.State
 import decide.Decide.decideStep
 import validate.Validate.validateStep
@@ -9,12 +10,11 @@ import config.UIConfig.*
 import dsl.creation.SituationGenerator
 import dsl.space.PositionSyntax.*
 import dsl.space.MovementSyntax.*
-
-import scala.annotation.tailrec
+import dsl.MatchSyntax.*
 
 object Update:
   enum Event:
-    case BallOut, Goal
+    case BallOut, GoalEast, GoalWest
 
   def update(state: Match): Match =
     val updateFlow: State[Match, Option[Event]] =
@@ -32,7 +32,10 @@ object Update:
       case Some(BallOut) =>
         val bounceType = state.ball.position getBounce (fieldWidth, fieldHeight)
         state.copy(ball = state.ball.copy(movement = state.ball.movement getMovementFrom bounceType))
-      case Some(Goal) =>
-        println("Goal!!!")
-        SituationGenerator.kickOff
+      case Some(GoalEast) =>
+        println("East Goal!!!")
+        SituationGenerator.kickOff(state.score.eastGoal, West)
+      case Some(GoalWest) =>
+        println("West Goal!!!")
+        SituationGenerator.kickOff(state.score.westGoal, East)
       case _ => state

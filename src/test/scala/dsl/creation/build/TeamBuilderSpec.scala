@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.shouldBe
 import model.Match.{Side, Team}
 
-class TestTeamBuilder extends AnyFlatSpec with Matchers:
+class TeamBuilderSpec extends AnyFlatSpec with Matchers:
   private def mk(id: Int) = PlayerBuilder(id).at(id, id).build()
 
   "TeamBuilder" should "collect players, side and hasBall flag" in {

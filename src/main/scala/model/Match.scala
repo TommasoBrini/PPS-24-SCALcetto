@@ -49,10 +49,13 @@ object Match:
 
   case class Ball(position: Position, movement: Movement = Movement.still)
 
-  case class Match(teams: (Team, Team), ball: Ball):
-    def map(mapper: Match => Match): Match = mapper.apply(this)
-    def mapIf(condition: Match => Boolean, mapper: Match => Match): Match =
-      if condition.apply(this) then map(mapper) else this
-    def players: List[Player] = teams._1.players ++ teams._2.players
+  opaque type Score = (Int, Int)
+  object Score:
+    def apply(scoreWest: Int, scoreEast: Int): Score = (scoreWest, scoreEast)
+    def init(): Score                                = (0, 0)
 
-import Space.*
+  extension (score: Score)
+    def westScore: Int = score._1
+    def eastScore: Int = score._2
+
+  case class Match(teams: (Team, Team), ball: Ball, score: Score = Score.init())

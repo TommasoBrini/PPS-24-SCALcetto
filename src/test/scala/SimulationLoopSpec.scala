@@ -7,11 +7,11 @@ class SimulationLoopSpec extends AnyFlatSpec with Matchers:
 
   if (!java.awt.GraphicsEnvironment.isHeadless) {
     "SimulationLoop" should "initialize without errors" in:
-      val state = SituationGenerator.kickOff
+      val state = SituationGenerator.kickOff(Score.init())
       noException should be thrownBy SimulationLoop.initialize(state)
 
     it should "start, pause, resume and reset without errors" in:
-      val state = SituationGenerator.kickOff
+      val state = SituationGenerator.kickOff(Score.init())
       SimulationLoop.initialize(state)
       noException should be thrownBy SimulationLoop.initialize(state)
   } else {

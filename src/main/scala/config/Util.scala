@@ -59,5 +59,5 @@ object Util:
       math.abs(cross) < 1e-6 && dot > 0
     }
 
-  def isPlayerInFirstTeam(player: Player, matchState: Match): Boolean =
-    matchState.teams.head.players.contains(player)
+  def isPlayerInWestTeam(player: Player, matchState: Match): Boolean =
+    matchState.teams.teamOf(player) == matchState.teams.teamWest

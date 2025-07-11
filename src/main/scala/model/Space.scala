@@ -17,9 +17,10 @@ object Space:
 
   opaque type Direction = (Double, Double)
   object Direction:
-    def apply(x: Int, y: Int): Direction       = (x, y)
-    def apply(x: Double, y: Double): Direction = (x, y)
-    def none: Direction                        = (0, 0)
+    def apply(x: Int, y: Int): Direction                = (x, y)
+    def apply(x: Double, y: Double): Direction          = (x, y)
+    def unapply(d: Direction): Option[(Double, Double)] = Some(d)
+    def none: Direction                                 = (0, 0)
   extension (d: Direction)
     def x: Double = d._1
     def y: Double = d._2
