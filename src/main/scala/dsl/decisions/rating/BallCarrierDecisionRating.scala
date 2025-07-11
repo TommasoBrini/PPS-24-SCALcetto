@@ -24,9 +24,9 @@ object BallCarrierDecisionRating:
     */
   extension (run: Decision.Run)
     def rate(player: Player, state: Match): Double =
-      isRunDirectionClear(player, run.direction, state) match
-        case true => RatingValues.VeryPoor
-        case _    => RatingValues.Impossible
+      if isRunDirectionClear(player, run.direction, state) && isRunDirectionForward(player, run.direction, state)
+      then RatingValues.VeryPoor
+      else RatingValues.Impossible
 
   /** Rates a pass decision based on path clarity, distance, and advancement
     * @param pass
@@ -136,8 +136,8 @@ private def calculateMoveToGoalDetails(
     player: Player,
     state: Match
 ): MoveToGoalEvaluationDetails =
-  val isTeamHead      = state.teams.head.players.contains(player)
-  val isOffensiveHalf = determineIfInOffensiveHalf(player, isTeamHead)
+  val isTeamWest      = Util.isPlayerInWestTeam(player, state)
+  val isOffensiveHalf = determineIfInOffensiveHalf(player, isTeamWest)
   val directionClear  = Util.isDirectionClear(player.position, moveToGoal.goalDirection, state)
 
   MoveToGoalEvaluationDetails(isOffensiveHalf, directionClear)
@@ -154,13 +154,19 @@ private def determineTeam(player: Player, state: Match): Team =
   state.teams.teamOf(player)
 
 private def calculateAdvancement(passer: Player, from: Position, to: Position, state: Match): Int =
-  if state.teams.head.players.contains(passer) then
+  if Util.isPlayerInWestTeam(passer, state) then
     to.x - from.x
   else
     from.x - to.x
 
-private def determineIfInOffensiveHalf(player: Player, isTeamHead: Boolean): Boolean =
-  if isTeamHead then
+private def determineIfInOffensiveHalf(player: Player, isTeamWest: Boolean): Boolean =
+  if isTeamWest then
     player.position.x > UIConfig.fieldWidth / 2
   else
     player.position.x < UIConfig.fieldWidth / 2
+
+private def isRunDirectionForward(player: Player, direction: Direction, state: Match): Boolean =
+  if Util.isPlayerInWestTeam(player, state) then
+    direction.x >= 0
+  else
+    direction.x <= 0

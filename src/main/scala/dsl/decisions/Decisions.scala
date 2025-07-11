@@ -116,7 +116,7 @@ trait CanDecideToShoot:
     )
 
   private def determineGoalXCoordinate(matchState: Match): Int =
-    if Util.isPlayerInFirstTeam(this, matchState) then UIConfig.goalEastX else UIConfig.goalWestX
+    if Util.isPlayerInWestTeam(this, matchState) then UIConfig.goalEastX else UIConfig.goalWestX
 
 /** Trait for players that can move towards the goal
   */
@@ -144,7 +144,7 @@ trait CanDecideToMoveToGoal:
     List(createMoveToGoalDecision(directionToGoal))
 
   private def determineGoalPosition(matchState: Match): Position =
-    if Util.isPlayerInFirstTeam(this, matchState) then
+    if Util.isPlayerInWestTeam(this, matchState) then
       Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)
     else
       Position(0, UIConfig.fieldHeight / 2)

@@ -58,12 +58,12 @@ class RatingSpec extends AnyFlatSpec with Matchers:
     val state               = Match(teams = (Team(List(passer, receiver), West), Team(List(), East)), ball)
     pass.rate(state) should be > 0.0
 
-  "Run rate" should "be 0.2 if direction is clear and not initial" in:
+  "Run rate" should "be 0.2 if direction is clear and forward" in:
     val ball = Ball(Position(10, 10))
     val runner =
       Player(1, Position(10, 10), Movement.still, Some(ball), Decision.MoveToGoal(Direction(1, 0)), Action.Initial)
     val run: Decision.Run = Decision.Run(Direction(1, 0), MatchConfig.runSteps)
-    val state             = Match(teams = (Team(List(runner), East), Team(List(), West)), ball)
+    val state             = Match(teams = (Team(List(runner), West), Team(List(), East)), ball)
     run.rate(runner, state) shouldBe 0.2
 
   it should "be 0.0 if direction is not clear" in:
