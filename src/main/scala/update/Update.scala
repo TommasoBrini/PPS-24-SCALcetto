@@ -12,8 +12,6 @@ import dsl.space.PositionSyntax.*
 import dsl.space.MovementSyntax.*
 import dsl.MatchSyntax.*
 
-import scala.annotation.tailrec
-
 object Update:
   enum Event:
     case BallOut, GoalEast, GoalWest

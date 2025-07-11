@@ -58,12 +58,4 @@ object Match:
     def westScore: Int = score._1
     def eastScore: Int = score._2
 
-  case class Match(teams: (Team, Team), ball: Ball, score: Score = Score.init()):
-    def map(mapper: Match => Match): Match = mapper.apply(this)
-    def mapIf(condition: Match => Boolean, mapper: Match => Match): Match =
-      if condition.apply(this) then map(mapper) else this
-    def players: List[Player] = teams._1.players ++ teams._2.players
-
-import Space.*
-
-import scala.annotation.tailrec
+  case class Match(teams: (Team, Team), ball: Ball, score: Score = Score.init())
