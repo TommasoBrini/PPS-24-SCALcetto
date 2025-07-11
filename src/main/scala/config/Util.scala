@@ -60,4 +60,4 @@ object Util:
     }
 
   def isPlayerInFirstTeam(player: Player, matchState: Match): Boolean =
-    matchState.teams.head.players.contains(player)
+    matchState.teams.head.players.exists(_.id == player.id)

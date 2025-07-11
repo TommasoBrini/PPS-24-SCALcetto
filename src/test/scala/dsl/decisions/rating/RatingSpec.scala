@@ -1,4 +1,4 @@
-package model.decisions.rating
+package dsl.decisions.rating
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

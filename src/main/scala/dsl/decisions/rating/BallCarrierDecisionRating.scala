@@ -69,7 +69,6 @@ object BallCarrierDecisionRating:
       val moveDetails = calculateMoveToGoalDetails(moveToGoal, player, state)
       evaluateMoveToGoalDecision(moveDetails)
 
-/** Rating constants */
 private object RatingValues:
   val Excellent: Double  = 1.0
   val Good: Double       = 0.8
@@ -78,26 +77,19 @@ private object RatingValues:
   val VeryPoor: Double   = 0.2
   val Impossible: Double = 0.0
 
-/** Distance thresholds for decision evaluation */
 private object DistanceThresholds:
   val ShortPass: Int           = 30
   val MediumPass: Int          = 100
   val HighAdvancement: Int     = 50
   val ModerateAdvancement: Int = 20
 
-/** Case classes for evaluation details to improve code organization
-  */
 private case class PassEvaluationDetails(pathClear: Boolean, advancement: Int, distance: Double)
 private case class ShootEvaluationDetails(distance: Double, pathClear: Boolean)
 private case class MoveToGoalEvaluationDetails(isOffensiveHalf: Boolean, directionClear: Boolean)
 
-/** Checks if the run direction is clear of obstacles
-  */
 private def isRunDirectionClear(player: Player, direction: Direction, state: Match): Boolean =
   Util.isDirectionClear(player.position, direction, state)
 
-/** Calculates pass evaluation details
-  */
 private def calculatePassDetails(pass: Decision.Pass, state: Match): PassEvaluationDetails =
   val fromPosition = pass.from.position
   val toPosition   = pass.to.position
@@ -108,8 +100,6 @@ private def calculatePassDetails(pass: Decision.Pass, state: Match): PassEvaluat
 
   PassEvaluationDetails(pathClear, advancement, distance)
 
-/** Evaluates pass decision based on calculated details
-  */
 private def evaluatePassDecision(details: PassEvaluationDetails): Double =
   if !details.pathClear then
     RatingValues.Impossible
@@ -126,8 +116,6 @@ private def evaluatePassDecision(details: PassEvaluationDetails): Double =
   else
     RatingValues.Impossible
 
-/** Calculates shoot evaluation details
-  */
 private def calculateShootDetails(shoot: Decision.Shoot, state: Match): ShootEvaluationDetails =
   val distance  = shoot.striker.position distanceFrom shoot.goal
   val team      = determineTeam(shoot.striker, state)
@@ -135,8 +123,6 @@ private def calculateShootDetails(shoot: Decision.Shoot, state: Match): ShootEva
 
   ShootEvaluationDetails(distance, pathClear)
 
-/** Evaluates shoot decision based on calculated details
-  */
 private def evaluateShootDecision(details: ShootEvaluationDetails): Double =
   if details.distance > MatchConfig.highDistanceToGoal || !details.pathClear then
     RatingValues.Impossible
@@ -145,8 +131,6 @@ private def evaluateShootDecision(details: ShootEvaluationDetails): Double =
   else
     RatingValues.VeryPoor
 
-/** Calculates move-to-goal evaluation details
-  */
 private def calculateMoveToGoalDetails(
     moveToGoal: Decision.MoveToGoal,
     player: Player,
@@ -158,8 +142,6 @@ private def calculateMoveToGoalDetails(
 
   MoveToGoalEvaluationDetails(isOffensiveHalf, directionClear)
 
-/** Evaluates move-to-goal decision based on calculated details
-  */
 private def evaluateMoveToGoalDecision(details: MoveToGoalEvaluationDetails): Double =
   if !details.isOffensiveHalf then
     RatingValues.Impossible
@@ -168,21 +150,15 @@ private def evaluateMoveToGoalDecision(details: MoveToGoalEvaluationDetails): Do
   else
     RatingValues.Average
 
-/** Determines the team ID for a player
-  */
 private def determineTeam(player: Player, state: Match): Team =
   state.teams.teamOf(player)
 
-/** Calculates the advancement value for a pass
-  */
 private def calculateAdvancement(passer: Player, from: Position, to: Position, state: Match): Int =
   if state.teams.head.players.contains(passer) then
     to.x - from.x
   else
     from.x - to.x
 
-/** Determines if a player is in the offensive half of the field
-  */
 private def determineIfInOffensiveHalf(player: Player, isTeamHead: Boolean): Boolean =
   if isTeamHead then
     player.position.x > UIConfig.fieldWidth / 2

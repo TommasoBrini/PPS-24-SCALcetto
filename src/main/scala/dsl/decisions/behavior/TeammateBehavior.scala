@@ -21,8 +21,6 @@ private enum TeammateSituation:
   case ContinueMovement(direction: Direction, remainingSteps: Int)
   case RandomMovement
 
-/** Behavior implementation for teammate players
-  */
 object TeammateBehavior:
 
   /** Calculates the best decision for a teammate player based on current match state
@@ -38,14 +36,6 @@ object TeammateBehavior:
       val situation = analyzeSituation(player, state)
       takeDecision(player, situation, state)
 
-  /** Analyzes the current situation to determine what action the teammate should take
-    * @param player
-    *   the teammate player
-    * @param state
-    *   the current match state
-    * @return
-    *   the identified situation
-    */
   private def analyzeSituation(player: TeammatePlayer, state: Match): TeammateSituation =
     player.nextAction match
       case Stopped(steps) if steps > 0 => TeammateSituation.Confusion(steps - 1)
@@ -59,14 +49,6 @@ object TeammateBehavior:
         else
           analyzeRandomMovementSituation(player)
 
-  /** Checks if the ball is in proximity range and no player currently has the ball
-    * @param player
-    *   the teammate player
-    * @param state
-    *   the current match state
-    * @return
-    *   true if ball is in proximity and no one has it
-    */
   private def isBallInProximityAndNoOneHasBall(
       distanceToBall: Double,
       player: TeammatePlayer,
@@ -74,12 +56,6 @@ object TeammateBehavior:
   ): Boolean =
     distanceToBall < MatchConfig.proximityRange && !state.teams.players.exists(_.hasBall)
 
-  /** Analyzes the random movement situation based on current decision
-    * @param player
-    *   the teammate player
-    * @return
-    *   the random movement situation
-    */
   private def analyzeRandomMovementSituation(player: TeammatePlayer): TeammateSituation =
     player.decision match
       case MoveRandom(direction, steps) if steps > 0 =>
@@ -87,16 +63,6 @@ object TeammateBehavior:
       case _ =>
         TeammateSituation.RandomMovement
 
-  /** Makes the appropriate decision based on the analyzed situation
-    * @param player
-    *   the teammate player
-    * @param situation
-    *   the identified situation
-    * @param state
-    *   the current match state
-    * @return
-    *   the decision to be made
-    */
   private def takeDecision(player: TeammatePlayer, situation: TeammateSituation, state: Match): Decision =
     situation match
       case TeammateSituation.Confusion(remainingSteps) =>
@@ -116,9 +82,5 @@ object TeammateBehavior:
         val randomDirection = generateRandomDirection()
         player.createRandomMovementDecision(randomDirection, MatchConfig.moveRandomSteps)
 
-  /** Generates a random direction for movement
-    * @return
-    *   a random direction vector
-    */
   private def generateRandomDirection(): Direction =
     Direction(Random.between(-1.toDouble, 1), Random.between(-1.toDouble, 1))

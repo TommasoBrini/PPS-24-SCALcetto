@@ -1,4 +1,4 @@
-package model.decisions.behavior
+package dsl.decisions.behavior
 
 import model.Match.*
 import model.Match.Decision.*
