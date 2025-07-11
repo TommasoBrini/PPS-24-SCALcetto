@@ -11,7 +11,7 @@ object UIConfig:
 
   val fieldPanelWidth  = 800
   val fieldPanelHeight = 500
-  val infoPanelHeight  = 50
+  val infoPanelHeight  = 80
   val fieldWidth: Int  = 700
   val fieldHeight: Int = 400
 
