@@ -1,7 +1,6 @@
 package monads
 
 import Monads.*
-import Streams.*, Stream.*
 
 object States:
 

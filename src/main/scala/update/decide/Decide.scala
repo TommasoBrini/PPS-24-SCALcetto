@@ -13,15 +13,16 @@ object Decide:
   /** Main decision function that orchestrates the decision-making process for all players
     */
   def decideStep: State[Match, Unit] =
-    State(s => (decide(s), ()))
-
-  def decide(state: Match): Match =
-    state.teams.map(assignRoles) match
-      case (teamA, teamB) =>
-        val (defenders, attackers) = determineTeamRoles(teamA, teamB)
-        val markings               = Util.assignMarkings(defenders.players, attackers.players)
-        val updatedTeams           = updateBothTeams(teamA, teamB, state, markings)
-        state.copy(teams = updatedTeams)
+    State(state =>
+      (
+        state.teams.map(assignRoles) match
+          case (teamA, teamB) =>
+            val (defenders, attackers) = determineTeamRoles(teamA, teamB)
+            val markings               = Util.assignMarkings(defenders.players, attackers.players)
+            val updatedTeams           = updateBothTeams(teamA, teamB, state, markings)
+            (state.copy(teams = updatedTeams), ())
+      )
+    )
 
   /** Determines which team has the ball and returns them as (defenders, attackers)
     */

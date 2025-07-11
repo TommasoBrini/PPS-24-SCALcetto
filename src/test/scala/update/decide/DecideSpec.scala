@@ -22,7 +22,7 @@ class DecideSpec extends AnyFlatSpec with Matchers:
         player(2) at (10, 10)
       ball at (0, 0) move (Direction(0, 0), 0)
 
-    val updatedState = decide(state)
+    val (updatedState, _) = decideStep.run(state)
 
     updatedState.teams.players.foreach { player =>
       player.decision should not be Decision.Initial
@@ -37,10 +37,10 @@ class DecideSpec extends AnyFlatSpec with Matchers:
         player(2) at (10, 10)
       ball at (0, 0) move (Direction(0, 0), 0)
 
-    val updatedState    = decide(state)
-    val teamWithBall    = updatedState.teams.withBall
-    val updatedAttacker = teamWithBall.get.players.head
-    val updatedDefender = updatedState.teams.opponentOf(teamWithBall.get).players.head
+    val (updatedState, _) = decideStep.run(state)
+    val teamWithBall      = updatedState.teams.withBall
+    val updatedAttacker   = teamWithBall.get.players.head
+    val updatedDefender   = updatedState.teams.opponentOf(teamWithBall.get).players.head
 
     updatedAttacker.decision should not be Decision.Initial
     updatedDefender.decision should not be Decision.Initial
@@ -51,7 +51,7 @@ class DecideSpec extends AnyFlatSpec with Matchers:
         team(East)
       ball at (0, 0) move (Direction(0, 0), 0)
 
-    val updatedState = decide(state)
+    val (updatedState, _) = decideStep.run(state)
 
     updatedState.teams.players should have size 0
 
@@ -66,7 +66,7 @@ class DecideSpec extends AnyFlatSpec with Matchers:
 
       ball at (15, 15) move (Direction(1, 1), 2)
 
-    val updatedState = decide(state)
+    val (updatedState, _) = decideStep.run(state)
 
     updatedState.teams.head.hasBall shouldBe true
     updatedState.teams(1).hasBall shouldBe false
@@ -82,7 +82,7 @@ class DecideSpec extends AnyFlatSpec with Matchers:
         player(4) at (11, 11)
       ball at (0, 0) move (Direction(0, 0), 0) // still ball at origin
 
-    val updatedState = decide(state)
+    val (updatedState, _) = decideStep.run(state)
 
     updatedState.teams.players.foreach { player =>
       player.decision should not be Decision.Initial
@@ -97,7 +97,7 @@ class DecideSpec extends AnyFlatSpec with Matchers:
         player(2) at (10, 10) decidedTo Mark(player1.build(), player1.build(), East)
       ball at (0, 0) move (Direction(0, 0), 0)
 
-    val updatedState = decide(state)
+    val (updatedState, _) = decideStep.run(state)
 
     updatedState.teams.players.foreach: player =>
       player.decision should not be Run(Direction(1, 0), MatchConfig.runSteps)
