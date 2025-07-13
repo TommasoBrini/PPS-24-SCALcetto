@@ -32,15 +32,16 @@ Le sezioni seguenti descrivono ogni componente in dettaglio.
 Le Context Functions introdotte da Scala 3 sono il meccanismo chiave che consente al DSL di apparire “magicamente” aperto sul builder corretto senza doverlo passare a mano fra tutte le chiamate.
 #### Come funziona
 1. Il valore scope viene marcato come given e quindi diventa disponibile per tutte le funzioni che richiedono un using MatchBuilder nel corpo del blocco passato a newMatch.
-``` scala 3
+```scala
 given scope: MatchBuilder = MatchBuilder(score)      // dentro newMatch
 ```
 2. Ogni volta che si invoca `team(side)` non è necessario passare il MatchBuilder: il compilatore lo pesca dal contesto corrente.
 3. All’interno di `team(side)` viene creato un TeamBuilder; la sua istanza viene poi resa implicita nello scope del blocco:
-``` scala 3
+```scala
 def apply(body: TeamBuilder ?=> Unit): TeamBuilder =
   body(using this)        // `this` diventa il context value TeamBuilder
 ```
+
 Grazie a ciò, il successivo player(id) trova automaticamente il TeamBuilder corretto.
 4. Poiché ogni builder è scope-bound, non può “uscire” dal proprio contesto e contaminare altri team o match, inoltre il compilatore impedisce di chiamare player fuori da un blocco di team, o team fuori da newMatch.
 
@@ -53,19 +54,20 @@ Grazie a ciò, il successivo player(id) trova automaticamente il TeamBuilder cor
 ### Sintassi
 #### CreationSyntax
 Una facciata che cuce insieme i builder tramite clausole using contestuali:
-``` scala 3
+
+```scala
 newMatch(score):                        // MatchBuilder implicito
   team(West):                           // TeamBuilder implicito
     player(1) at (3,4) ownsBall true
   team(East): 
-    …
+    player(2) at (3,4) ownsBall false
   ball at (50,25) move (Direction(0,0), 0)
-
 ```
+
 Punti chiave:
 - newMatch restituisce il Match già costruito, rendendolo l’unico punto di ingresso.
 - i metodi team, ball e player sono proxy che delegano il lavoro al builder necessario.
-- Il supporto all’operatore postfix dona una sintassi più scorrevole (“ownsBall true”, “move (dir, speed)”).
+- Il supporto all’operatore postfix dona una sintassi più scorrevole `(“ownsBall true”, “move (dir, speed)”)`.
 
 ### Principi di Progettazione
 - Builder Pattern: isola la mutabilità, mantenendo l’API esterna immutabile.
