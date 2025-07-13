@@ -5,6 +5,10 @@ import model.Match.{Player, Side, Team}
 
 export TeamsSyntax.*
 
+/** Collection of **high-level queries** on the tuple `(westTeam, eastTeam)` returned by `Match.teams`.
+  *
+  * Private helpers are kept hidden; only the DSL-facing extension methods are documented below.
+  */
 object TeamsSyntax:
   private def getOpponent(teams: (Team, Team), myTeam: Team): Team =
     if teams.teamWest != myTeam then teams.teamWest
@@ -36,15 +40,39 @@ object TeamsSyntax:
       )
 
   extension (teams: (Team, Team))
-    def teamWest: Team                     = getWestTeam(teams)
-    def teamEast: Team                     = getEastTeam(teams)
-    def opponentOf(team: Team): Team       = getOpponent(teams, team)
-    def players: List[Player]              = teamWest.players ::: teamEast.players
-    def teamOf(player: Player): Team       = getTeamOf(teams, player)
-    def withBall: Option[Team]             = getTeamWithBall(teams)
+    /** Team defending the **West** goal. */
+    def teamWest: Team = getWestTeam(teams)
+
+    /** Team defending the **East** goal. */
+    def teamEast: Team = getEastTeam(teams)
+
+    /** Retrieves the opponent of the supplied `team`.
+      *
+      * @return
+      *   the other element of the tuple
+      */
+    def opponentOf(team: Team): Team = getOpponent(teams, team)
+
+    /** Flattened list of the 22 players on the pitch.
+      */
+    def players: List[Player] = teamWest.players ::: teamEast.players
+
+    /** Team that owns the given `player`.
+      */
+    def teamOf(player: Player): Team = getTeamOf(teams, player)
+
+    /** `Some(team)` if any side has the ball, `None` otherwise.
+      */
+    def withBall: Option[Team] = getTeamWithBall(teams)
+
+    /** Maps both teams with the supplied function and returns the updated pair.
+      */
     def map(f: Team => Team): (Team, Team) = (f(teams._1), f(teams._2))
 
   extension (side: Side)
+    /** Fixed **seed value** used to generate correctly the players of a specific Team in his side initially (West = 1,
+      * East = 2).
+      */
     def seed: Int = side match
       case West => 1
       case East => 2
