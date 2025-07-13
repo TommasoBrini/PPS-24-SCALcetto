@@ -12,7 +12,20 @@ import dsl.MatchSyntax.*
 
 import scala.util.Random
 
+/** Convenience object that produces **ready-made match situations** by orchestrating the creation DSL.
+  */
 object SituationGenerator:
+  /** Builds a *kick-off* situation:
+    *   1. Positions both teams in their halves. 2. Gives the ball to the nominated starting side. 3. Drops the ball at
+    *      the centre spot.
+    *
+    * @param score
+    *   initial scoreline
+    * @param side
+    *   team that starts with the ball (default = West)
+    * @return
+    *   a fully playable match in kick-off configuration
+    */
   def kickOff(score: Score, side: Side = West): Match =
     newMatch(score):
       if side == West then
