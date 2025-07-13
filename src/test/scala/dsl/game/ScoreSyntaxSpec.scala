@@ -17,14 +17,14 @@ class ScoreSyntaxSpec extends AnyFlatSpec with Matchers:
   it should "leave the original Score unchanged (immutability)" in:
     val initial = Score(0, 0)
     val _       = initial.westGoal
-    initial shouldBe Score(0, 0) // original untouched
+    initial shouldBe Score(0, 0)
 
   "eastGoal" should "increment only the east team’s score" in:
     val initial = Score(4, 1)
     val updated = initial.eastGoal
 
-    updated.westScore shouldBe 4 // unchanged
-    updated.eastScore shouldBe 2 // +1
+    updated.westScore shouldBe 4
+    updated.eastScore shouldBe 2
 
   it should "work correctly when both scores are already high" in:
     val initial = Score(10, 10)

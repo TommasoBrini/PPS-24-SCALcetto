@@ -10,7 +10,13 @@ import dsl.decisions.PlayerRoleFactory.*
 
 object Decide:
 
-  /** Main decision function that orchestrates the decision-making process for all players
+  /** Orchestrates the decision-making process for all players in the match.
+    *
+    * This function coordinates the entire decision-making workflow: assign roles, determine team roles, assign markings
+    * and update all players with new decisions.
+    *
+    * @return
+    *   A State monad that transforms the match state by updating all player decisions
     */
   def decideStep: State[Match, Unit] =
     State(state =>
@@ -24,12 +30,9 @@ object Decide:
       )
     )
 
-  /** Determines which team has the ball and returns them as (defenders, attackers)
-    */
   private def determineTeamRoles(teamA: Team, teamB: Team): (Team, Team) =
     if teamA.hasBall then (teamB, teamA) else (teamA, teamB)
 
-  /** Updates both teams with new player decisions */
   private def updateBothTeams(
       teamA: Team,
       teamB: Team,
@@ -40,14 +43,10 @@ object Decide:
     val updatedTeamB = updateTeamDecisions(teamB, state, markings)
     (updatedTeamA, updatedTeamB)
 
-  /** Updates all players in a team with new decisions
-    */
   private def updateTeamDecisions(team: Team, state: Match, markings: Map[Player, Player]): Team =
     val updatedPlayers = team.players.map(player => updatePlayerDecision(player, state, markings))
     team.copy(players = updatedPlayers)
 
-  /** Updates a single player's decision based on the current state and markings
-    */
   private def updatePlayerDecision(player: Player, state: Match, markings: Map[Player, Player]): Player =
     player.copy(decision = player.decide(state, markings))
 

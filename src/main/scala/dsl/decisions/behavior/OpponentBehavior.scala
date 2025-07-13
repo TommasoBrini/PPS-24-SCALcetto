@@ -16,17 +16,17 @@ private enum DefensiveSituation:
 
 object OpponentBehavior:
 
-  /** Calculates the best decision for an opponent player based on current match state
-    * @param player
-    *   the opponent player making the decision
-    * @param matchState
-    *   the current match state
-    * @param target
-    *   optional target player to mark
-    * @return
-    *   the best decision for the player
-    */
   extension (player: OpponentPlayer)
+    /** Calculates the optimal defensive decision for an opponent player based on current match state. Implements the
+      * decision-making logic for players on the team without the ball.
+      *
+      * @param matchState
+      *   The current match state
+      * @param target
+      *   Optional target player to mark (from defensive assignments)
+      * @return
+      *   The best defensive decision for the opponent player
+      */
     def calculateBestDecision(matchState: Match, target: Option[Player]): Decision =
       player.nextAction match
         case Action.Stopped(remainingSteps) if remainingSteps > 0 =>

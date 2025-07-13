@@ -11,12 +11,16 @@ import config.MatchConfig
 object DecisionMaker:
 
   extension (player: Player)
-    /** Decide the best action for the player based on the state of the match.
+    /** Determines the optimal action for a player based on their role and current match state.
+      *
+      * This method delegates decision-making to specialized behavior modules based on the player's role
       *
       * @param matchState
-      *   the current state of the match
+      *   The current state of the match
+      * @param markings
+      *   A mapping of defensive players to their assigned offensive targets
       * @return
-      *   the best action for the player
+      *   The best decision for the player given their role and current situation
       */
     def decide(matchState: Match, markings: Map[Player, Player]): Decision = player match
       case c: BallCarrierPlayer =>

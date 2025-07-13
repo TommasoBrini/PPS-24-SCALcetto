@@ -9,16 +9,15 @@ import dsl.decisions.PlayerRoleFactory.*
 
 object BallCarrierBehavior:
 
-  /** Calculates the best decision for an ball carrier player based on current match state
-    *
-    * @param player
-    *   the ball carrier player making the decision
-    * @param state
-    *   the current match state
-    * @return
-    *   the best decision for the player
-    */
   extension (player: BallCarrierPlayer)
+    /** Calculates the optimal decision for a ball carrier player based on current match state. Implements the
+      * decision-making logic for players in possession of the ball.
+      *
+      * @param state
+      *   The current match state
+      * @return
+      *   The best decision for the ball carrier player
+      */
     def calculateBestDecision(state: Match): Decision =
       player.decision match
         case Decision.Run(direction, steps) if steps > 0 =>

@@ -12,8 +12,6 @@ import dsl.space.PositionSyntax.*
 import dsl.game.TeamsSyntax.*
 import dsl.game.PlayerSyntax.*
 
-/** Represents different teammate situations that require specific decisions
-  */
 private enum TeammateSituation:
   case Confusion(remainingSteps: Int)
   case BallInInterceptRange
@@ -23,15 +21,15 @@ private enum TeammateSituation:
 
 object TeammateBehavior:
 
-  /** Calculates the best decision for a teammate player based on current match state
-    * @param player
-    *   the teammate player making the decision
-    * @param state
-    *   the current match state
-    * @return
-    *   the best decision for the player
-    */
   extension (player: TeammatePlayer)
+    /** Calculates the optimal support decision for a teammate player based on current match state. Implements the
+      * decision-making logic for players on the team with the ball
+      *
+      * @param state
+      *   The current match state
+      * @return
+      *   The best support decision for the teammate player
+      */
     def calculateBestDecision(state: Match): Decision =
       val situation = analyzeSituation(player, state)
       takeDecision(player, situation, state)

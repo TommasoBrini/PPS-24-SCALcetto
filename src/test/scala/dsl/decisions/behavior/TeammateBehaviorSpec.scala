@@ -103,7 +103,6 @@ class TeammateBehaviorSpec extends AnyFlatSpec with Matchers:
 
     val decision = teammatePlayer.calculateBestDecision(state)
 
-    // Non dovrebbe essere Confusion(0) ma una decisione normale
     decision should not be a[Confusion]
     decision shouldBe a[Decision]
 

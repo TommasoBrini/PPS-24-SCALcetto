@@ -16,7 +16,7 @@ class DecideSpec extends AnyFlatSpec with Matchers:
   "Decide.decide" should "update all players with new decisions" in:
     val state: Match = newMatch(Score.init()):
       team(West) withBall:
-        player(1) at (5, 5) ownsBall true // ball-carrier
+        player(1) at (5, 5) ownsBall true
         player(3) at (15, 15)
       team(East):
         player(2) at (10, 10)
@@ -74,13 +74,13 @@ class DecideSpec extends AnyFlatSpec with Matchers:
 
   it should "update decisions for multiple players per team" in:
     val state: Match = newMatch(Score.init()):
-      team(West) withBall:                // team1 → hasBall = true
-        player(1) at (5, 5) ownsBall true // ball-carrier
-        player(2) at (6, 6)               // teammate
-      team(East):                         // team2 → hasBall = false
-        player(3) at (10, 10)             // opponent players
+      team(West) withBall:
+        player(1) at (5, 5) ownsBall true
+        player(2) at (6, 6)
+      team(East):
+        player(3) at (10, 10)
         player(4) at (11, 11)
-      ball at (0, 0) move (Direction(0, 0), 0) // still ball at origin
+      ball at (0, 0) move (Direction(0, 0), 0)
 
     val (updatedState, _) = decideStep.run(state)
 

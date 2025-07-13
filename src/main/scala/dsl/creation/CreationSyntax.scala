@@ -8,7 +8,7 @@ import scala.language.postfixOps
 object CreationSyntax:
 
   def newMatch(score: Score)(body: MatchBuilder ?=> Unit): Match =
-    given scope: MatchBuilder = MatchBuilder(score) // create mutable builders
+    given scope: MatchBuilder = MatchBuilder(score)
     body(using scope)
     scope.build()
 

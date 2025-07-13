@@ -89,14 +89,12 @@ object View:
       val x          = (size.width - totalWidth) / 2
       val y          = yOffset + 40
 
-      g.setFont(g.getFont.deriveFont(scoreFontSize.toFloat))
-      // Blue score
       g.setColor(Colors.teamBlue)
       g.drawString(westScore, x, y)
-      // Gap
+
       g.setColor(Colors.textColor)
       g.drawString(gap, x + metrics.stringWidth(westScore) + 20, y)
-      // Red score
+
       g.setColor(Colors.teamRed)
       g.drawString(eastScore, x + metrics.stringWidth(westScore) + 20 + metrics.stringWidth(gap) + 20, y)
 

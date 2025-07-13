@@ -11,8 +11,8 @@ import config.UIConfig
 class PositionSyntaxSpec extends AnyFlatSpec with Matchers:
   private val firstPost  = (UIConfig.fieldHeight - UIConfig.goalHeight) / 2
   private val secondPost = firstPost + UIConfig.goalHeight
-  private val xWest      = 0                   // goal line at the west side
-  private val xEast      = UIConfig.fieldWidth // goal line at the east side
+  private val xWest      = 0
+  private val xEast      = UIConfig.fieldWidth
 
   "isOutOfBound" should "return false for positions within bounds" in:
     val inside = Position(2, 2)
@@ -45,9 +45,9 @@ class PositionSyntaxSpec extends AnyFlatSpec with Matchers:
 
   it should "return false for points outside the east goal rectangle" in:
     val outsideEast = Seq(
-      Position(xEast, firstPost - 1),  // above cross-bar
-      Position(xEast, secondPost + 1), // below goal
-      Position(xEast - 10, firstPost)  // in the field
+      Position(xEast, firstPost - 1),
+      Position(xEast, secondPost + 1),
+      Position(xEast - 10, firstPost)
     )
     outsideEast.foreach:
       _.goalWest shouldBe false
@@ -64,9 +64,9 @@ class PositionSyntaxSpec extends AnyFlatSpec with Matchers:
 
   it should "return false for points outside the west goal rectangle" in:
     val outsideWest = Seq(
-      Position(xWest, firstPost - 1),  // above
-      Position(xWest, secondPost + 1), // below
-      Position(xWest + 10, firstPost)  // in the field
+      Position(xWest, firstPost - 1),
+      Position(xWest, secondPost + 1),
+      Position(xWest + 10, firstPost)
     )
     outsideWest.foreach:
       _.goalEast shouldBe false
