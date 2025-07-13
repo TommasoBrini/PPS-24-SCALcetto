@@ -38,8 +38,7 @@ object ActionProcessor:
       val carrier = state.players.find(_.hasBall)
       val teams   = state.teams.map(_.processActions())
       val ball    = state.ball.updateMovement(carrier)
-      val score   = state.score
-      Match(teams, ball, score)
+      state.copy(teams = teams, ball = ball)
 
     def moveEntities(): Match = Match(state.teams.map(_.move()), state.ball.move(), state.score)
 
