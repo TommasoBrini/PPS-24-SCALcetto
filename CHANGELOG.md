@@ -1,3 +1,17 @@
+## [3.1.0](https://github.com/TommasoBrini/PPS-24-SCALcetto/compare/v3.0.0...v3.1.0) (2025-07-11)
+
+### Features
+
+* Move validate logic in DecisionValidator, move act logic in ActionProcessor ([d4276d1](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/d4276d1d2e99b4dc6e45f9459335ce3e8d448d67))
+* **release:** new release ([a72bd9e](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/a72bd9e0842597930ff12f211528c987947e2095))
+* remove solo syntax ([323e585](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/323e5854990aa9e0ddb0703a7feb8cad64ad9912))
+* score initial structure injected ([68fba64](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/68fba64353522bcead51b878a1db4d98addb8089))
+* score works correctly ([bde338e](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/bde338e69dbf10a628eee0ee45eddcf5cc0bd0db))
+
+### Bug Fixes
+
+* fix bug in move to goal direction ([295ed94](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/295ed94d1f76b57cf7ae5a1dd7143e3005cdc848))
+
 ## [3.0.0](https://github.com/TommasoBrini/PPS-24-SCALcetto/compare/v2.0.0...v3.0.0) (2025-07-08)
 
 ### ⚠ BREAKING CHANGES
