@@ -1,5 +1,7 @@
 package model
 
+import dsl.SpaceSyntax.+
+
 /** Root namespace that groups every data type needed to **describe the state of a football match** (players, ball,
   * score…). It also re-exports the geometry primitives from [[model.Space]] so that DSL users can access them without
   * an extra import.
@@ -54,6 +56,16 @@ object Match:
     * @param nextAction
     *   concrete action scheduled for the next step
     */
+
+  trait Entity:
+    def position: Position
+
+  trait Moving[MovingEntity <: Entity]:
+    self: MovingEntity =>
+    def movement: Movement
+    def withPosition(position: Position): MovingEntity
+    def move(): MovingEntity = withPosition(position + movement)
+
   case class Player(
       id: ID,
       position: Position,
@@ -61,7 +73,11 @@ object Match:
       ball: Option[Ball] = None,
       decision: Decision = Decision.Initial,
       nextAction: Action = Action.Initial
-  )
+  ) extends Entity with Moving[Player]:
+    override def withPosition(position: Position): Player = copy(position = position)
+
+  case class Ball(position: Position, movement: Movement = Movement.still) extends Entity with Moving[Ball]:
+    override def withPosition(position: Position): Ball = copy(position = position)
 
   /** Logical side of the pitch a team defends. */
   enum Side:
@@ -77,8 +93,6 @@ object Match:
     *   whether the team owns the ball at the moment
     */
   case class Team(players: List[Player], side: Side = Side.West, hasBall: Boolean = false)
-
-  case class Ball(position: Position, movement: Movement = Movement.still)
 
   /** Opaque wrapper around the pair *(westGoals, eastGoals)* to prevent accidental swaps in client code.
     */
