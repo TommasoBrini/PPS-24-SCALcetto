@@ -76,13 +76,7 @@ object Match:
     * @param hasBall
     *   whether the team owns the ball at the moment
     */
-  case class Team(players: List[Player], side: Side, hasBall: Boolean = false)
-
-  object Team:
-    import Side.West
-    def apply(players: List[Player], hasBall: Boolean): Team = Team(players, West, hasBall)
-    def apply(players: List[Player]): Team                   = Team(players, false)
-    def apply(players: List[Player], side: Side): Team       = Team(players, side, false)
+  case class Team(players: List[Player], side: Side = Side.West, hasBall: Boolean = false)
 
   case class Ball(position: Position, movement: Movement = Movement.still)
 
