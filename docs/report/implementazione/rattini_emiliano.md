@@ -7,7 +7,7 @@ parent: Implementazione
 
 Nella mia parte mi sono concentrato in particolare sulla rappresentazione dello spazio, sull'implementazione della fase
 di *act* e sull'integrazione delle tre fasi successive.
-# Space
+## Space
 A livello di spazio è stato necessario modellare:
 - *Position*: coppia di interi rappresentante la posizione.
 - *Direction*: coppia di interi rappresentante l'offset da applicare a *Position* per modificarla.
@@ -21,7 +21,7 @@ sommandole la direzione moltiplicata per la velocità
     def +(m: Movement): Position = calculateMovedPosition(p, m)
 ```
 
-# Act
+## Act
 Per *Act* si intende la fase in cui le azioni di gioco (prendere la palla, tirare, muoversi) avvengono,
 modificando lo stato della partita e ritornando un evento opzionale.
 Il comportamento è il seguente:
@@ -107,7 +107,7 @@ Qualche test usando *AnyFlatSpec* e *Matchers*:
     val player          = Player(0, initialPosition, movement = initialMovement)
     player.move().position should be(initialPosition + initialMovement)
 ```
-# Update Flow
+## Update Flow
 Come si può aver notato dal primo snippet sul comportamento della fase di *Act*, le varie fasi del ciclo di *Update*
 sono state modellate come variazioni di stato usando lo *State* del laboratorio 4.
 ```scala
