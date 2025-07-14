@@ -15,7 +15,7 @@ A livello di spazio è stato necessario modellare:
 
 Ho inoltre aggiunto un extension method per applicare il movimento alla posizione, modificandola 
 sommandole la direzione moltiplicata per la velocità
-```scala 3
+```scala
 extension (p: Position)
     @targetName("applyMovement")
     def +(m: Movement): Position = calculateMovedPosition(p, m)
@@ -25,7 +25,7 @@ extension (p: Position)
 Per *Act* si intende la fase in cui le azioni di gioco (prendere la palla, tirare, muoversi) avvengono,
 modificando lo stato della partita e ritornando un evento opzionale.
 Il comportamento è il seguente:
-```scala 3
+```scala
   def actStep: State[Match, Option[Event]] = 
     State(state => {
       val updatedState = state
@@ -55,7 +55,7 @@ Da qui, si sono rese necessarie 5 azioni per gestire correttamente le varie casi
 
 Le implementazioni dei metodi precedenti sono state raggruppate in *ActionProcessor* come extension methods.
 Ecco tre esempi:
-```scala 3
+```scala
 extension (state: Match)
   def updateMovements(): Match =
     val carrier = state.players.find(_.hasBall)
@@ -87,7 +87,7 @@ extension (ball: Ball)
 In quest'ultimo metodo c'è un piccolo workaround per non fare uscire la palla dal campo essendo essa davanti al giocatore
 e potendo il giocatore raggiungere il bordo.
 Qualche test usando *AnyFlatSpec* e *Matchers*:
-```scala 3
+```scala
 "A player" should "gain possession of the ball if he's taking it" in:
   val ball   = Ball(Position(0, 0))
   val player = Player(0, Position(0, 0), ball = Some(ball), nextAction = Take(ball))
@@ -110,12 +110,12 @@ it should "move correctly" in:
 # Update Flow
 Come si può aver notato dal primo snippet sul comportamento della fase di *Act*, le varie fasi del ciclo di *Update*
 sono state modellate come variazioni di stato usando lo *State* del laboratorio 4.
-```scala 3
+```scala
 case class State[S, A](run: S => (S, A))
 ```
 In questo caso il valore prodotto viene usato solo nella *Act*, che ritorna un *Event* che rappresenta l'evento di 
 goal, uno per squadra, e l'evento di palla uscita.
-```scala 3
+```scala
 enum Event:
   case BallOut, GoalEast, GoalWest
 
@@ -131,7 +131,7 @@ def update(state: Match): Match =
 ```
 L'evento di goal viene gestito aumentato lo *Score* dentro lo stato mentre quello di *BallOut* attraverso
 la modifica del movimento della palla con un rimbalzo.
-```scala 3
+```scala
 import Event.*
 private def handleEvent(state: Match, event: Option[Event]): Match =
   event match
