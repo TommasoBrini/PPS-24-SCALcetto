@@ -241,7 +241,7 @@ Le iterazioni hanno incluso pair programming per task complesse, con revisioni i
 
 Sprint dinamico che ha arricchito le meccaniche di gioco, con successi nel handling di accuracy. Suggerisce un maggiore focus su task aperte per chiudere loop di sviluppo.
 
-## functional refactor
+## Sprint: functional refactor
 
 ### Descrizione dell'andamento dello sviluppo
 Sprint dedicato al refactoring funzionale avanzato, con enfasi su decisioni, validazioni e documentazione. Tutte le task sono state completate, inclusi refactoring di decision e act, con tempi da 2 a 20 ore. Ha mirato a ottimizzare l'architettura MVU e i layer decide-validate-act, raggiungendo una maturità funzionale elevata attraverso l'uso di monadi, DSL e pattern avanzati.
