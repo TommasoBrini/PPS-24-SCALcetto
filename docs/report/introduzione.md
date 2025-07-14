@@ -4,7 +4,7 @@ nav_order: 1
 parent: Report
 ---
 # Introduzione
-**SCALcetto** è un simulatore di partite di calcio sviluppato in **Scala 3** che implementa un sistema di intelligenza artificiale per i giocatori.
+**SCALcetto** è un simulatore di partite di calcio sviluppato in **Scala 3** che implementa un sistema intelligente di giocatori.
 
 L'obiettivo del progetto è la realizzazione di un simulatore che permetta di osservare l'evoluzione di una partita di calcio attraverso l'interazione intelligente di giocatori artificiali. Il sistema simula:
 

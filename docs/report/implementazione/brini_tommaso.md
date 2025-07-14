@@ -22,7 +22,7 @@ Il sistema è progettato seguendo un approccio modulare, dove ogni tipo di gioca
 All'interno del Model, le possibili decisioni sono state implementate come una enum che rappresenta tutte le azioni disponibili per i giocatori:
 
 <figure class="w-5 mx-auto">
-  <img src="../assets/images/decision/decision.png" alt="Decision Enum Structure">
+  <img src="../../assets/images/decision/decision.png" alt="Decision Enum Structure">
   <figcaption>Struttura dell'enum Decision</figcaption>
 </figure>
 
@@ -32,7 +32,7 @@ Di seguito verranno spiegati nel dettaglio le principali componenti
 La componente *Decide* rappresenta l'orchestratore principale della fase di decisione all'interno del ciclo decide-validate-act. Il suo compito è coordinare il processo decisionale di tutti i giocatori in modo dichiarativo, modulare e privo di *side-effects*, in linea con i principi della programmazione funzionale.
 Si basa sull'uso della **State Monad**, che consente di trasformare lo stato della partita in modo puro e trasparente, senza mutare direttamente gli oggetti.
 <figure class="w-5 mx-auto">
-  <img src="../assets/images/decision/decide.png" alt="Decide Monad State">
+  <img src="../../assets/images/decision/decide.png" alt="Decide Monad State">
   <figcaption>Struttura dell'entry point</figcaption>
 </figure>
 
@@ -48,7 +48,7 @@ Il metodo *decide* è implementato come extension method su **Player**, all'inte
 - Se è un TeammatePlayer, la decisione viene affidata a TeammateBehavior.
 
 <figure class="w-5 mx-auto">
-  <img src="../assets/images/decision/DecisionMaker.png" alt="DecisionMaker">
+  <img src="../../assets/images/decision/DecisionMaker.png" alt="DecisionMaker">
   <figcaption>Decision Maker</figcaption>
 </figure>
 
@@ -60,7 +60,7 @@ L'uso di pattern matching esaustivo e la composizione di funzioni pure garantisc
 La gestione dei ruoli dei giocatori è uno degli aspetti chiave per mantenere il sistema estendibile, leggibile e robusto. In questa architettura, i ruoli vengono definiti tramite **mixin** di trait.
 Il modulo PlayerTypes definisce, tramite type alias, i diversi ruoli che un giocatore può assumere durante la partita. Ogni ruolo è una composizione di trait che rappresentano le capacità decisionali specifiche per quel ruolo.
 <figure class="w-5 mx-auto">
-  <img src="../assets/images/decision/playerTypes.png" alt="PlayerTypes">
+  <img src="../../assets/images/decision/playerTypes.png" alt="PlayerTypes">
   <figcaption>Player Types</figcaption>
 </figure>
 Garantisce:
@@ -92,7 +92,7 @@ Questa struttura permette di:
 
 Un esempio rappresentativo è il trait *CanDecideToPass*, che fornisce a un giocatore la capacità di generare decisioni di passaggio e di restituire tutti i possibili passaggi ai compagni:
 <figure class="w-5 mx-auto">
-<img src="../assets/images/decision/canDecideToPass.png" alt="Example of Trait">
+<img src="../../assets/images/decision/canDecideToPass.png" alt="Example of Trait">
 <figcaption>Esempio di trait decisionale: CanDecideToPass</figcaption>
 </figure>
 - Il trait può aggiunto come mixin a qualsiasi classe che estende Player
