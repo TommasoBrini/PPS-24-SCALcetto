@@ -6,7 +6,7 @@ import model.Space.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class MatchSpec extends AnyFlatSpec with Matchers:
+class MatchStateSpec extends AnyFlatSpec with Matchers:
   "A Team" should "contain a list of players and a side" in:
     val players = List(
       Player(1, Position(1, 1), Movement.still),
@@ -28,7 +28,7 @@ class MatchSpec extends AnyFlatSpec with Matchers:
     val team1 = Team(List(Player(1, Position(1, 1), Movement.still)), West)
     val team2 = Team(List(Player(2, Position(2, 2), Movement.still)), East)
     val ball  = Ball(Position(0, 0), Movement.still)
-    val state = Match((team1, team2), ball)
+    val state = MatchState((team1, team2), ball)
 
     state.teams should matchPattern { case (_: Team, _: Team) => }
     state.ball shouldBe ball

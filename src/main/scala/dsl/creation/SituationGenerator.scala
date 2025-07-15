@@ -2,7 +2,7 @@ package dsl.creation
 
 import config.MatchConfig.teamSize
 import config.UIConfig.{fieldHeight, fieldWidth}
-import model.Match.{Match, Score, Side}
+import model.Match.{MatchState, Score, Side}
 import model.Match.Side.{East, West}
 import dsl.creation.CreationSyntax.*
 import dsl.creation.build.MatchBuilder
@@ -26,7 +26,7 @@ object SituationGenerator:
     * @return
     *   a fully playable match in kick-off configuration
     */
-  def kickOff(score: Score, side: Side = West): Match =
+  def kickOff(score: Score, side: Side = West): MatchState =
     newMatch(score):
       if side == West then
         startingTeam(West)

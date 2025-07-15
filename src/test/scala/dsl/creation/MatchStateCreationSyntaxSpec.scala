@@ -2,17 +2,17 @@ package dsl.creation
 
 import CreationSyntax.*
 import model.Space.{Direction, Movement, Position}
-import model.Match.{Match, Side}
+import model.Match.{MatchState, Side}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.*
 import dsl.MatchSyntax.*
 import model.Match.Score
 
-final class MatchCreationSyntaxSpec extends AnyFlatSpec with Matchers {
+final class MatchStateCreationSyntaxSpec extends AnyFlatSpec with Matchers {
 
   "newMatch" should "assemble a complete Match when two teams and a ball are declared" in:
-    val kickoff: Match = newMatch(Score.init()):
+    val kickoff: MatchState = newMatch(Score.init()):
       team(Side.West):
         player(10) at (10, 20)
       team(Side.East):

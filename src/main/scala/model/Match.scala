@@ -100,4 +100,4 @@ object Match:
     * @param score
     *   current scoreline
     */
-  case class Match(teams: (Team, Team), ball: Ball, score: Score = Score.init())
+  case class MatchState(teams: (Team, Team), ball: Ball, score: Score = Score.init())

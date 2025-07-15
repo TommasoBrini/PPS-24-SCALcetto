@@ -2,15 +2,15 @@ package dsl.creation
 
 import config.MatchConfig.teamSize
 import config.UIConfig.{fieldHeight, fieldWidth}
-import model.Match.Match
+import model.Match.MatchState
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import model.Match.Score
-import dsl.game.TeamsSyntax.*
+import dsl.`match`.TeamsSyntax.*
 
 class GenSituationSpec extends AnyFlatSpec with Matchers {
 
-  val kickOff: Match = SituationGenerator.kickOff(Score.init())
+  val kickOff: MatchState = SituationGenerator.kickOff(Score.init())
 
   "kickOff" should "create initial simulation state with two teams and a ball" in:
     kickOff.ball should not be null

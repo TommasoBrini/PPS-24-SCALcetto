@@ -123,7 +123,7 @@ class PlayerRoleDecisionsSpec extends AnyFlatSpec with Matchers:
     val opponent  = PlayerBuilder(4).at(10, 10).build()
     val team1     = Team(List(passer, teammate1, teammate2), West, hasBall = true)
     val team2     = Team(List(opponent), East, hasBall = false)
-    val state     = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val state     = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possiblePasses = passer.generatePossiblePasses(state)
 
@@ -140,7 +140,7 @@ class PlayerRoleDecisionsSpec extends AnyFlatSpec with Matchers:
     val opponent = PlayerBuilder(3).at(10, 10).build()
     val team1    = Team(List(passer, teammate), West, hasBall = true)
     val team2    = Team(List(opponent), East, hasBall = false)
-    val state    = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val state    = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val possiblePasses = passer.generatePossiblePasses(state)
 

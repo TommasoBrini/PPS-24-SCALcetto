@@ -9,8 +9,8 @@ import dsl.decisions.DecisionGenerator.*
 import dsl.decisions.CommonPlayerDecisions.*
 import scala.util.Random
 import dsl.space.PositionSyntax.*
-import dsl.game.TeamsSyntax.*
-import dsl.game.PlayerSyntax.*
+import dsl.`match`.TeamsSyntax.*
+import dsl.`match`.PlayerSyntax.*
 
 private enum TeammateSituation:
   case Confusion(remainingSteps: Int)
@@ -30,11 +30,11 @@ object TeammateBehavior:
       * @return
       *   The best support decision for the teammate player
       */
-    def calculateBestDecision(state: Match): Decision =
+    def calculateBestDecision(state: MatchState): Decision =
       val situation = analyzeSituation(player, state)
       takeDecision(player, situation, state)
 
-  private def analyzeSituation(player: TeammatePlayer, state: Match): TeammateSituation =
+  private def analyzeSituation(player: TeammatePlayer, state: MatchState): TeammateSituation =
     player.nextAction match
       case Stopped(steps) if steps > 0 => TeammateSituation.Confusion(steps - 1)
       case _ =>
@@ -50,7 +50,7 @@ object TeammateBehavior:
   private def isBallInProximityAndNoOneHasBall(
       distanceToBall: Double,
       player: TeammatePlayer,
-      state: Match
+      state: MatchState
   ): Boolean =
     distanceToBall < MatchConfig.proximityRange && !state.teams.players.exists(_.hasBall)
 
@@ -61,7 +61,7 @@ object TeammateBehavior:
       case _ =>
         TeammateSituation.RandomMovement
 
-  private def takeDecision(player: TeammatePlayer, situation: TeammateSituation, state: Match): Decision =
+  private def takeDecision(player: TeammatePlayer, situation: TeammateSituation, state: MatchState): Decision =
     situation match
       case TeammateSituation.Confusion(remainingSteps) =>
         player.createConfusionDecision(remainingSteps)

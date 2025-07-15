@@ -22,7 +22,7 @@ object DecisionMaker:
       * @return
       *   The best decision for the player given their role and current situation
       */
-    def decide(matchState: Match, markings: Map[Player, Player]): Decision = player match
+    def decide(matchState: MatchState, markings: Map[Player, Player]): Decision = player match
       case c: BallCarrierPlayer =>
         import dsl.decisions.behavior.BallCarrierBehavior.*
         c.calculateBestDecision(matchState)

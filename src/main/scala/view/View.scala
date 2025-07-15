@@ -6,10 +6,10 @@ import config.UIConfig.*
 import model.Match.*
 import view.RenderUtils.*
 import java.awt.BasicStroke
-import dsl.game.TeamsSyntax.*
+import dsl.`match`.TeamsSyntax.*
 
 object View:
-  class MatchPanel(var state: Match) extends Panel:
+  class MatchPanel(var state: MatchState) extends Panel:
     background = Colors.backgroundColor
 
     override def paintComponent(g: Graphics2D): Unit =
@@ -67,7 +67,7 @@ object View:
 
       g.translate(-fieldOffsetX, -fieldOffsetY)
 
-  class InfoPanel(var state: Match) extends Panel:
+  class InfoPanel(var state: MatchState) extends Panel:
     background = Colors.infoPanelColor
     border = Swing.EmptyBorder(10)
 
@@ -111,7 +111,7 @@ object View:
         repaint()
     }
 
-  class SwingView(initialState: Match):
+  class SwingView(initialState: MatchState):
     private val panel: MatchPanel    = new MatchPanel(initialState)
     private val infoPanel: InfoPanel = new InfoPanel(initialState)
 
@@ -181,7 +181,7 @@ object View:
           action
       }
 
-    def render(state: Match): Unit =
+    def render(state: MatchState): Unit =
       panel.state = state
       panel.repaint()
       infoPanel.state = state

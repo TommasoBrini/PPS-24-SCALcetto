@@ -5,7 +5,7 @@ import model.Match.*
 import scala.collection.mutable.ListBuffer
 
 /** Root builder in the creation DSL. It collects exactly two teams plus a ball and materialises an immutable
-  * [[model.Match.Match]] once [[build]] is called.
+  * [[model.Match.MatchState]] once [[build]] is called.
   *
   * @param score
   *   initial scoreboard for the fixture
@@ -40,6 +40,6 @@ final class MatchBuilder(score: Score):
     * @return
     *   the finished match object
     */
-  def build(): Match =
+  def build(): MatchState =
     require(teams.size == 2, "exactly two teams required")
-    Match((teams.head.build(), teams.last.build()), ball.build(), score)
+    MatchState((teams.head.build(), teams.last.build()), ball.build(), score)

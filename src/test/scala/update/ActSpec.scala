@@ -14,7 +14,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val ball     = Ball(Position(0, 0))
     val carrier  = Player(0, Position(0, 0), ball = Some(ball))
     val tackling = Player(1, Position(0, 0), decision = Tackle(ball), nextAction = Take(ball))
-    val state    = Match((Team(List(carrier)), Team(List(tackling))), ball)
+    val state    = MatchState((Team(List(carrier)), Team(List(tackling))), ball)
     actStep.run(state)._1.players.find(_.id == carrier.id) match
       case Some(tackled) =>
         tackled.nextAction should matchPattern { case Stopped(_) => }
@@ -26,7 +26,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
     val player       = Player(1, Position(0, 0), ball = None, decision = Intercept(ball), nextAction = Take(ball))
     val team         = Team(List(player))
     val tuple        = (team, Team(Nil))
-    val state        = Match(tuple, ball)
+    val state        = MatchState(tuple, ball)
     val (updated, _) = actStep.run(state)
     updated.players.head.ball should be(Some(ball))
     updated.teams._1.hasBall should be(true)
@@ -34,7 +34,7 @@ class ActSpec extends AnyFlatSpec with Matchers:
   it should "update player and ball movement and position if they are moving" in:
     val ball         = Ball(Position(0, 0))
     val carrier      = Player(1, Position(0, 0), ball = Some(ball), nextAction = Move(Direction(1, 1), 1))
-    val state        = Match((Team(List(carrier)), Team(Nil)), ball)
+    val state        = MatchState((Team(List(carrier)), Team(Nil)), ball)
     val (updated, _) = actStep.run(state)
 
     updated.ball.movement shouldNot be(ball.movement)
