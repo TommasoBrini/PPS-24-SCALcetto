@@ -1,7 +1,7 @@
 package dsl
 
 import config.UIConfig
-import space.PositionSyntax.isOutOfBound
+import space.PositionSyntax.isOutOfField
 import model.Match.{Match, Player}
 
 object MatchSyntax:
@@ -32,4 +32,4 @@ object MatchSyntax:
       *   true if the ball position is out of the field bounds, false otherwise
       */
     def isBallOut: Boolean =
-      state.ball.position.isOutOfBound(UIConfig.fieldWidth, UIConfig.fieldHeight)
+      state.ball.position.isOutOfField

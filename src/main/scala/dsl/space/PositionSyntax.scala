@@ -31,7 +31,7 @@ object PositionSyntax:
     (p.x >= UIConfig.fieldWidth) && (p.y >= firstGoalPost && p.y <= secondGoalPost)
 
   extension (p: Position)
-    /** Checks whether the position is **outside** the rectangular field bounds.
+    /** Checks whether the position is **outside** the field rectangular bounds.
       *
       * @param widthBound
       *   inclusive maximum `x`
@@ -40,6 +40,10 @@ object PositionSyntax:
       */
     def isOutOfBound(widthBound: Int, heightBound: Int): Boolean =
       checkAxisOutOfBound(p.x, widthBound) || checkAxisOutOfBound(p.y, heightBound)
+
+    /** Checks whether the position is outside field bounds.
+      */
+    def isOutOfField: Boolean = isOutOfBound(UIConfig.fieldWidth, UIConfig.fieldHeight)
 
     /** Applies the supplied movement vector and returns the **new position**.
       *
