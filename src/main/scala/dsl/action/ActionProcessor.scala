@@ -138,15 +138,6 @@ object ActionProcessor:
       case Take(ball)             => player.copy(movement = Movement.still)
       case _                      => player
 
-    /** Updates the player's position based on their current movement, clamped to field bounds.
-      *
-      * @return
-      *   the moved Player
-      */
-    def move(): Player =
-      val newPosition = (player.position + player.movement).clampToField
-      player.copy(position = newPosition)
-
   extension (ball: Ball)
     /** Updates the ball’s movement and optionally its position based on the ball carrier’s action.
       *
@@ -164,10 +155,3 @@ object ActionProcessor:
       case Some(Player(_, position, movement, _, _, Take(ball))) =>
         ball.copy(position = position + (movement * (UIConfig.ballSize / 2)), movement = movement)
       case _ => ball
-
-    /** Moves the ball by applying its movement.
-      *
-      * @return
-      *   the updated Ball with new position
-      */
-    def move(): Ball = ball.copy(position = ball.position + ball.movement)

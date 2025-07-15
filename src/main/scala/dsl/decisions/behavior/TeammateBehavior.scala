@@ -1,16 +1,19 @@
 package dsl.decisions.behavior
 
-import config.MatchConfig
+import config.{MatchConfig, UIConfig}
 import model.Match.*
 import model.Match.Action.Stopped
 import model.Match.Decision.MoveRandom
 import dsl.decisions.PlayerTypes.*
 import dsl.decisions.DecisionGenerator.*
 import dsl.decisions.CommonPlayerDecisions.*
+
 import scala.util.Random
-import dsl.space.PositionSyntax.*
+import dsl.space.PositionSyntax.{+, distanceFrom, isOutOfField}
 import dsl.`match`.TeamsSyntax.*
 import dsl.`match`.PlayerSyntax.*
+
+import scala.annotation.tailrec
 
 private enum TeammateSituation:
   case Confusion(remainingSteps: Int)
@@ -61,6 +64,9 @@ object TeammateBehavior:
       case _ =>
         TeammateSituation.RandomMovement
 
+  private def isGoingOutOfField(player: Player, direction: Direction): Boolean =
+    (player.position + Movement(direction, MatchConfig.playerSpeed)).isOutOfField
+
   private def takeDecision(player: TeammatePlayer, situation: TeammateSituation, state: MatchState): Decision =
     situation match
       case TeammateSituation.Confusion(remainingSteps) =>
@@ -77,8 +83,15 @@ object TeammateBehavior:
         player.createRandomMovementDecision(direction, remainingSteps)
 
       case TeammateSituation.RandomMovement =>
-        val randomDirection = generateRandomDirection()
+        val randomDirection = generateRandomDirection(player)
         player.createRandomMovementDecision(randomDirection, MatchConfig.moveRandomSteps)
 
-  private def generateRandomDirection(): Direction =
-    Direction(Random.between(-1.toDouble, 1), Random.between(-1.toDouble, 1))
+  @tailrec
+  private def generateRandomDirection(player: Player): Direction = {
+    val randomDirection = Direction(Random.between(-1.toDouble, 1), Random.between(-1.toDouble, 1))
+    if isGoingOutOfField(player, randomDirection)
+    then
+      generateRandomDirection(player)
+    else
+      randomDirection
+  }
