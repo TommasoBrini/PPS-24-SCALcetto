@@ -37,6 +37,26 @@ object Match:
     case MoveRandom(direction: Direction, steps: Int)
     case ReceivePass(ball: Ball)
 
+  /** Trait representing an entity with a position.
+    */
+  trait Entity:
+    def position: Position
+
+  /** Trait for entities that can move based on a direction and speed. This trait uses self-typing to ensure that `move`
+    * returns the specific subtype (`MovingEntity`).
+    *
+    * Classes mixing in this trait must implement `withPosition`, typically using `.copy(position = ...)` so that
+    * movement logic can be shared across all movable entities.
+    *
+    * @tparam MovingEntity
+    *   the concrete type of the entity mixing in this trait
+    */
+  trait Moving[MovingEntity <: Entity]:
+    self: MovingEntity =>
+    def movement: Movement
+    def withPosition(position: Position): MovingEntity
+    def move(): MovingEntity = withPosition(position + movement)
+
   /** Alias for the unique identifier attached to every [[Player]].
     */
   type ID = Int
@@ -56,16 +76,6 @@ object Match:
     * @param nextAction
     *   concrete action scheduled for the next step
     */
-
-  trait Entity:
-    def position: Position
-
-  trait Moving[MovingEntity <: Entity]:
-    self: MovingEntity =>
-    def movement: Movement
-    def withPosition(position: Position): MovingEntity
-    def move(): MovingEntity = withPosition(position + movement)
-
   case class Player(
       id: ID,
       position: Position,
@@ -76,6 +86,13 @@ object Match:
   ) extends Entity with Moving[Player]:
     override def withPosition(position: Position): Player = copy(position = position)
 
+  /** Immutable representation of a ball.
+    *
+    * @param position
+    *   ball's position
+    * @param movement
+    *   ball's movement, still by default
+    */
   case class Ball(position: Position, movement: Movement = Movement.still) extends Entity with Moving[Ball]:
     override def withPosition(position: Position): Ball = copy(position = position)
 
