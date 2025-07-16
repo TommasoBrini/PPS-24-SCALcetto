@@ -9,9 +9,8 @@ import dsl.decisions.DecisionGenerator.*
 import dsl.decisions.CommonPlayerDecisions.*
 
 import scala.util.Random
-import dsl.space.PositionSyntax.{+, distanceFrom, isOutOfField}
-import dsl.`match`.TeamsSyntax.*
-import dsl.`match`.PlayerSyntax.*
+import dsl.MatchSyntax.*
+import dsl.SpaceSyntax.*
 
 import scala.annotation.tailrec
 
