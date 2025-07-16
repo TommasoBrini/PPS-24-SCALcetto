@@ -4,10 +4,8 @@ nav_order: 5
 parent: Report
 ---
 # Design di dettaglio
-Design di dettaglio (scelte rilevanti di design, pattern di progettazione, principi clean code, organizzazione del codice, Descrizione Model (Match, Space) -- corredato da pochi ma efficaci diagrammi)
-
 ## Model
-Abbiamo cominciato il progetto modellando quello che è uno dei concetti fondamentali, ovvero la rappresentazione spaziale.
+Il progetto è stato cominciato modellando quello che è uno dei concetti fondamentali, ovvero la rappresentazione spaziale.
 ### Space
 In questa sezione, che di fatto è un `object` si è modellata la rappresentazione dello spazio attraverso 3 tipi fondamentali:
 - `Position`: coppia di interi rappresentante la posizione.
@@ -91,7 +89,7 @@ per lo spazio e `PlayerSyntax`, `TeamsSyntax` e `ScoreSyntax` per il match.
 Gli altri tipi di sintassi verranno affrontati nelle implementazioni.
 
 ## Update
-A questo punto è giusto analizzare più nel dettaglio il design del ciclo di `Update`.
+A questo punto è giusto analizzare più nel dettaglio il design del ciclo di `Update`, che è la parte centrale del progetto.
 
 ### Decide
 La fase **Decide** costituisce il primo stadio del ciclo di simulazione, in cui ogni giocatore valuta il contesto 

@@ -8,13 +8,9 @@ parent: Implementazione
 Nella mia parte mi sono concentrato in particolare sulla rappresentazione dello spazio, sull'implementazione della fase
 di *act* e sull'integrazione delle tre fasi successive.
 ## Space
-A livello di spazio è stato necessario modellare:
-- *Position*: coppia di interi rappresentante la posizione.
-- *Direction*: coppia di interi rappresentante l'offset da applicare a *Position* per modificarla.
-- *Movement*: composto da *Direction* e da un intero che rappresenta la velocità.
-
-Ho inoltre aggiunto un extension method per applicare il movimento alla posizione, modificandola 
-sommandole la direzione moltiplicata per la velocità
+Oltre allo spazio già discusso è stato aggiunto un extension method per applicare il movimento alla posizione, modificandola 
+sommandole la direzione moltiplicata per la velocità.
+Ho usato il simbolo **+** per la sua intuitività. Fa parte della `SpaceSyntax`
 ```scala
   extension (p: Position)
     @targetName("applyMovement")
@@ -22,7 +18,7 @@ sommandole la direzione moltiplicata per la velocità
 ```
 
 ## Act
-Per *Act* si intende la fase in cui le azioni di gioco (prendere la palla, tirare, muoversi) avvengono,
+Per *Act** si intende la fase in cui le azioni di gioco (prendere la palla, tirare, muoversi) avvengono,
 modificando lo stato della partita e ritornando un evento opzionale.
 Il comportamento è il seguente:
 ```scala
@@ -47,11 +43,11 @@ nessuna delle due squadre è in possesso palla, creando problemi con i comportam
 - **PositionsUpdate** - Aggiorno le posizioni applicando il movimento
 
 Da qui, si sono rese necessarie 5 azioni per gestire correttamente le varie casistiche:
-- *Move*: composta da direzione e velocità, muove il giocatore ed eventuamente la palla se il giocatore è in possesso
-- *Hit*: composta da direzione e velocità, cambia movimento alla palla e la toglie al giocatore in possesso
-- *Take*: assegna la palla al giocatore
-- *Initial*: azione nulla, data alla creazione del giocatore
-- *Stopped*: ferma il giocatore per un numero di giri
+- `Move`: composta da direzione e velocità, muove il giocatore ed eventuamente la palla se il giocatore è in possesso
+- `Hit`: composta da direzione e velocità, cambia movimento alla palla e la toglie al giocatore in possesso
+- `Take`: assegna la palla al giocatore
+- `Initial`: azione nulla, data alla creazione del giocatore
+- `Stopped`: ferma il giocatore per un numero di giri
 
 Le implementazioni dei metodi precedenti sono state raggruppate in *ActionProcessor* come extension methods.
 Ecco tre esempi:
@@ -86,7 +82,7 @@ Ecco tre esempi:
 ```
 In quest'ultimo metodo c'è un piccolo workaround per non fare uscire la palla dal campo essendo essa davanti al giocatore
 e potendo il giocatore raggiungere il bordo.
-Qualche test usando *AnyFlatSpec* e *Matchers*:
+Qualche test usando `AnyFlatSpec` e `Matchers`:
 ```scala
   "A player" should "gain possession of the ball if he's taking it" in:
     val ball   = Ball(Position(0, 0))
@@ -108,12 +104,12 @@ Qualche test usando *AnyFlatSpec* e *Matchers*:
     player.move().position should be(initialPosition + initialMovement)
 ```
 ## Update Flow
-Come si può aver notato dal primo snippet sul comportamento della fase di *Act*, le varie fasi del ciclo di *Update*
-sono state modellate come variazioni di stato usando lo *State* del laboratorio 4.
+Come si può aver notato dal primo snippet sul comportamento della fase di `Act`, le varie fasi del ciclo di `Update`
+sono state modellate come variazioni di stato usando lo `State` del laboratorio 4.
 ```scala
   case class State[S, A](run: S => (S, A))
 ```
-In questo caso il valore prodotto viene usato solo nella *Act*, che ritorna un *Event* che rappresenta l'evento di 
+In questo caso il valore prodotto viene usato solo nella `Act`, che ritorna un `Event` che rappresenta l'evento di 
 goal, uno per squadra, e l'evento di palla uscita.
 ```scala
   enum Event:
@@ -129,7 +125,7 @@ goal, uno per squadra, e l'evento di palla uscita.
       val (updated, event) = updateFlow.run(state)
       handleEvent(updated, event)
 ```
-L'evento di goal viene gestito aumentato lo *Score* dentro lo stato mentre quello di *BallOut* attraverso
+L'evento di goal viene gestito aumentato lo `Score` dentro lo stato mentre quello di `BallOut` attraverso
 la modifica del movimento della palla con un rimbalzo.
 ```scala
   import Event.*
