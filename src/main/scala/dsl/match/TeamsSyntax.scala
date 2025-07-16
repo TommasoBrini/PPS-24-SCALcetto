@@ -1,4 +1,4 @@
-package dsl.game
+package dsl.`match`
 
 import model.Match.Side.{East, West}
 import model.Match.{Player, Side, Team}

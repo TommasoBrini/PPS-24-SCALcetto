@@ -10,7 +10,7 @@ import update.Update.Event
 import update.Update.Event.{BallOut, GoalEast, GoalWest}
 
 object ActionProcessor:
-  extension (state: Match)
+  extension (state: MatchState)
     /** Checks whether a player has successfully tackled and is taking the ball.
       *
       * @return
@@ -37,7 +37,7 @@ object ActionProcessor:
       * @return
       *   the match state with ball carrier tackled
       */
-    def tackleBallCarrier(): Match =
+    def tackleBallCarrier(): MatchState =
       state.copy(teams =
         state.teams.map((t: Team) =>
           t.copy(players = t.players.map({
@@ -53,7 +53,7 @@ object ActionProcessor:
       * @return
       *   the match state with new player and team possession
       */
-    def updateBallPossession(): Match =
+    def updateBallPossession(): MatchState =
       state.copy(teams = state.teams.map(_.updateBallPossession()))
 
     /** Applies movement updates for all teams and the ball. This processes player actions into movement, and the ball
@@ -63,7 +63,7 @@ object ActionProcessor:
       * @return
       *   the match state with new movements
       */
-    def updateMovements(): Match =
+    def updateMovements(): MatchState =
       val carrier = state.players.find(_.hasBall)
       val teams   = state.teams.map(_.processActions())
       val ball    = state.ball.updateMovement(carrier)
@@ -74,7 +74,7 @@ object ActionProcessor:
       * @return
       *   the state with new positions
       */
-    def moveEntities(): Match = state.copy(teams = state.teams.map(_.move()), ball = state.ball.move())
+    def moveEntities(): MatchState = state.copy(teams = state.teams.map(_.move()), ball = state.ball.move())
 
     /** Detects if a major game event has occurred based on the ball’s current position.
       *

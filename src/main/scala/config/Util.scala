@@ -1,10 +1,10 @@
 package config
 
-import model.Match.{Match, Player, Team}
+import model.Match.{MatchState, Player, Team}
 import model.Space.{Direction, Position}
-import dsl.game.PlayerSyntax.*
+import dsl.`match`.PlayerSyntax.*
 import dsl.space.PositionSyntax.*
-import dsl.game.TeamsSyntax.*
+import dsl.`match`.TeamsSyntax.*
 
 object Util:
 
@@ -31,7 +31,7 @@ object Util:
     }
     markings
 
-  def isPathClear(from: Position, to: Position, state: Match, team: Team): Boolean =
+  def isPathClear(from: Position, to: Position, state: MatchState, team: Team): Boolean =
     val opponents: List[Player] = (state.teams opponentOf team).players
     opponents.forall { opponent =>
       !positionIsInBetween(from, to, opponent.position)
@@ -49,7 +49,7 @@ object Util:
         (mid.y >= Math.min(start.y, end.y) && mid.y <= Math.max(start.y, end.y))
     collinear && inSegment
 
-  def isDirectionClear(from: Position, dir: Direction, state: Match): Boolean =
+  def isDirectionClear(from: Position, dir: Direction, state: MatchState): Boolean =
     val opponents = state.teams.players.filterNot(_.hasBall)
     !opponents.exists { opponent =>
       val dx    = opponent.position.x - from.x
@@ -59,5 +59,5 @@ object Util:
       math.abs(cross) < 1e-6 && dot > 0
     }
 
-  def isPlayerInWestTeam(player: Player, matchState: Match): Boolean =
+  def isPlayerInWestTeam(player: Player, matchState: MatchState): Boolean =
     matchState.teams.teamOf(player) == matchState.teams.teamWest

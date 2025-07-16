@@ -18,7 +18,7 @@ object BallCarrierBehavior:
       * @return
       *   The best decision for the ball carrier player
       */
-    def calculateBestDecision(state: Match): Decision =
+    def calculateBestDecision(state: MatchState): Decision =
       player.decision match
         case Decision.Run(direction, steps) if steps > 0 =>
           continueCurrentRun(player, direction, steps)
@@ -28,17 +28,17 @@ object BallCarrierBehavior:
   private def continueCurrentRun(player: Player, direction: Direction, remainingSteps: Int): Decision =
     player.createRunDecision(direction, remainingSteps - 1)
 
-  private def selectBestDecision(player: BallCarrierPlayer, state: Match): Decision =
+  private def selectBestDecision(player: BallCarrierPlayer, state: MatchState): Decision =
     val possibleDecisions = player.generateAllPossibleDecisions(state)
     val decisionRatings   = rateAllDecisions(possibleDecisions, player, state)
     selectHighestRatedDecision(decisionRatings)
 
-  private def rateAllDecisions(decisions: List[Decision], player: Player, state: Match): Map[Decision, Double] =
+  private def rateAllDecisions(decisions: List[Decision], player: Player, state: MatchState): Map[Decision, Double] =
     decisions.map(decision =>
       (decision, calculateDecisionRating(decision, player, state))
     ).toMap
 
-  private def calculateDecisionRating(decision: Decision, player: Player, state: Match): Double =
+  private def calculateDecisionRating(decision: Decision, player: Player, state: MatchState): Double =
     decision match
       case run: Decision.Run               => run.rate(player, state)
       case pass: Decision.Pass             => pass.rate(state)

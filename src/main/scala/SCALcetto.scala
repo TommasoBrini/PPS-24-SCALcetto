@@ -9,6 +9,6 @@ object SCALcetto:
 
   @main def app(): Unit =
 
-    val initialState: Match = SituationGenerator.kickOff(Score.init())
+    val initialState: MatchState = SituationGenerator.kickOff(Score.init())
 
     initialize(initialState, 50)

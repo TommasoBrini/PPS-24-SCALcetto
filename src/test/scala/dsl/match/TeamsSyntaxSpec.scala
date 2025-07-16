@@ -1,4 +1,4 @@
-package dsl.game
+package dsl.`match`
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

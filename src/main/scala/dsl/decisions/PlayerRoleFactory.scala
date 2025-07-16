@@ -52,7 +52,7 @@ object DecisionGenerator:
     *   A list of all possible decisions the ball carrier can make
     */
   extension (player: PlayerTypes.BallCarrierPlayer)
-    def generateAllPossibleDecisions(state: Match): List[Decision] =
+    def generateAllPossibleDecisions(state: MatchState): List[Decision] =
       player.decision match
         case Decision.Initial => player.generatePossiblePasses(state)
         case _ =>

@@ -9,10 +9,6 @@ import scala.annotation.targetName
   */
 object MovementSyntax:
   extension (m: Movement)
-    /** Arbitrary constant used by the game logic (kept for compatibility).
-      */
-    def bool: Int = 4
-
     /** Reflects the movement vector according to the bounce type.
       *
       * @return

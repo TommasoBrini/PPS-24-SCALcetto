@@ -10,7 +10,7 @@ import dsl.decisions.PlayerTypes.*
 import dsl.decisions.DecisionGenerator.*
 import config.MatchConfig
 import dsl.decisions.CommonPlayerDecisions.*
-import dsl.game.TeamsSyntax.*
+import dsl.`match`.TeamsSyntax.*
 import Side.*
 import dsl.creation.build.{BallBuilder, PlayerBuilder}
 import dsl.creation.CreationSyntax.*

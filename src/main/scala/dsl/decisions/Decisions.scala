@@ -4,7 +4,7 @@ import model.Match.*
 import config.UIConfig
 import model.Space.*
 import config.MatchConfig
-import dsl.game.TeamsSyntax.*
+import dsl.`match`.TeamsSyntax.*
 import config.Util
 
 /** Common decision-making capabilities for all players.
@@ -34,7 +34,7 @@ object CommonPlayerDecisions:
       * @return
       *   List of possible run decisions
       */
-    def generatePossibleRunDirections(matchState: Match): List[Decision] =
+    def generatePossibleRunDirections(matchState: MatchState): List[Decision] =
       val validDirections =
         for
           dx <- -1 to 1
@@ -85,7 +85,7 @@ trait CanDecideToPass:
     * @return
     *   List of possible pass decisions
     */
-  def generatePossiblePasses(matchState: Match): List[Decision] =
+  def generatePossiblePasses(matchState: MatchState): List[Decision] =
     for
       teammate <- matchState.teams.teamOf(this).players.filter(_.id != this.id)
     yield this.createPassDecision(teammate)
@@ -112,11 +112,11 @@ trait CanDecideToShoot:
     * @return
     *   List of possible shoot decisions
     */
-  def generatePossibleShots(matchState: Match): List[Decision] =
+  def generatePossibleShots(matchState: MatchState): List[Decision] =
     val goalPositions = determineGoalPositions(matchState)
     goalPositions.map(createShootDecision)
 
-  private def determineGoalPositions(matchState: Match): List[Position] =
+  private def determineGoalPositions(matchState: MatchState): List[Position] =
     val goalX = determineGoalXCoordinate(matchState)
     List(
       Position(goalX, UIConfig.firstPoleY),
@@ -124,7 +124,7 @@ trait CanDecideToShoot:
       Position(goalX, UIConfig.secondPoleY)
     )
 
-  private def determineGoalXCoordinate(matchState: Match): Int =
+  private def determineGoalXCoordinate(matchState: MatchState): Int =
     if Util.isPlayerInWestTeam(this, matchState) then UIConfig.goalEastX else UIConfig.goalWestX
 
 /** Trait for players that can move towards the goal
@@ -149,12 +149,12 @@ trait CanDecideToMoveToGoal:
     * @return
     *   List of possible move to goal decisions
     */
-  def generatePossibleMovesToGoal(matchState: Match): List[Decision] =
+  def generatePossibleMovesToGoal(matchState: MatchState): List[Decision] =
     val goalPosition    = determineGoalPosition(matchState)
     val directionToGoal = this.position.getDirection(goalPosition)
     List(createMoveToGoalDecision(directionToGoal))
 
-  private def determineGoalPosition(matchState: Match): Position =
+  private def determineGoalPosition(matchState: MatchState): Position =
     if Util.isPlayerInWestTeam(this, matchState) then
       Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)
     else
