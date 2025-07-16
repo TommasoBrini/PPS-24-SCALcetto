@@ -59,6 +59,8 @@ object TeammateBehavior:
 
   private def analyzeRandomMovementSituation(player: TeammatePlayer): TeammateSituation =
     player.decision match
+      case MoveRandom(direction, steps) if steps > 0 && isGoingOutOfField(player, direction) =>
+        TeammateSituation.ContinueMovement(direction.clampToField(player.position, MatchConfig.playerSpeed), steps - 1)
       case MoveRandom(direction, steps) if steps > 0 =>
         TeammateSituation.ContinueMovement(direction, steps - 1)
       case _ =>

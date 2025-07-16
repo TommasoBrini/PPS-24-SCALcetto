@@ -29,7 +29,9 @@ jobs:
         uses: coursier/setup-action@v1
 
       - name: Run tests with coverage and generate report
-        run: sbt clean coverage test coverageReport
+        run: |
+          sbt 'set coverageEnabled := true' 
+          sbt clean coverage test coverageReport
 
       - name: Upload coverage to Codecov 
         uses: codecov/codecov-action@v3
