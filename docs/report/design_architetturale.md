@@ -14,7 +14,7 @@ Il pattern Model-View-Update (MVU) nasce nella comunità del linguaggio Elm come
 - **Update**: riceve il Model e un evento, restituendo un nuovo Model; è il cuore della logica e garantisce che le transizioni di stato siano sempre deterministiche, elaborando eventi come rimbalzi della palla o goal attraverso un flusso sequenziale.
 
 <figure class="w-5 mx-auto">
-  <img src="../assets/images/mvu.png" alt="Descriptive alt text">
+  <img src="../assets/images/mvu.png" alt="architettura_mvu">
   <figcaption>flusso unidirezionale di MVU</figcaption>
 </figure>
 

@@ -11,7 +11,7 @@ L'obiettivo del progetto è la realizzazione di un simulatore che permetta di os
 - **Interazione tra giocatori**: Passaggi, dribbling, tiri e movimenti intelligenti
 - **Decisioni intelligenti**: Ogni giocatore prende decisioni basate sulla situazione di gioco
 - **Strategie di squadra**: Coordinamento tra compagni per raggiungere l'obiettivo (parzialmente implementato)
-- **Fisica semplificata**: Simulazione riadattata per semplicità, dinamiche di gioco ridotte
+- **Fisica semplificata**: Simulazione riadattata per semplicità e dinamiche di gioco ridotte
 
 # Demo
 <video width="100%" controls>
@@ -26,6 +26,6 @@ L'obiettivo del progetto è la realizzazione di un simulatore che permetta di os
 - **GitHub Pages**: Documentazione automatica
 
 ## Autori
-- **Brini Tommaso**: Architettura MVU e pattern funzionali
-- **Rattini Emiliano**: DSL e sintassi del linguaggio
-- **Samite Mounir**: Logica di gioco e algoritmi di decisione
+- **Brini Tommaso**
+- **Rattini Emiliano**
+- **Samite Mounir**

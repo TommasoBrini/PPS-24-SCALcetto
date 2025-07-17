@@ -40,7 +40,7 @@ Il backlog includeva una varietà di task di implementazione e refactoring:
 - Implementazione di act (completato in 8 ore da Rattini Emiliano).
 - Refactoring del model e GUI (completato in 3 ore da Brini Tommaso).
 - Implementazione di decide (completato in 5 ore da Samite Mounir).
-- Refactoring del progetto tramite pair programming (completati in 5 ore da Samite Mounir e in 3 ore da Brini Tommaso).
+- Refactoring del progetto tramite pair programming (completato in 5 ore da Samite Mounir e in 3 ore da Brini Tommaso).
 - Implementazione di decisioni per giocatore con palla (completato in 5 ore da Samite Mounir).
 - Implementazione di move random e decide no control (completato in 6 ore da Brini Tommaso).
 - Controllo della copertura test con badge Codecov (completato in 2 ore da Brini Tommaso).
@@ -62,8 +62,8 @@ Purtroppo non siamo riusciti a raggiungere un buon risultato che rispettava gli 
 ### Descrizione dell'andamento dello sviluppo
 
 Focalizzato su test, implementazioni e documentazione pre-rilascio, questo sprint ha completato task relative a model, decisioni e confini del gioco. 
-Sono state implementate logiche per movimenti casuali, test di qualità e docs su MVU e architetture. L
-a maggior parte delle attività è stata risolta, con tempi totali intorno ai 1-10 ore per task, preparando il terreno per il primo rilascio.
+Sono state implementate logiche per movimenti casuali, test di qualità e docs su MVU e architetture. 
+La maggior parte delle attività è stata risolta, con tempi totali intorno ai 1-10 ore per task, preparando il terreno per il primo rilascio.
 
 ### Backlog
 
@@ -107,7 +107,7 @@ Il backlog si concentrava su implementazioni e accuracy:
 - Implementazione evento goal (completato in 5 ore da Samite Mounir).
 - Implementazione decisioni ball player (shoot) (completato in 5 ore da Samite Mounir).
 - Implementazione act con accuracy per shoot (completato in 5 ore da Samite Mounir).
-- Implementazione team with ball decisions (take e move random) (completati in 8 ore da Brini Tommaso e in 6 ore da Rattini Emiliano).
+- Implementazione team with ball decisions (take e move random) (completato in 8 ore da Brini Tommaso e in 6 ore da Rattini Emiliano).
 - Implementazione ball player decisions (pass) (completato in 6 ore da Rattini Emiliano).
 - Implementazione act con accuracy per pass (completato in 6 ore da Rattini Emiliano).
 - Layer intermedio per accuracy via pair programming (completato in 8 ore da Samite Mounir).
@@ -159,7 +159,7 @@ Il backlog includeva una varietà di task di implementazione e refactoring:
 - Implementazione di act (completato in 8 ore da Rattini Emiliano).
 - Refactoring del model e GUI (completato in 3 ore da Brini Tommaso).
 - Implementazione di decide (completato in 5 ore da Samite Mounir).
-- Refactoring del progetto tramite pair programming (completati in 5 ore da Samite Mounir e in 3 ore da Brini Tommaso).
+- Refactoring del progetto tramite pair programming (completato in 5 ore da Samite Mounir e in 3 ore da Brini Tommaso).
 - Implementazione di decisioni per giocatore con palla (completato in 5 ore da Samite Mounir).
 - Implementazione di move random e decide no control (completato in 6 ore da Brini Tommaso).
 - Controllo della copertura test con badge Codecov (completato in 2 ore da Brini Tommaso).
@@ -226,7 +226,7 @@ Il backlog si concentrava su implementazioni e accuracy:
 - Implementazione evento goal (completato in 5 ore da Samite Mounir).
 - Implementazione decisioni ball player (shoot) (completato in 5 ore da Samite Mounir).
 - Implementazione act con accuracy per shoot (completato in 5 ore da Samite Mounir).
-- Implementazione team with ball decisions (take e move random) (completati in 8 ore da Brini Tommaso e in 6 ore da Rattini Emiliano).
+- Implementazione team with ball decisions (take e move random) (completato in 8 ore da Brini Tommaso e in 6 ore da Rattini Emiliano).
 - Implementazione ball player decisions (pass) (completato in 6 ore da Rattini Emiliano).
 - Implementazione act con accuracy per pass (completato in 6 ore da Rattini Emiliano).
 - Layer intermedio per accuracy via pair programming (completato in 8 ore da Samite Mounir).
@@ -264,7 +264,7 @@ Il backlog includeva refactoring e docs:
 
 ### Iterazioni
 
-Le iterazioni hanno coinvolto refactoring progressivi, con focus su programmazione funzionale avanzata. Aggiornamenti hanno tracciato avanzamenti in layer specifici, identificando e risolvendo fix per probabilità, culminando in un completamento integrale senza task residue.
+Le iterazioni hanno coinvolto refactoring progressivi, con focus su programmazione funzionale avanzata. Aggiornamenti hanno tracciato avanzamenti in layer specifici, identificando e risolvendo fix per probabilità, culminando in un completamento integrale senza task irrisolte.
 
 ### Commenti sprint
 

@@ -95,7 +95,7 @@ Il tasso di successo per un tiro viene calcolato nella funzione privata `shootSu
 - Se la distanza è minore o uguale a `MatchConfig.highDistanceToGoal` (ma maggiore della soglia bassa), il tasso è `DecisionSuccessRate.LongDistanceShot` (pari a 0.4).
 - Se la distanza supera `MatchConfig.highDistanceToGoal`, il tasso è 0.0, rendendo il tiro impossibile.
 
-Nota che i valori di successo sembrano controintuitivi (tiri da breve distanza hanno una probabilità inferiore rispetto a quelli da lunga distanza), ma questo riflette è stato fatto per visualizzare l'errore dei giocatori nella simulazione, chiaramente questi "iperparametri" potranno essere modificati per una simulazione più realistica.
+Nota che i valori di successo sembrano controintuitivi (tiri da breve distanza hanno una probabilità inferiore rispetto a quelli da lunga distanza), ma questo è stato fatto per visualizzare l'errore dei giocatori nella simulazione, chiaramente questi "iperparametri" potranno essere modificati per una simulazione più realistica.
 
 ## Generazione dell'Azione
 

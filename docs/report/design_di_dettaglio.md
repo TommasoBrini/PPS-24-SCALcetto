@@ -66,7 +66,7 @@ i comportamenti e le strategie da adottare in base allo stato attuale del gioco.
 Ecco il diagramma risultante:
 <figure class="w-1/3 mx-auto">
   <img src="../assets/images/design_di_dettaglio/match_model.png" alt="space" align="center">
-  <figcaption>Model<figcaption>
+  <figcaption>Model</figcaption>
 </figure>
 
 ## DSL
@@ -83,7 +83,7 @@ fanno `export` e quindi si compongono rispettivamete di `PositionSyntax`, `Direc
 per lo spazio e `PlayerSyntax`, `TeamsSyntax` e `ScoreSyntax` per il match.
 <figure class="w-5 mx-auto">
   <img src="../assets/images/design_di_dettaglio/match_space_dsl.png" alt="space" align="center">
-  <figcaption>Space and match syntax<figcaption>
+  <figcaption>Space and match syntax</figcaption>
 </figure>
 
 Gli altri tipi di sintassi verranno affrontati nelle implementazioni.

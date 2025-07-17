@@ -99,7 +99,7 @@ Un esempio rappresentativo è il trait *CanDecideToPass*, che fornisce a un gioc
 - Fornisce sia la creazione di una singola decisione di passaggio, sia la generazione di tutte le possibili opzioni di passaggio ai compagni
 - L'implementazione è completamente *side-effects free* e facilmente testabile
 
-Ho implementato questa architettura poichè mi garantisce composizione (ogni ruolo è una combinazione di questi trait riutilizzabili), estendibilità, estrema pulizia (ogni trait è piccolo e ben documentato) 
+Ho implementato questa architettura poiché mi garantisce composizione (ogni ruolo è una combinazione di questi trait riutilizzabili), estendibilità, estrema pulizia (ogni trait è piccolo e ben documentato) 
 
 ## Behavior
 La componente Behavior incapsula la logica decisionale specifica per ciascun ruolo di giocatore, separando nettamente le strategie di gioco in base al contesto e al ruolo. Ogni modulo di comportamento implementa un metodo *calculateBestDecision*, che valuta lo stato corrente della partita e restituisce la decisione ottimale per il giocatore

@@ -5,7 +5,7 @@ parent: Report
 ---
 # Testing
 L'approccio al testing nel progetto ha adottato il **Test-Driven Development (TDD)** come metodologia principale, 
-scrivendo test prima dell'implementazione per guidare il design e verificare le funzionalità. 
+scrivendo i test prima dell'implementazione per guidare il design e verificare le funzionalità. 
 Inizialmente, si è proceduto con test su funzioni private importandole tramite visibilità di package 
 in Scala, ma questa pratica è stata abbandonata in favore di **test focalizzati su API pubbliche** e 
 comportamenti complessivi, per evitare test fragili legati a dettagli interni. 
@@ -28,7 +28,7 @@ con upload XML su Codecov per tracciare linee e branch non coperte.
 Questo setup previene regressioni e mantiene alta copertura.
 
 ## Codice
-I test comportamentali sono stati implementati con **ScalaTest's** **FlatSpec** e **Matchers** per asserzioni leggibili. 
+I test comportamentali sono stati implementati con **ScalaTest FlatSpec** e **Matchers** per asserzioni leggibili. 
 
 - Ecco un esempio dai test della view, che verifica inizializzazione e rendering senza eccezioni, questo test si concentra su comportamenti osservabili in ambienti con interfaccia grafica,
   saltando test GUI se in ambienti headless per gestire vincoli CI:

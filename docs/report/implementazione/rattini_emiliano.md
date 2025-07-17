@@ -18,7 +18,7 @@ Ho usato il simbolo **+** per la sua intuitività. Fa parte della `SpaceSyntax`
 ```
 
 ## Act
-Per *Act** si intende la fase in cui le azioni di gioco (prendere la palla, tirare, muoversi) avvengono,
+Per *Act* si intende la fase in cui le azioni di gioco (prendere la palla, tirare, muoversi) avvengono,
 modificando lo stato della partita e ritornando un evento opzionale.
 Il comportamento è il seguente:
 ```scala
