@@ -2,11 +2,15 @@ import model.Match.*
 import SimulationLoop.*
 import dsl.creation.SituationGenerator
 
-/** new version -> v3.0.0
-  */
+object SCALcetto:
 
-@main def SCALcetto(): Unit =
+  /** release 3.2.0
+    */
+  def main(args: Array[String]): Unit =
+    app()
 
-  val initialState: Match = SituationGenerator.kickOff(Score.init())
+  @main def app(): Unit =
 
-  initialize(initialState, 50)
+    val initialState: MatchState = SituationGenerator.kickOff(Score.init())
+
+    initialize(initialState, 50)

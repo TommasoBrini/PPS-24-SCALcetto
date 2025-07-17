@@ -5,77 +5,76 @@ import config.MatchConfig
 import config.Util
 import config.UIConfig
 import dsl.space.PositionSyntax.*
-import dsl.game.TeamsSyntax.*
+import dsl.`match`.TeamsSyntax.*
 
-/** Rating system for ball carrier player decisions Provides evaluation methods for run, pass, shoot, and move-to-goal
-  * decisions
+/** Rating system for ball carrier player decisions.
   */
 object BallCarrierDecisionRating:
 
-  /** Rates a run decision based on path clarity
-    * @param run
-    *   the run decision to evaluate
-    * @param player
-    *   the player making the decision
-    * @param state
-    *   the current match state
-    * @return
-    *   rating between 0.0 and 1.0
-    */
   extension (run: Decision.Run)
-    def rate(player: Player, state: Match): Double =
-      if isRunDirectionClear(player, run.direction, state) && isRunDirectionForward(player, run.direction, state)
-      then RatingValues.VeryPoor
+    /** Rates a run decision based on path clarity and forward movement.
+      *
+      * @param player
+      *   The player making the decision
+      * @param state
+      *   The current match state
+      * @return
+      *   Rating between 0.0 and 1.0
+      */
+    def rate(player: Player, state: MatchState): Double =
+      if isRunDirectionClear(player, run.direction, state)
+      then
+        if isRunDirectionForward(player, run.direction, state)
+        then RatingValues.VeryPoor
+        else RatingValues.VeryVeryPoor
       else RatingValues.Impossible
 
-  /** Rates a pass decision based on path clarity, distance, and advancement
-    * @param pass
-    *   the pass decision to evaluate
-    * @param state
-    *   the current match state
-    * @return
-    *   rating between 0.0 and 1.0
-    */
   extension (pass: Decision.Pass)
-    def rate(state: Match): Double =
+    /** Rates a pass decision based on path clarity, distance, and advancement.
+      *
+      * @param state
+      *   The current match state
+      * @return
+      *   Rating between 0.0 and 1.0
+      */
+    def rate(state: MatchState): Double =
       val passDetails = calculatePassDetails(pass, state)
       evaluatePassDecision(passDetails)
 
-  /** Rates a shoot decision based on distance to goal and path clarity
-    * @param shoot
-    *   the shoot decision to evaluate
-    * @param state
-    *   the current match state
-    * @return
-    *   rating between 0.0 and 1.0
-    */
   extension (shoot: Decision.Shoot)
-    def rate(state: Match): Double =
+    /** Rates a shoot decision based on distance to goal and path clarity.
+      *
+      * @param state
+      *   The current match state
+      * @return
+      *   Rating between 0.0 and 1.0
+      */
+    def rate(state: MatchState): Double =
       val shootDetails = calculateShootDetails(shoot, state)
       evaluateShootDecision(shootDetails)
 
-  /** Rates a move-to-goal decision based on position and direction clarity
-    * @param moveToGoal
-    *   the move-to-goal decision to evaluate
-    * @param player
-    *   the player making the decision
-    * @param state
-    *   the current match state
-    * @return
-    *   rating between 0.0 and 1.0
-    */
   extension (moveToGoal: Decision.MoveToGoal)
-    def rate(player: Player, state: Match): Double =
+    /** Rates a move-to-goal decision based on position and direction clarity.
+      *
+      * @param player
+      *   The player making the decision
+      * @param state
+      *   The current match state
+      * @return
+      *   Rating between 0.0 and 1.0
+      */
+    def rate(player: Player, state: MatchState): Double =
       val moveDetails = calculateMoveToGoalDetails(moveToGoal, player, state)
       evaluateMoveToGoalDecision(moveDetails)
 
 private object RatingValues:
-  val Excellent: Double  = 1.0
-  val Good: Double       = 0.8
-  val Average: Double    = 0.7
-  val Poor: Double       = 0.5
-  val VeryPoor: Double   = 0.2
-  val Impossible: Double = 0.0
+  val Excellent: Double    = 1.0
+  val Good: Double         = 0.8
+  val Average: Double      = 0.7
+  val Poor: Double         = 0.5
+  val VeryPoor: Double     = 0.2
+  val VeryVeryPoor: Double = 0.1
+  val Impossible: Double   = 0.0
 
 private object DistanceThresholds:
   val ShortPass: Int           = 30
@@ -87,10 +86,10 @@ private case class PassEvaluationDetails(pathClear: Boolean, advancement: Int, d
 private case class ShootEvaluationDetails(distance: Double, pathClear: Boolean)
 private case class MoveToGoalEvaluationDetails(isOffensiveHalf: Boolean, directionClear: Boolean)
 
-private def isRunDirectionClear(player: Player, direction: Direction, state: Match): Boolean =
+private def isRunDirectionClear(player: Player, direction: Direction, state: MatchState): Boolean =
   Util.isDirectionClear(player.position, direction, state)
 
-private def calculatePassDetails(pass: Decision.Pass, state: Match): PassEvaluationDetails =
+private def calculatePassDetails(pass: Decision.Pass, state: MatchState): PassEvaluationDetails =
   val fromPosition = pass.from.position
   val toPosition   = pass.to.position
   val team         = determineTeam(pass.from, state)
@@ -116,7 +115,7 @@ private def evaluatePassDecision(details: PassEvaluationDetails): Double =
   else
     RatingValues.Impossible
 
-private def calculateShootDetails(shoot: Decision.Shoot, state: Match): ShootEvaluationDetails =
+private def calculateShootDetails(shoot: Decision.Shoot, state: MatchState): ShootEvaluationDetails =
   val distance  = shoot.striker.position distanceFrom shoot.goal
   val team      = determineTeam(shoot.striker, state)
   val pathClear = Util.isPathClear(shoot.striker.position, shoot.goal, state, team)
@@ -134,7 +133,7 @@ private def evaluateShootDecision(details: ShootEvaluationDetails): Double =
 private def calculateMoveToGoalDetails(
     moveToGoal: Decision.MoveToGoal,
     player: Player,
-    state: Match
+    state: MatchState
 ): MoveToGoalEvaluationDetails =
   val isTeamWest      = Util.isPlayerInWestTeam(player, state)
   val isOffensiveHalf = determineIfInOffensiveHalf(player, isTeamWest)
@@ -150,10 +149,10 @@ private def evaluateMoveToGoalDecision(details: MoveToGoalEvaluationDetails): Do
   else
     RatingValues.Average
 
-private def determineTeam(player: Player, state: Match): Team =
+private def determineTeam(player: Player, state: MatchState): Team =
   state.teams.teamOf(player)
 
-private def calculateAdvancement(passer: Player, from: Position, to: Position, state: Match): Int =
+private def calculateAdvancement(passer: Player, from: Position, to: Position, state: MatchState): Int =
   if Util.isPlayerInWestTeam(passer, state) then
     to.x - from.x
   else
@@ -165,8 +164,8 @@ private def determineIfInOffensiveHalf(player: Player, isTeamWest: Boolean): Boo
   else
     player.position.x < UIConfig.fieldWidth / 2
 
-private def isRunDirectionForward(player: Player, direction: Direction, state: Match): Boolean =
+private def isRunDirectionForward(player: Player, direction: Direction, state: MatchState): Boolean =
   if Util.isPlayerInWestTeam(player, state) then
-    direction.x >= 0
+    direction.x > 0
   else
-    direction.x <= 0
+    direction.x < 0

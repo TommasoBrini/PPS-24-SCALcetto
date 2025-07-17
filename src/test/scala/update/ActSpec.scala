@@ -1,37 +1,43 @@
 package update
 
-import config.{MatchConfig, UIConfig}
-import dsl.SpaceSyntax.*
-import model.Match.*
-import model.Match.Action.*
-import update.act.Act.*
 import dsl.MatchSyntax.players
-import Side.*
-
+import model.Match.*
+import model.Match.Action.{Move, Stopped, Take}
+import model.Match.Decision.{Intercept, Tackle}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import update.act.Act.*
 
 class ActSpec extends AnyFlatSpec with Matchers:
-  val defaultSpeed                = 1
-  val defaultDirection: Direction = Direction(1, 1)
 
-  "An act phase" should "update player movement and position if it is moving" in:
-    val initialPosition = Position(0, 0)
-    val player =
-      Player(0, initialPosition, movement = Movement.still, nextAction = Move(defaultDirection, defaultSpeed))
-    val teamA        = Team(List(player), East)
-    val teamB        = Team(List(player), West)
-    val state        = Match((teamA, teamB), Ball(Position(0, 0)))
-    val (updated, _) = actStep.run(state)
-    updated.teams.players
-      .forall(_.movement == Movement(defaultDirection, defaultSpeed)) should be(true)
-    updated.teams.players
-      .forall(_.position == initialPosition + Movement(defaultDirection, defaultSpeed)) should be(true)
+  "An act phase" should "tackle ball carrier if someone successfully tackled him" in:
+    val ball     = Ball(Position(0, 0))
+    val carrier  = Player(0, Position(0, 0), ball = Some(ball))
+    val tackling = Player(1, Position(0, 0), decision = Tackle(ball), nextAction = Take(ball))
+    val state    = MatchState((Team(List(carrier)), Team(List(tackling))), ball)
+    actStep.run(state)._1.players.find(_.id == carrier.id) match
+      case Some(tackled) =>
+        tackled.nextAction should matchPattern { case Stopped(_) => }
+        tackled.ball should be(None)
+      case None => fail("Tackled player not found")
 
-  it should "update ball movement if someone hits it" in:
-    val ball         = Ball(Position(0, 0), movement = Movement.still)
-    val player       = Player(0, Position(0, 0), ball = Some(ball), nextAction = Hit(defaultDirection, defaultSpeed))
+  it should "update ball possession if some is taking the ball" in:
+    val ball         = Ball(Position(0, 0))
+    val player       = Player(1, Position(0, 0), ball = None, decision = Intercept(ball), nextAction = Take(ball))
     val team         = Team(List(player))
-    val state        = Match((team, team), ball)
+    val tuple        = (team, Team(Nil))
+    val state        = MatchState(tuple, ball)
     val (updated, _) = actStep.run(state)
-    updated.ball.movement should be(Movement(defaultDirection, defaultSpeed))
+    updated.players.head.ball should be(Some(ball))
+    updated.teams._1.hasBall should be(true)
+
+  it should "update player and ball movement and position if they are moving" in:
+    val ball         = Ball(Position(0, 0))
+    val carrier      = Player(1, Position(0, 0), ball = Some(ball), nextAction = Move(Direction(1, 1), 1))
+    val state        = MatchState((Team(List(carrier)), Team(Nil)), ball)
+    val (updated, _) = actStep.run(state)
+
+    updated.ball.movement shouldNot be(ball.movement)
+    updated.players.head.movement shouldNot be(carrier.movement)
+    updated.ball.position shouldNot be(ball.position)
+    updated.players.head.position shouldNot be(carrier.position)

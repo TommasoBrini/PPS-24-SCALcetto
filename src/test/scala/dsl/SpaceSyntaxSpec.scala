@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers.shouldBe
 import dsl.SpaceSyntax.*
 import model.Match.{Side, Team}
 import Side.*
-import dsl.game.TeamsSyntax.opponentOf
+import dsl.`match`.TeamsSyntax.opponentOf
 import model.Space.Bounce.*
 
 import scala.util.Random

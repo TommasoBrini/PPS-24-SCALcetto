@@ -4,33 +4,37 @@ import model.Match.*
 import config.UIConfig
 import model.Space.*
 import config.MatchConfig
-import dsl.game.TeamsSyntax.*
+import dsl.`match`.TeamsSyntax.*
 import config.Util
 
-/** Common decision-making capabilities for all players Provides basic movement and action decisions
+/** Common decision-making capabilities for all players.
+  *
+  * Provides basic movement and action decisions that are available to all player types.
   */
 object CommonPlayerDecisions:
 
   extension (player: Player)
 
-    /** Creates a run decision in the specified direction
+    /** Creates a run decision in the specified direction.
+      *
       * @param direction
-      *   the direction to run
+      *   The direction to run
       * @param steps
-      *   the number of steps to run
+      *   The number of steps to run
       * @return
-      *   a run decision
+      *   A run decision
       */
     def createRunDecision(direction: Direction, steps: Int): Decision =
       Decision.Run(direction, steps)
 
-    /** Generates all possible run directions for a player Uses for comprehension for clean functional composition
+    /** Generates all possible run directions for a player
+      *
       * @param matchState
-      *   the current match state
+      *   The current match state
       * @return
-      *   list of possible run decisions
+      *   List of possible run decisions
       */
-    def generatePossibleRunDirections(matchState: Match): List[Decision] =
+    def generatePossibleRunDirections(matchState: MatchState): List[Decision] =
       val validDirections =
         for
           dx <- -1 to 1
@@ -39,20 +43,22 @@ object CommonPlayerDecisions:
         yield player.createRunDecision(Direction(dx, dy), MatchConfig.runSteps)
       validDirections.toList
 
-    /** Creates a confusion decision
+    /** Creates a confusion decision.
+      *
       * @param remainingSteps
-      *   the remaining confusion steps
+      *   The remaining confusion steps
       * @return
-      *   a confusion decision
+      *   A confusion decision
       */
     def createConfusionDecision(remainingSteps: Int): Decision =
       Decision.Confusion(remainingStep = remainingSteps)
 
-    /** Creates a move to ball decision
+    /** Creates a move to ball decision.
+      *
       * @param directionToBall
-      *   the direction towards the ball
+      *   The direction towards the ball
       * @return
-      *   a move to ball decision
+      *   A move to ball decision
       */
     def createMoveToBallDecision(directionToBall: Direction): Decision =
       Decision.MoveToBall(directionToBall)
@@ -62,52 +68,55 @@ object CommonPlayerDecisions:
 trait CanDecideToPass:
   self: Player =>
 
-  /** Creates a pass decision to another player
+  /** Creates a pass decision to another player.
+    *
     * @param target
-    *   the target player
+    *   The target player
     * @return
-    *   a pass decision
+    *   A pass decision
     */
   def createPassDecision(target: Player): Decision =
     Decision.Pass(this, target)
 
-  /** Generates all possible pass decisions for available teammates Uses functional composition with filter and map
+  /** Generates all possible pass decisions for available teammates.
+    *
     * @param matchState
-    *   the current match state
+    *   The current match state
     * @return
-    *   list of possible pass decisions
+    *   List of possible pass decisions
     */
-  def generatePossiblePasses(matchState: Match): List[Decision] =
+  def generatePossiblePasses(matchState: MatchState): List[Decision] =
     for
       teammate <- matchState.teams.teamOf(this).players.filter(_.id != this.id)
     yield this.createPassDecision(teammate)
 
-/** Trait for players that can make shooting decisions
+/** Trait for players that can make shooting decisions.
   */
 trait CanDecideToShoot:
   self: Player =>
 
-  /** Creates a shoot decision towards a goal position
+  /** Creates a shoot decision towards a goal position.
+    *
     * @param goalPosition
-    *   the target goal position
+    *   The target goal position
     * @return
-    *   a shoot decision
+    *   A shoot decision
     */
   def createShootDecision(goalPosition: Position): Decision =
     Decision.Shoot(this, goalPosition)
 
-  /** Generates all possible shoot decisions towards goal positions Uses functional composition to determine goal
-    * positions
+  /** Generates all possible shoot decisions towards goal positions.
+    *
     * @param matchState
-    *   the current match state
+    *   The current match state
     * @return
-    *   list of possible shoot decisions
+    *   List of possible shoot decisions
     */
-  def generatePossibleShots(matchState: Match): List[Decision] =
+  def generatePossibleShots(matchState: MatchState): List[Decision] =
     val goalPositions = determineGoalPositions(matchState)
     goalPositions.map(createShootDecision)
 
-  private def determineGoalPositions(matchState: Match): List[Position] =
+  private def determineGoalPositions(matchState: MatchState): List[Position] =
     val goalX = determineGoalXCoordinate(matchState)
     List(
       Position(goalX, UIConfig.firstPoleY),
@@ -115,7 +124,7 @@ trait CanDecideToShoot:
       Position(goalX, UIConfig.secondPoleY)
     )
 
-  private def determineGoalXCoordinate(matchState: Match): Int =
+  private def determineGoalXCoordinate(matchState: MatchState): Int =
     if Util.isPlayerInWestTeam(this, matchState) then UIConfig.goalEastX else UIConfig.goalWestX
 
 /** Trait for players that can move towards the goal
@@ -123,58 +132,62 @@ trait CanDecideToShoot:
 trait CanDecideToMoveToGoal:
   self: Player =>
 
-  /** Creates a move to goal decision
+  /** Creates a move to goal decision.
+    *
     * @param direction
-    *   the direction towards the goal
+    *   The direction towards the goal
     * @return
-    *   a move to goal decision
+    *   A move to goal decision
     */
   def createMoveToGoalDecision(direction: Direction): Decision =
     Decision.MoveToGoal(direction)
 
-  /** Generates possible move to goal decisions
+  /** Generates possible move to goal decisions.
+    *
     * @param matchState
-    *   the current match state
+    *   The current match state
     * @return
-    *   list of possible move to goal decisions
+    *   List of possible move to goal decisions
     */
-  def generatePossibleMovesToGoal(matchState: Match): List[Decision] =
+  def generatePossibleMovesToGoal(matchState: MatchState): List[Decision] =
     val goalPosition    = determineGoalPosition(matchState)
     val directionToGoal = this.position.getDirection(goalPosition)
     List(createMoveToGoalDecision(directionToGoal))
 
-  private def determineGoalPosition(matchState: Match): Position =
+  private def determineGoalPosition(matchState: MatchState): Position =
     if Util.isPlayerInWestTeam(this, matchState) then
       Position(UIConfig.fieldWidth, UIConfig.fieldHeight / 2)
     else
       Position(0, UIConfig.fieldHeight / 2)
 
-/** Trait for players that can mark opponents
+/** Trait for players that can mark opponents.
   */
 trait CanDecideToMark:
   self: Player =>
 
-  /** Creates a mark decision
+  /** Creates a mark decision.
+    *
     * @param target
-    *   the player to mark
-    * @param teamId
-    *   the team identifier
+    *   The player to mark
+    * @param teamSide
+    *   The team identifier
     * @return
-    *   a mark decision
+    *   A mark decision
     */
   def createMarkDecision(target: Player, teamSide: Side): Decision =
     Decision.Mark(this, target, teamSide)
 
-/** Trait for players that can tackle the ball
+/** Trait for players that can tackle the ball.
   */
 trait CanDecideToTackle:
   self: Player =>
 
-  /** Creates a tackle decision
+  /** Creates a tackle decision.
+    *
     * @param ball
-    *   the ball to tackle
+    *   The ball to tackle
     * @return
-    *   a tackle decision
+    *   A tackle decision
     */
   def createTackleDecision(ball: Ball): Decision =
     Decision.Tackle(ball)
@@ -184,11 +197,12 @@ trait CanDecideToTackle:
 trait CanDecideToIntercept:
   self: Player =>
 
-  /** Creates an intercept decision
+  /** Creates an intercept decision.
+    *
     * @param ball
-    *   the ball to intercept
+    *   The ball to intercept
     * @return
-    *   an intercept decision
+    *   An intercept decision
     */
   def createInterceptDecision(ball: Ball): Decision =
     Decision.Intercept(ball)
@@ -198,13 +212,14 @@ trait CanDecideToIntercept:
 trait CanDecideToMoveRandom:
   self: Player =>
 
-  /** Creates a random movement decision
+  /** Creates a random movement decision.
+    *
     * @param direction
-    *   the direction to move
+    *   The direction to move
     * @param steps
-    *   the number of steps to move
+    *   The number of steps to move
     * @return
-    *   a random movement decision
+    *   A random movement decision
     */
   def createRandomMovementDecision(direction: Direction, steps: Int): Decision =
     Decision.MoveRandom(direction, steps)
@@ -214,11 +229,12 @@ trait CanDecideToMoveRandom:
 trait CanDecideToReceivePass:
   self: Player =>
 
-  /** Creates a receive pass decision
+  /** Creates a receive pass decision.
+    *
     * @param ball
-    *   the ball to receive
+    *   The ball to receive
     * @return
-    *   a receive pass decision
+    *   A receive pass decision
     */
   def createReceivePassDecision(ball: Ball): Decision =
     Decision.ReceivePass(ball)

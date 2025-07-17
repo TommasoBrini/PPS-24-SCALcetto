@@ -16,7 +16,7 @@ abbiamo regolato durata e frequenza dei meeting in base alle esigenze del team, 
 Il lavoro è stato infatti suddiviso in sprint settimanali, ognuno caratterizzato da:
 - Sprint Planning: pianificazione degli obiettivi da raggiungere durante la durata dello sprint.
 - Daily Scrum: brevi incontri giornalieri di 10-15 minuti per allineare il team su problemi, avanzamento e passi successivi.
-- Sprint Review: incontro finale dello sprint per valutare le funzionalità implementate, produrre una nuova release del progetto, riflette su cosa ha funzionato e su come migliorare nel successivo sprint.
+- Sprint Review: incontro finale dello sprint per valutare le funzionalità implementate, produrre una nuova release del progetto, riflettere su cosa ha funzionato e su come migliorare nel successivo sprint.
 
 In questo modo abbiamo potuto adattare i requisiti in corso d'opera, correggere tempestivamente le criticità e consegnare demo funzionanti a cadenza regolare.
 
@@ -29,7 +29,7 @@ In questo modo abbiamo potuto adattare i requisiti in corso d'opera, correggere 
 ### YouTrack
 Per tracciare tutte le attività di sviluppo abbiamo utilizzato YouTrack come strumento di project management:
 - Creazione dei task -> ogni nuova funzionalità, bug o attività di refactoring è stata modellata come issue, con descrizione dettagliata e stima dei tempi.
-- Backlog -> abbiamo mantenuto un backlog ordinato e agiornato: durante lo Sprint Planning abbiamo selezionato i task più urgenti, spostandoli al successivo sprint, mentre le richieste meno prioritarie rimanevano per sprint futuri.
+- Backlog -> abbiamo mantenuto un backlog ordinato e aggiornato: durante lo Sprint Planning abbiamo selezionato i task più urgenti, spostandoli al successivo sprint, mentre le richieste meno prioritarie rimanevano per sprint futuri.
 - Timesheet -> abbiamo registrato il tempo impiegato per ogni task, consentendo una stima più accurata delle risorse necessarie per completare le attività future.
 
 ## Controllo di Versione
@@ -38,7 +38,7 @@ Git ci ha permesso di lavorare in parallelo in modo efficiente, gestendo con sem
 
 ### Convenzioni sui commit
 Abbiamo adottato la convenzione Conventional Commits, un formato standard per i messaggi di commit che rende la cronologia leggibile e consente l'automazione delle release.
-Grazie a questa convenzione, il sistema di rilascio automatico è stato in grado id determinare se creare una release e con quale versione, in base ai tipi di commit effettuati.
+Grazie a questa convenzione, il sistema di rilascio automatico è stato in grado di determinare se creare una release e con quale versione, in base ai tipi di commit effettuati.
 
 ### Workflow
 Abbiamo seguito un flusso di sviluppo simile a GitFlow, ma semplificato e adattato al nostro processo Scrum:

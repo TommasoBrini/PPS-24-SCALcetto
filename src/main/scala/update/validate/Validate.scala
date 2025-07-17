@@ -1,16 +1,16 @@
 package update.validate
 
-import model.Match.{Match, Player, Team}
+import model.Match.{MatchState, Player, Team}
 import dsl.decisions.DecisionValidator.toAction
-import dsl.game.TeamsSyntax.map
+import dsl.`match`.TeamsSyntax.map
 import monads.States.State
 
 object Validate:
-  def validateStep: State[Match, Unit] =
+  def validateStep: State[MatchState, Unit] =
     State(s => (s.validate(), {}))
 
-  extension (state: Match)
-    def validate(): Match =
+  extension (state: MatchState)
+    def validate(): MatchState =
       state.copy(teams = state.teams.map(_.validate()))
 
   extension (team: Team)

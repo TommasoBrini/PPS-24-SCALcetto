@@ -4,14 +4,28 @@ nav_order: 1
 parent: Report
 ---
 # Introduzione
-L'obiettivo del progetto è la realizzazione di un simulatore di una partita
-di calcio. 
-La simulazione consiste nell'interazione di più giocatori, suddivisi in
-due squadre, che cercano, attraverso passaggi, dribbling e tiri, di 
-fare entrare la palla nella rete avversaria.
+**SCALcetto** è un simulatore di partite di calcio sviluppato in **Scala 3** che implementa un sistema intelligente di giocatori.
 
-L'obiettivo sarà quello di rendere i giocatori il più intelligenti
-possibile e fare in modo che essi arrivino al goal nel modo più
-efficace.
+L'obiettivo del progetto è la realizzazione di un simulatore che permetta di osservare l'evoluzione di una partita di calcio attraverso l'interazione intelligente di giocatori artificiali. Il sistema simula:
 
-[Next Chapter](./specifica_dei_requisiti.md)
+- **Interazione tra giocatori**: Passaggi, dribbling, tiri e movimenti intelligenti
+- **Decisioni intelligenti**: Ogni giocatore prende decisioni basate sulla situazione di gioco
+- **Strategie di squadra**: Coordinamento tra compagni per raggiungere l'obiettivo (parzialmente implementato)
+- **Fisica semplificata**: Simulazione riadattata per semplicità e dinamiche di gioco ridotte
+
+# Demo
+<video width="100%" controls>
+  <source src="../assets/images/scalcetto.mp4" type="video/mp4">
+</video>
+
+## Tecnologie Utilizzate
+- **Scala 3**: Linguaggio di programmazione funzionale moderno
+- **sbt**: Build tool per la gestione del progetto
+- **ScalaTest**: Framework di testing
+- **Git**: Controllo versione con hooks automatizzati
+- **GitHub Pages**: Documentazione automatica
+
+## Autori
+- **Brini Tommaso**
+- **Rattini Emiliano**
+- **Samite Mounir**

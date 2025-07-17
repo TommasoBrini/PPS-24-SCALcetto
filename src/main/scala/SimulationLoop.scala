@@ -11,9 +11,9 @@ object SimulationLoop:
 
   private var timer: Option[SwingTimer] = None
   private var view: SwingView           = _
-  private var state: Match              = _
+  private var state: MatchState         = _
 
-  def initialize(initialState: Match, initialFrameRate: Int = 30): Unit =
+  def initialize(initialState: MatchState, initialFrameRate: Int = 30): Unit =
     val delayMs: Int = 1000 / initialFrameRate
     state = initialState
     view = new SwingView(state)

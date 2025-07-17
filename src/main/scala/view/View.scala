@@ -6,10 +6,10 @@ import config.UIConfig.*
 import model.Match.*
 import view.RenderUtils.*
 import java.awt.BasicStroke
-import dsl.game.TeamsSyntax.*
+import dsl.`match`.TeamsSyntax.*
 
 object View:
-  class MatchPanel(var state: Match) extends Panel:
+  class MatchPanel(var state: MatchState) extends Panel:
     background = Colors.backgroundColor
 
     override def paintComponent(g: Graphics2D): Unit =
@@ -67,7 +67,7 @@ object View:
 
       g.translate(-fieldOffsetX, -fieldOffsetY)
 
-  class InfoPanel(var state: Match) extends Panel:
+  class InfoPanel(var state: MatchState) extends Panel:
     background = Colors.infoPanelColor
     border = Swing.EmptyBorder(10)
 
@@ -89,14 +89,12 @@ object View:
       val x          = (size.width - totalWidth) / 2
       val y          = yOffset + 40
 
-      g.setFont(g.getFont.deriveFont(scoreFontSize.toFloat))
-      // Blue score
       g.setColor(Colors.teamBlue)
       g.drawString(westScore, x, y)
-      // Gap
+
       g.setColor(Colors.textColor)
       g.drawString(gap, x + metrics.stringWidth(westScore) + 20, y)
-      // Red score
+
       g.setColor(Colors.teamRed)
       g.drawString(eastScore, x + metrics.stringWidth(westScore) + 20 + metrics.stringWidth(gap) + 20, y)
 
@@ -113,7 +111,7 @@ object View:
         repaint()
     }
 
-  class SwingView(initialState: Match):
+  class SwingView(initialState: MatchState):
     private val panel: MatchPanel    = new MatchPanel(initialState)
     private val infoPanel: InfoPanel = new InfoPanel(initialState)
 
@@ -183,7 +181,7 @@ object View:
           action
       }
 
-    def render(state: Match): Unit =
+    def render(state: MatchState): Unit =
       panel.state = state
       panel.repaint()
       infoPanel.state = state
