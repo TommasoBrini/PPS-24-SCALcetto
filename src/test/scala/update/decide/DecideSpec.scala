@@ -9,12 +9,12 @@ import Decide.*
 import config.MatchConfig
 import dsl.creation.CreationSyntax.*
 import dsl.creation.build.{PlayerBuilder, TeamBuilder}
-import dsl.game.TeamsSyntax.*
+import dsl.`match`.TeamsSyntax.*
 
 class DecideSpec extends AnyFlatSpec with Matchers:
 
   "Decide.decide" should "update all players with new decisions" in:
-    val state: Match = newMatch(Score.init()):
+    val state: MatchState = newMatch(Score.init()):
       team(West) withBall:
         player(1) at (5, 5) ownsBall true
         player(3) at (15, 15)
@@ -29,7 +29,7 @@ class DecideSpec extends AnyFlatSpec with Matchers:
     }
 
   it should "assign markings between defenders and attackers" in:
-    val state: Match = newMatch(Score.init()):
+    val state: MatchState = newMatch(Score.init()):
       team(West) withBall:
         player(1) at (5, 5) ownsBall true
         player(3) at (15, 15)
@@ -46,7 +46,7 @@ class DecideSpec extends AnyFlatSpec with Matchers:
     updatedDefender.decision should not be Decision.Initial
 
   it should "handle empty teams gracefully" in:
-    val state: Match = newMatch(Score.init()):
+    val state: MatchState = newMatch(Score.init()):
       team(West) withBall
         team(East)
       ball at (0, 0) move (Direction(0, 0), 0)
@@ -57,7 +57,7 @@ class DecideSpec extends AnyFlatSpec with Matchers:
 
   it should "preserve team structure and ball state" in:
     val currBall = Ball(Position(15, 15), Movement(Direction(1, 1), 2))
-    val state: Match = newMatch(Score.init()):
+    val state: MatchState = newMatch(Score.init()):
       team(West) withBall:
         player(1) at (5, 5) ownsBall true
         player(3) at (15, 15)
@@ -73,7 +73,7 @@ class DecideSpec extends AnyFlatSpec with Matchers:
     updatedState.ball shouldBe currBall
 
   it should "update decisions for multiple players per team" in:
-    val state: Match = newMatch(Score.init()):
+    val state: MatchState = newMatch(Score.init()):
       team(West) withBall:
         player(1) at (5, 5) ownsBall true
         player(2) at (6, 6)
@@ -90,7 +90,7 @@ class DecideSpec extends AnyFlatSpec with Matchers:
 
   it should "handle players with existing decisions" in:
     val player1 = PlayerBuilder(1) at (5, 5) decidedTo Run(Direction(1, 0), MatchConfig.runSteps) ownsBall true
-    val state: Match = newMatch(Score.init()):
+    val state: MatchState = newMatch(Score.init()):
       team(West) withBall:
         player(1) at (5, 5) decidedTo Run(Direction(1, 0), MatchConfig.runSteps) ownsBall true
       team(East):

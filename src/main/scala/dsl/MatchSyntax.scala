@@ -1,15 +1,15 @@
 package dsl
 
 import config.UIConfig
-import space.PositionSyntax.isOutOfBound
-import model.Match.{Match, Player}
+import space.PositionSyntax.isOutOfField
+import model.Match.{MatchState, Player}
 
 object MatchSyntax:
-  export game.PlayerSyntax.*
-  export game.TeamsSyntax.*
-  export game.ScoreSyntax.*
+  export `match`.PlayerSyntax.*
+  export `match`.TeamsSyntax.*
+  export `match`.ScoreSyntax.*
 
-  extension (state: Match)
+  extension (state: MatchState)
     /** Applies the given function to the match state if the condition is true. Used to chain conditional updates in a
       * DSL style.
       *
@@ -20,7 +20,7 @@ object MatchSyntax:
       * @return
       *   the updated or original match state
       */
-    def applyIf(condition: Match => Boolean)(f: Match => Match): Match =
+    def applyIf(condition: MatchState => Boolean)(f: MatchState => MatchState): MatchState =
       if condition.apply(state) then f(state) else state
 
     /** @return
@@ -32,4 +32,4 @@ object MatchSyntax:
       *   true if the ball position is out of the field bounds, false otherwise
       */
     def isBallOut: Boolean =
-      state.ball.position.isOutOfBound(UIConfig.fieldWidth, UIConfig.fieldHeight)
+      state.ball.position.isOutOfField

@@ -1,11 +1,11 @@
-package dsl.game
+package dsl.`match`
 
 import model.Space.{Direction, Movement, Position}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.shouldBe
 import model.Match.{Ball, Player}
-import dsl.game.PlayerSyntax.*
+import dsl.`match`.PlayerSyntax.*
 import dsl.decisions.PlayerRoleFactory.*
 import model.Match.Decision
 import model.Match.Action

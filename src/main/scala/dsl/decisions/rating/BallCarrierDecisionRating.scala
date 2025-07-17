@@ -5,7 +5,7 @@ import config.MatchConfig
 import config.Util
 import config.UIConfig
 import dsl.space.PositionSyntax.*
-import dsl.game.TeamsSyntax.*
+import dsl.`match`.TeamsSyntax.*
 
 /** Rating system for ball carrier player decisions.
   */
@@ -21,7 +21,7 @@ object BallCarrierDecisionRating:
       * @return
       *   Rating between 0.0 and 1.0
       */
-    def rate(player: Player, state: Match): Double =
+    def rate(player: Player, state: MatchState): Double =
       if isRunDirectionClear(player, run.direction, state)
       then
         if isRunDirectionForward(player, run.direction, state)
@@ -37,7 +37,7 @@ object BallCarrierDecisionRating:
       * @return
       *   Rating between 0.0 and 1.0
       */
-    def rate(state: Match): Double =
+    def rate(state: MatchState): Double =
       val passDetails = calculatePassDetails(pass, state)
       evaluatePassDecision(passDetails)
 
@@ -49,7 +49,7 @@ object BallCarrierDecisionRating:
       * @return
       *   Rating between 0.0 and 1.0
       */
-    def rate(state: Match): Double =
+    def rate(state: MatchState): Double =
       val shootDetails = calculateShootDetails(shoot, state)
       evaluateShootDecision(shootDetails)
 
@@ -63,7 +63,7 @@ object BallCarrierDecisionRating:
       * @return
       *   Rating between 0.0 and 1.0
       */
-    def rate(player: Player, state: Match): Double =
+    def rate(player: Player, state: MatchState): Double =
       val moveDetails = calculateMoveToGoalDetails(moveToGoal, player, state)
       evaluateMoveToGoalDecision(moveDetails)
 
@@ -86,10 +86,10 @@ private case class PassEvaluationDetails(pathClear: Boolean, advancement: Int, d
 private case class ShootEvaluationDetails(distance: Double, pathClear: Boolean)
 private case class MoveToGoalEvaluationDetails(isOffensiveHalf: Boolean, directionClear: Boolean)
 
-private def isRunDirectionClear(player: Player, direction: Direction, state: Match): Boolean =
+private def isRunDirectionClear(player: Player, direction: Direction, state: MatchState): Boolean =
   Util.isDirectionClear(player.position, direction, state)
 
-private def calculatePassDetails(pass: Decision.Pass, state: Match): PassEvaluationDetails =
+private def calculatePassDetails(pass: Decision.Pass, state: MatchState): PassEvaluationDetails =
   val fromPosition = pass.from.position
   val toPosition   = pass.to.position
   val team         = determineTeam(pass.from, state)
@@ -115,7 +115,7 @@ private def evaluatePassDecision(details: PassEvaluationDetails): Double =
   else
     RatingValues.Impossible
 
-private def calculateShootDetails(shoot: Decision.Shoot, state: Match): ShootEvaluationDetails =
+private def calculateShootDetails(shoot: Decision.Shoot, state: MatchState): ShootEvaluationDetails =
   val distance  = shoot.striker.position distanceFrom shoot.goal
   val team      = determineTeam(shoot.striker, state)
   val pathClear = Util.isPathClear(shoot.striker.position, shoot.goal, state, team)
@@ -133,7 +133,7 @@ private def evaluateShootDecision(details: ShootEvaluationDetails): Double =
 private def calculateMoveToGoalDetails(
     moveToGoal: Decision.MoveToGoal,
     player: Player,
-    state: Match
+    state: MatchState
 ): MoveToGoalEvaluationDetails =
   val isTeamWest      = Util.isPlayerInWestTeam(player, state)
   val isOffensiveHalf = determineIfInOffensiveHalf(player, isTeamWest)
@@ -149,10 +149,10 @@ private def evaluateMoveToGoalDecision(details: MoveToGoalEvaluationDetails): Do
   else
     RatingValues.Average
 
-private def determineTeam(player: Player, state: Match): Team =
+private def determineTeam(player: Player, state: MatchState): Team =
   state.teams.teamOf(player)
 
-private def calculateAdvancement(passer: Player, from: Position, to: Position, state: Match): Int =
+private def calculateAdvancement(passer: Player, from: Position, to: Position, state: MatchState): Int =
   if Util.isPlayerInWestTeam(passer, state) then
     to.x - from.x
   else
@@ -164,7 +164,7 @@ private def determineIfInOffensiveHalf(player: Player, isTeamWest: Boolean): Boo
   else
     player.position.x < UIConfig.fieldWidth / 2
 
-private def isRunDirectionForward(player: Player, direction: Direction, state: Match): Boolean =
+private def isRunDirectionForward(player: Player, direction: Direction, state: MatchState): Boolean =
   if Util.isPlayerInWestTeam(player, state) then
     direction.x > 0
   else

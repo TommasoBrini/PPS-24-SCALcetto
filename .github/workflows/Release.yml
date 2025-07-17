@@ -11,11 +11,18 @@ permissions:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: "temurin"
+
+      - name: Build JAR
+        run: sbt assembly
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -24,7 +31,6 @@ jobs:
 
       - name: Install semantic-release
         run: npm install -g semantic-release @semantic-release/git @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/release-notes-generator conventional-changelog-conventionalcommits
-
 
       - name: Run semantic-release
         env:

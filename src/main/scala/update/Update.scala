@@ -1,6 +1,6 @@
 package update
 
-import model.Match.{Match, Score, Side}
+import model.Match.{MatchState, Score, Side}
 import model.Match.Side.*
 import monads.States.State
 import decide.Decide.decideStep
@@ -16,8 +16,8 @@ object Update:
   enum Event:
     case BallOut, GoalEast, GoalWest
 
-  def update(state: Match): Match =
-    val updateFlow: State[Match, Option[Event]] =
+  def update(state: MatchState): MatchState =
+    val updateFlow: State[MatchState, Option[Event]] =
       for
         _     <- decideStep
         _     <- validateStep
@@ -27,7 +27,7 @@ object Update:
     handleEvent(updated, event)
 
   import Event.*
-  private def handleEvent(state: Match, event: Option[Event]): Match =
+  private def handleEvent(state: MatchState, event: Option[Event]): MatchState =
     event match
       case Some(BallOut) =>
         val bounceType = state.ball.position getBounce (fieldWidth, fieldHeight)

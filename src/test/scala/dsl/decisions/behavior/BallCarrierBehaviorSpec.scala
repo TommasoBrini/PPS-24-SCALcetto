@@ -23,7 +23,7 @@ class BallCarrierBehaviorSpec extends AnyFlatSpec with Matchers:
     val teammate = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
     val team1    = Team(List(ballCarrierPlayer, teammate), East, hasBall = true)
     val team2    = Team(List(), West, hasBall = false)
-    val state    = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val state    = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = ballCarrierPlayer.calculateBestDecision(state)
 
@@ -35,7 +35,7 @@ class BallCarrierBehaviorSpec extends AnyFlatSpec with Matchers:
     val teammate          = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
     val team1             = Team(List(ballCarrierPlayer, teammate), East, hasBall = true)
     val team2             = Team(List(), West, hasBall = false)
-    val state             = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val state             = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = ballCarrierPlayer.calculateBestDecision(state)
 
@@ -53,7 +53,7 @@ class BallCarrierBehaviorSpec extends AnyFlatSpec with Matchers:
       ).asBallCarrierPlayer
     val team1 = Team(List(ballCarrierPlayer), West, hasBall = true)
     val team2 = Team(List(), East, false)
-    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = ballCarrierPlayer.calculateBestDecision(state)
 
@@ -70,7 +70,7 @@ class BallCarrierBehaviorSpec extends AnyFlatSpec with Matchers:
     ).asBallCarrierPlayer
     val team1 = Team(List(ballCarrierPlayer), East, hasBall = true)
     val team2 = Team(List(), West, hasBall = false)
-    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = ballCarrierPlayer.calculateBestDecision(state)
 
@@ -89,7 +89,7 @@ class BallCarrierBehaviorSpec extends AnyFlatSpec with Matchers:
     ).asBallCarrierPlayer
     val team1 = Team(List(ballCarrierPlayer), West, hasBall = true)
     val team2 = Team(List(), East, hasBall = false)
-    val state = Match((team1, team2), ball)
+    val state = MatchState((team1, team2), ball)
 
     val decision = ballCarrierPlayer.calculateBestDecision(state)
 
@@ -107,7 +107,7 @@ class BallCarrierBehaviorSpec extends AnyFlatSpec with Matchers:
     ).asBallCarrierPlayer
     val team1 = Team(List(ballCarrierPlayer), West, hasBall = true)
     val team2 = Team(List(), East, hasBall = false)
-    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = ballCarrierPlayer.calculateBestDecision(state)
 
@@ -126,7 +126,7 @@ class BallCarrierBehaviorSpec extends AnyFlatSpec with Matchers:
       ).asBallCarrierPlayer
     val team1 = Team(List(ballCarrierPlayer), West, hasBall = true)
     val team2 = Team(List(), East, hasBall = false)
-    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = ballCarrierPlayer.calculateBestDecision(state)
 
@@ -138,7 +138,7 @@ class BallCarrierBehaviorSpec extends AnyFlatSpec with Matchers:
     val teammate          = Player(2, Position(6, 6), Movement.still).asTeammatePlayer
     val team1             = Team(List(ballCarrierPlayer, teammate), West, hasBall = true)
     val team2             = Team(List(), East, hasBall = false)
-    val state             = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val state             = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = ballCarrierPlayer.calculateBestDecision(state)
 
@@ -156,7 +156,7 @@ class BallCarrierBehaviorSpec extends AnyFlatSpec with Matchers:
     ).asBallCarrierPlayer
     val team1 = Team(List(ballCarrierPlayer), West, hasBall = true)
     val team2 = Team(List(), East, hasBall = false)
-    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision1 = ballCarrierPlayer.calculateBestDecision(state)
     val decision2 = ballCarrierPlayer.calculateBestDecision(state)
@@ -174,7 +174,7 @@ class BallCarrierBehaviorSpec extends AnyFlatSpec with Matchers:
     ).asBallCarrierPlayer
     val team1 = Team(List(ballCarrierPlayer), East, hasBall = true)
     val team2 = Team(List(), West, hasBall = false)
-    val state = Match((team1, team2), Ball(Position(0, 0), Movement.still))
+    val state = MatchState((team1, team2), Ball(Position(0, 0), Movement.still))
 
     val decision = ballCarrierPlayer.calculateBestDecision(state)
 

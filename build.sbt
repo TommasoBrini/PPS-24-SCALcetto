@@ -7,7 +7,7 @@ enablePlugins(ScalafmtPlugin)
 enablePlugins(ScoverageSbtPlugin)
 
 scalafmtOnCompile := true
-
+coverageEnabled := false
 val setupHooks = taskKey[Unit]("Install git hooks in the folder .git/hooks")
 
 setupHooks := {
@@ -26,6 +26,14 @@ setupHooks := {
     log.info(s"Executed : ${file.getName}")  // uso la val 'log'
   }
 }
+
+enablePlugins(AssemblyPlugin)
+Compile / mainClass := Some("SCALcetto")
+assembly / assemblyMergeStrategy := {
+  case PathList("META-INF", _*) => MergeStrategy.discard
+  case _                        => MergeStrategy.first
+}
+assembly / assemblyJarName := "SCALcetto.jar"
 
 lazy val root = (project in file("."))
   .settings(

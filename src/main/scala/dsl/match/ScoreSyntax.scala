@@ -1,4 +1,4 @@
-package dsl.game
+package dsl.`match`
 
 import model.Match.Score
 
