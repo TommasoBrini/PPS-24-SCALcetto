@@ -1,3 +1,17 @@
+## [3.2.0](https://github.com/TommasoBrini/PPS-24-SCALcetto/compare/v3.1.0...v3.2.0) (2025-07-17)
+
+### Features
+
+* add retrospettiva section ([9694de4](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/9694de40b11c326c581334b38326776779a33bf4))
+* add retrospettiva section ([a4bb93d](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/a4bb93d30a52b937058695eb40f7f80b05d3e193))
+* player and ball refactor with Entity and Moving ([c3b3f1e](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/c3b3f1ea9424147bc7a561035d921557a21c0373))
+* player and ball refactor with Entity and Moving ([08ba934](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/08ba93436396da88a7ca500ae44f282c1c6dbfb0))
+* **release:** final release ([39d2915](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/39d2915b6a6057e335e105b82c713279940cac61))
+
+### Bug Fixes
+
+* minor adjustments and cleaning ([bc08d9f](https://github.com/TommasoBrini/PPS-24-SCALcetto/commit/bc08d9f1e50e44b7d74d158e7f5140aa6546cf76))
+
 ## [3.1.0](https://github.com/TommasoBrini/PPS-24-SCALcetto/compare/v3.0.0...v3.1.0) (2025-07-11)
 
 ### Features
