@@ -1,3 +1,8 @@
+# SCALcetto
+SCALcetto is a football match simulator developed in **Scala 3** that implements an intelligent player system.
+
+![Video Demo](assets/Simulation2.gif)
+
 
 ## BUILD STATUS
 ![Build](https://github.com/TommasoBrini/PPS-24-SCALcetto/actions/workflows/Test_Scala.yml/badge.svg)
